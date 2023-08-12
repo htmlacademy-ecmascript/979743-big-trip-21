@@ -1,5 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const { request } = require('http');
+const HtmlPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js', // Точка входа
@@ -11,8 +13,18 @@ module.exports = {
   },
   devtool: 'source-map', // карта исходного кода, чтобы в инстр-х разраб-ка видеть не минифицированный код
   plugins: [
+    new HtmlPlugin({
+      template: 'public/index.html',
+    }),
     new CopyPlugin({
-      patterns: [{ from: 'public' }],
+      patterns: [
+        {
+          from: 'public',
+          globOptions: {
+            ignore: ['**/index.html'],
+          },
+        },
+      ],
     }),
   ],
   module: {
