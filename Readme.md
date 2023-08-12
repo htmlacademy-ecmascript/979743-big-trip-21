@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Анна Богословская](https://up.htmlacademy.ru/ecmascript/21/user/979743).
-* Наставник: `Неизвестно`.
+- Студент: [Анна Богословская](https://up.htmlacademy.ru/ecmascript/21/user/979743).
+- Наставник: [Антон Попов] (https://htmlacademy.ru/profile/joker).
 
 ---
 
