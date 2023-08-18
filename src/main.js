@@ -1,4 +1,6 @@
 import { render, RenderPosition } from './render';
+import { EVENT_POINTS } from './consts';
+
 import TripInfoView from './view/trip-info-view';
 import TotalView from './view/total-view';
 import TripAboutelView from './view/trip-aboute-view';
@@ -11,6 +13,7 @@ import EventEditHeaderView from './view/event-edit-form-header-view';
 import EventEditDetailsView from './view/event-edit-form-details-view';
 import EventEditOffersView from './view/event-edit-form-offers-view';
 import EventEditDestinationView from './view/event-edit-form-destination-view';
+import EventItemView from './view/event-item-view';
 
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
@@ -25,11 +28,11 @@ render(new TotalView(), siteTripInfoElement);
 
 render(new TripFilterslView(), siteTripControlsElement);
 
-//---------------------------- Events Prosenter ------------------------------------------
+//---------------------------- Events Presenter ------------------------------------------
 const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
-render(new SortlView(), siteTripEventsElement); // сортировка
+render(new SortlView(), siteTripEventsElement); // сортировка, форма
 
-const eventsList = new EventsListView(); // форма
+const eventsList = new EventsListView(); // список
 render(eventsList, siteTripEventsElement);
 const siteEventsListElement = eventsList.getElement();
 
@@ -43,6 +46,11 @@ const eventEditDetails = new EventEditDetailsView(); // секция детал�
 render(eventEditDetails, siteEventEditFormElement);
 const siteEventEditFormDetailsElement = eventEditDetails.getElement(); //получили контейнер для офферов и пункта назначения
 
+// офферы и пункт назначения в форме
 render(new EventEditOffersView(), siteEventEditFormDetailsElement);
 render(new EventEditDestinationView(), siteEventEditFormDetailsElement);
-// офферы и пункт назначения в форме
+
+// остальные точки
+for (let i = 0; i < EVENT_POINTS.length; i++) {
+  render(new EventItemView(EVENT_POINTS[i]), siteEventsListElement);
+}
