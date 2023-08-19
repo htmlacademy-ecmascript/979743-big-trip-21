@@ -1,9 +1,9 @@
-import { createTotalTemplate } from '../templates/total-template';
+import { createTripTotalTemplate } from '../templates/trip-total-template';
 import { createElement } from '../render';
 
-export default class TotalView {
+export default class TripTotalView {
   getTemplate() {
-    return createTotalTemplate();
+    return createTripTotalTemplate();
   }
 
   getElement() {

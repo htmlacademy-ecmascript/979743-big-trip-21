@@ -1,7 +1,7 @@
 import { createSortTemplate } from '../templates/sort-form-template';
 import { createElement } from '../render';
 
-export default class SortlView {
+export default class SortView {
   getTemplate() {
     return createSortTemplate();
   }

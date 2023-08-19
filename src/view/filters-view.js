@@ -2,7 +2,7 @@
 import { createFiltersTemplate } from '../templates/filters-temlate';
 import { createElement } from '../render';
 
-export default class TripAboutelView {
+export default class TripFiltersView {
   getTemplate() {
     return createFiltersTemplate();
   }

@@ -1,7 +1,7 @@
 import { createTripAbouteTemplate } from '../templates/trip-aboute-template';
 import { createElement } from '../render';
 
-export default class TripAboutelView {
+export default class TripAbouteView {
   getTemplate() {
     return createTripAbouteTemplate();
   }
