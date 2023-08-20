@@ -12,8 +12,16 @@ function createElement(template) {
   return newElement.firstElementChild;
 }
 
-function render(component, container, place = RenderPosition.BEFOREEND) {
+function render(
+  component,
+  container,
+  place = RenderPosition.BEFOREEND,
+  isInsides = false
+) {
   container.insertAdjacentElement(place, component.getElement());
+  if (isInsides) {
+    component.renderInsides();
+  }
 }
 
-export {RenderPosition, createElement, render};
+export { RenderPosition, createElement, render };
