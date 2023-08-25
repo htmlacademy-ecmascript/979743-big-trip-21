@@ -1,4 +1,17 @@
 // константы
+const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
+
+const DATA_SHORT_FORMAT = 'MMM DD';
+
+const TIME_FORMAT = 'HH:mm';
+
+const SEC_IN_MIN = 60;
+const MIN_IN_HOUR = 60;
+const HOUR_IN_DAY = 24;
+const MSEC_IN_SEC = 1000;
+const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
+const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
+
 const EVENT_POINTS = [
   // --- 1 -----
   {
@@ -152,4 +165,4 @@ const EVENT_POINTS = [
   },
 ];
 
-export { EVENT_POINTS };
+export { EVENT_POINTS, DATA_FORMAT, DATA_SHORT_FORMAT, TIME_FORMAT, MSEC_IN_DAY, MSEC_IN_HOUR };
