@@ -1,6 +1,6 @@
 import HeaderPresenter from './presenters/header-presenter';
 import EventsPresenter from './presenters/events-presenter';
-import Model from './model/model'; // ВРЕМЕННО
+// import Model from './model/model'; // ВРЕМЕННО
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
 const headerPresenter = new HeaderPresenter(siteTripMainElement);
@@ -12,9 +12,8 @@ const eventsPresenter = new EventsPresenter(siteTripEventsElement);
 eventsPresenter.init();
 
 // --------------тестируем генерацию моков
-const data = new Model();
-console.log('destinations', data.destinations);
-console.log('offers', data.offers);
-console.log('points', data.points);
-const index = 0;
-console.log('adaptOpenPointData', data.adaptOpenPointData());
+// const data = new Model();
+// console.log('destinations', data.destinations);
+// console.log('offers', data.offers);
+// console.log('points', data.points);
+// console.log('adaptOpenPointData', data.adaptOpenPointData());
