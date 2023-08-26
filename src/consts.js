@@ -16,7 +16,7 @@ const DESTINATIONS_COUNT = 5;
 const OFFERS_COUNT = 5;
 const POINTS_COUNT = 9;
 
-const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const DEFAULT_TYPE = 'flight';
 

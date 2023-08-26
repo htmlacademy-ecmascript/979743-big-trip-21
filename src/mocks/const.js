@@ -49,111 +49,111 @@ const CITIES = [
 const ALL_OFFERS = [
   {
     name: 'Add luggage',
-    pointType: 'Taxi',
+    pointType: 'taxi',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Taxi',
+    pointType: 'taxi',
   },
   {
     name: 'Order Uber',
-    pointType: 'Taxi',
+    pointType: 'taxi',
   },
   //-----------------------------------------
   {
     name: 'Add luggage',
-    pointType: 'Bus',
+    pointType: 'bus',
   },
   {
     name: 'Choose seats',
-    pointType: 'Bus',
+    pointType: 'bus',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Bus',
+    pointType: 'bus',
   },
   //------------------------------------
   {
     name: 'Add luggage',
-    pointType: 'Train',
+    pointType: 'train',
   },
   {
     name: 'Add meal',
-    pointType: 'Train',
+    pointType: 'train',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Train',
+    pointType: 'train',
   },
   {
     name: 'Choose seats',
-    pointType: 'Train',
+    pointType: 'train',
   },
   // ---------------------------------------
   {
     name: 'Add luggage',
-    pointType: 'Ship',
+    pointType: 'ship',
   },
   {
     name: 'Add meal',
-    pointType: 'Ship',
+    pointType: 'ship',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Ship',
+    pointType: 'ship',
   },
   {
     name: 'Choose seats',
-    pointType: 'Ship',
+    pointType: 'ship',
   },
   // -----------------------------------
   {
     name: 'Rent a car',
-    pointType: 'Drive',
+    pointType: 'drive',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Drive',
+    pointType: 'drive',
   },
   //------------------------------------------
   {
     name: 'Add luggage',
-    pointType: 'Flight',
+    pointType: 'flight',
   },
   {
     name: 'Add meal',
-    pointType: 'Flight',
+    pointType: 'flight',
   },
   {
     name: 'Switch to comfort',
-    pointType: 'Flight',
+    pointType: 'flight',
   },
   {
     name: 'Choose seats',
-    pointType: 'Flight',
+    pointType: 'flight',
   },
   {
     name: 'Travel by train',
-    pointType: 'Flight',
+    pointType: 'flight',
   },
   //--------------------------------------
   {
     name: 'Add breakfast',
-    pointType: 'Check-in',
+    pointType: 'check-in',
   },
   //------------------------------------------
   {
     name: 'Book tickets',
-    pointType: 'Sightseeing',
+    pointType: 'sightseeing',
   },
   {
     name: 'Lunch in city',
-    pointType: 'Sightseeing',
+    pointType: 'sightseeing',
   },
   //-----------------------------------------
   {
     name: 'Choose seats',
-    pointType: 'Restaurant',
+    pointType: 'restaurant',
   },
 ];
 

@@ -3,6 +3,15 @@ import { createEventEditHeaderTemplate } from '../templates/event-edit-form-head
 import { createElement } from '../render';
 
 export default class EventEditHeaderView {
+  constructor(headerInfo) {
+    this.headerInfo = headerInfo;
+  }
+
+  // ВРЕМЕННО
+  // showPointInfo() {
+  //   console.log(this.headerInfo);
+  // }
+
   getTemplate() {
     return createEventEditHeaderTemplate();
   }

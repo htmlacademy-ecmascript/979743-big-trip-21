@@ -1,7 +1,6 @@
 import HeaderPresenter from './presenters/header-presenter';
 import EventsPresenter from './presenters/events-presenter';
-import MockModel from './model/mock-model';
-
+import Model from './model/model'; // ВРЕМЕННО
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
 const headerPresenter = new HeaderPresenter(siteTripMainElement);
@@ -13,8 +12,9 @@ const eventsPresenter = new EventsPresenter(siteTripEventsElement);
 eventsPresenter.init();
 
 // --------------тестируем генерацию моков
-const mocks = new MockModel();
-// console.log(mocks.getDestinations());
-// console.log(mocks.getOffers());
-// console.log(mocks.generateOnePoint());
-console.log(mocks.generatePoints());
+const data = new Model();
+console.log('destinations', data.destinations);
+console.log('offers', data.offers);
+console.log('points', data.points);
+const index = 0;
+console.log('adaptOpenPointData', data.adaptOpenPointData());

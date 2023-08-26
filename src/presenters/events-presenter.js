@@ -1,6 +1,9 @@
 // отрисовка компонентов списка событий
 import { EVENT_POINTS } from '../consts';
 import { render, RenderPosition } from '../render';
+
+import Model from '../model/model';
+
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventEditView from '../view/event-edit-form-view';
@@ -14,10 +17,21 @@ export default class EventsPresenter {
   constructor(container) {
     this.container = container;
   }
+  // ---------- получаем данные
+
+  data = new Model();
+  adaptedData = this.data.adaptOpenPointData();
+
+  // testData = {
+  //   type: 'Flight',
+  //   date: 'MAR 18',
+  // };
+
+  // ---------------------------
 
   sortComponent = new SortView();
   eventsListComponent = new EventsListView();
-  eventEditComponent = new EventEditView(); // форма редактирования
+  eventEditComponent = new EventEditView(this.adaptedData); // форма редактирования
 
   // eventEditHeaderComponent = new EventEditHeaderView(); // header формы ----------------------
   // eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
@@ -25,14 +39,10 @@ export default class EventsPresenter {
   // eventEditDestinationComponent = new EventEditDestinationView(); // пункт назначения в форме
 
   init() {
+    // this.eventEditComponent.showPointInfo();
     render(this.sortComponent, this.container);
     render(this.eventsListComponent, this.container);
-    render(
-      this.eventEditComponent,
-      this.eventsListComponent.getElement(),
-      RenderPosition.BEFOREEND,
-      true
-    ); // форма редактирования
+    render(this.eventEditComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND, true); // форма редактирования
 
     // render(
     //   this.eventEditHeaderComponent,
@@ -44,10 +54,7 @@ export default class EventsPresenter {
 
     // остальные точки в списке
     for (let i = 0; i < EVENT_POINTS.length; i++) {
-      render(
-        new EventItemView(EVENT_POINTS[i]),
-        this.eventsListComponent.getElement()
-      );
+      render(new EventItemView(EVENT_POINTS[i]), this.eventsListComponent.getElement());
     }
   }
 }
