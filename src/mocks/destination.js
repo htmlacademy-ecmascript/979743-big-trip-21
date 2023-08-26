@@ -1,8 +1,7 @@
-import { getRandomArrayElement } from '../util';
+// возвращает данные о пунктах назначения в том виде, как они типа на сервере хранятся
+// из них будет выборка и по ним потом поиск будет
 import { CITIES } from './const';
-
-function generateDestination() {
-  const city = getRandomArrayElement(CITIES);
+function generateDestination(city) {
   return {
     id: crypto.randomUUID(),
     name: city.name,
@@ -16,4 +15,8 @@ function generateDestination() {
   };
 }
 
-export { generateDestination };
+function generateAllDestinations() {
+  return CITIES.map(generateDestination);
+}
+
+export { generateAllDestinations };

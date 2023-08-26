@@ -12,6 +12,14 @@ const MSEC_IN_SEC = 1000;
 const MSEC_IN_HOUR = MIN_IN_HOUR * SEC_IN_MIN * MSEC_IN_SEC;
 const MSEC_IN_DAY = HOUR_IN_DAY * MSEC_IN_HOUR;
 
+const DESTINATIONS_COUNT = 5;
+const OFFERS_COUNT = 5;
+const POINTS_COUNT = 9;
+
+const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+
+const DEFAULT_TYPE = 'flight';
+
 const EVENT_POINTS = [
   // --- 1 -----
   {
@@ -165,4 +173,16 @@ const EVENT_POINTS = [
   },
 ];
 
-export { EVENT_POINTS, DATA_FORMAT, DATA_SHORT_FORMAT, TIME_FORMAT, MSEC_IN_DAY, MSEC_IN_HOUR };
+export {
+  EVENT_POINTS,
+  DATA_FORMAT,
+  DATA_SHORT_FORMAT,
+  TIME_FORMAT,
+  MSEC_IN_DAY,
+  MSEC_IN_HOUR,
+  DESTINATIONS_COUNT,
+  OFFERS_COUNT,
+  POINTS_COUNT,
+  POINT_TYPES,
+  DEFAULT_TYPE,
+};

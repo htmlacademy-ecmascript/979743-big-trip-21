@@ -46,20 +46,116 @@ const CITIES = [
   },
 ];
 
-const OFFERS_TYPES = [
-  'Add luggage',
-  'Add meal',
-  'Switch to comfort',
-  'Order Uber',
-  'Rent a car',
-  'Add breakfast',
-  'Book tickets',
-  'Lunch in city',
-  'Travel by train',
-  'Choose seats',
+const ALL_OFFERS = [
+  {
+    name: 'Add luggage',
+    pointType: 'Taxi',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Taxi',
+  },
+  {
+    name: 'Order Uber',
+    pointType: 'Taxi',
+  },
+  //-----------------------------------------
+  {
+    name: 'Add luggage',
+    pointType: 'Bus',
+  },
+  {
+    name: 'Choose seats',
+    pointType: 'Bus',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Bus',
+  },
+  //------------------------------------
+  {
+    name: 'Add luggage',
+    pointType: 'Train',
+  },
+  {
+    name: 'Add meal',
+    pointType: 'Train',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Train',
+  },
+  {
+    name: 'Choose seats',
+    pointType: 'Train',
+  },
+  // ---------------------------------------
+  {
+    name: 'Add luggage',
+    pointType: 'Ship',
+  },
+  {
+    name: 'Add meal',
+    pointType: 'Ship',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Ship',
+  },
+  {
+    name: 'Choose seats',
+    pointType: 'Ship',
+  },
+  // -----------------------------------
+  {
+    name: 'Rent a car',
+    pointType: 'Drive',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Drive',
+  },
+  //------------------------------------------
+  {
+    name: 'Add luggage',
+    pointType: 'Flight',
+  },
+  {
+    name: 'Add meal',
+    pointType: 'Flight',
+  },
+  {
+    name: 'Switch to comfort',
+    pointType: 'Flight',
+  },
+  {
+    name: 'Choose seats',
+    pointType: 'Flight',
+  },
+  {
+    name: 'Travel by train',
+    pointType: 'Flight',
+  },
+  //--------------------------------------
+  {
+    name: 'Add breakfast',
+    pointType: 'Check-in',
+  },
+  //------------------------------------------
+  {
+    name: 'Book tickets',
+    pointType: 'Sightseeing',
+  },
+  {
+    name: 'Lunch in city',
+    pointType: 'Sightseeing',
+  },
+  //-----------------------------------------
+  {
+    name: 'Choose seats',
+    pointType: 'Restaurant',
+  },
 ];
-
-const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
 const PRICE = {
   min: 1,
@@ -73,4 +169,4 @@ const DURATION = {
   minute: 59,
 };
 
-export { CITIES, PRICE, DURATION, OFFERS_TYPES, POINT_TYPES };
+export { CITIES, PRICE, DURATION, ALL_OFFERS };

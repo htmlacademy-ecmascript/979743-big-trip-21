@@ -1,3 +1,4 @@
+// генерирует объект для одной точки
 import { getRandomInteger } from '../util';
 import { PRICE } from './const';
 import { getDate } from './util';
