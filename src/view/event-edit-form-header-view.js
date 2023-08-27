@@ -7,11 +7,6 @@ export default class EventEditHeaderView {
     this.headerInfo = headerInfo;
   }
 
-  // ВРЕМЕННО
-  // showPointInfo() {
-  //   console.log(this.headerInfo);
-  // }
-
   getTemplate() {
     return createEventEditHeaderTemplate();
   }
