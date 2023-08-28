@@ -11,6 +11,8 @@ import EventEditHeaderView from '../view/event-edit-form-header-view';
 
 import EventEditDetailsView from '../view/event-edit-form-details-view';
 import EventEditOffersView from '../view/event-edit-form-offers-view';
+import EventEditOfferView from '../view/event-edit-form-offer-view';
+
 import EventEditDestinationView from '../view/event-edit-form-destination-view';
 import EventItemView from '../view/event-item-view';
 
@@ -41,6 +43,15 @@ export default class EventsPresenter {
     render(eventEditHeaderComponent, this.eventEditComponent.getElement().querySelector('.event')); // header формы
     render(this.eventEditDetailsComponent, this.eventEditComponent.getElement().querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
     render(this.eventEditOffersComponent, this.eventEditDetailsComponent.getElement()); // офферы
+
+    for (let i = 0; i < this.openPoint.offersInfo.length; i++) {
+      render(
+        // копка - оффер
+        new EventEditOfferView(this.openPoint.offersInfo[i]), // передаем один элемент массива офферов
+        this.eventEditOffersComponent.getElement().querySelector('.event__available-offers')
+      );
+    }
+
     render(this.eventEditDestinationComponent, this.eventEditDetailsComponent.getElement()); // пункт назначения
 
     // остальные точки в списке

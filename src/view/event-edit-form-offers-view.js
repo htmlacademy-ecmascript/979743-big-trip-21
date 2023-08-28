@@ -1,3 +1,5 @@
+// находятся в детялях формы
+// контейнер для кнопок-офферов
 import { createEventEditOffersTemplate } from '../templates/event-edit-form-offers-templates';
 import { createElement } from '../render';
 

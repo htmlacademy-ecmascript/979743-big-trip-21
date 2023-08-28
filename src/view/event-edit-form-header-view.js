@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 export default class EventEditHeaderView {
   constructor(destinations, point) {
-    this.destinations = destinations;
+    this.destinations = destinations; // будут нужны для выпадающего списка -> потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
     this.point = point; // это адаптированный в модели объект, один элемент массива точек
   }
 
@@ -19,8 +19,6 @@ export default class EventEditHeaderView {
   }
 
   getTemplate() {
-    console.log('from view ', this.point);
-    console.log('from view adapted', this.getAdaptPointData());
     return createEventEditHeaderTemplate(this.getAdaptPointData()); // передаем объект открытой точки
   }
 
