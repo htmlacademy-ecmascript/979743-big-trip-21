@@ -1,13 +1,12 @@
 import dayjs from 'dayjs';
 import { capitalize } from '../util';
-import MockModel from './mock-model';
+// import MockModel from './mock-model';
 export default class Model {
-  //-----получаем данные-------------
-  data = new MockModel();
-
-  destinations = this.data.getDestinations();
-  offers = this.data.getOffers();
-  points = this.data.generatePoints();
+  constructor(data) {
+    this.destinations = data.getDestinations();
+    this.offers = data.getOffers();
+    this.points = data.generatePoints();
+  }
 
   getDestinationByID(id) {
     return this.destinations.find((dest) => dest.id === id);
@@ -35,5 +34,17 @@ export default class Model {
       dateTo: dayjs(this.points[index].dateTo).format('DD/MM/YYTHH:mm'),
       offers: this.getMarkedOffers(this.points[index].type, this.points[index].offers), // массив объектов
     };
+  }
+
+  getDestinations() {
+    return this.destinations;
+  }
+
+  getOffers() {
+    return this.offers;
+  }
+
+  getPoints() {
+    return this.points;
   }
 }

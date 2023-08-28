@@ -3,12 +3,14 @@ import { createEventEditHeaderTemplate } from '../templates/event-edit-form-head
 import { createElement } from '../render';
 
 export default class EventEditHeaderView {
-  constructor(headerInfo) {
-    this.headerInfo = headerInfo;
+  constructor(destinations, points) {
+    this.destinations = destinations;
+    this.points = points;
   }
 
   getTemplate() {
-    return createEventEditHeaderTemplate();
+    console.log('from view ', this.points);
+    return createEventEditHeaderTemplate(this.points[0]); // передаем объект открытой точки
   }
 
   getElement() {
