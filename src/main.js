@@ -22,4 +22,4 @@ eventsPresenter.init();
 console.log('destinations', model.destinations);
 console.log('offers', model.offers);
 console.log('points', model.points);
-console.log('adaptOpenPointData', model.adaptOpenPointData(0));
+// console.log('adaptOpenPointsData', model.adaptOpenPointsData(0));

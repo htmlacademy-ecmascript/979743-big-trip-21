@@ -1,5 +1,5 @@
 // отрисовка компонентов списка событий
-import { EVENT_POINTS } from '../consts';
+import { EVENT_POINTS, DEFAULT_OPEN_POINT_INDEX } from '../consts';
 import { render, RenderPosition } from '../render';
 
 // import Model from '../model/model';
@@ -20,6 +20,7 @@ export default class EventsPresenter {
     this.destinations = model.getDestinations();
     this.offers = model.getOffers();
     this.points = model.getPoints();
+    this.openPoint = model.adaptPointData(this.points[DEFAULT_OPEN_POINT_INDEX]);
   }
 
   sortComponent = new SortView();
@@ -36,7 +37,7 @@ export default class EventsPresenter {
     render(this.eventsListComponent, this.container);
     render(this.eventEditComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND, true); // форма редактирования
 
-    const eventEditHeaderComponent = new EventEditHeaderView(this.destinations, this.points); // header формы
+    const eventEditHeaderComponent = new EventEditHeaderView(this.destinations, this.openPoint); // header формы - передаем элемент для открытой точки
     render(eventEditHeaderComponent, this.eventEditComponent.getElement().querySelector('.event')); // header формы
     render(this.eventEditDetailsComponent, this.eventEditComponent.getElement().querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
     render(this.eventEditOffersComponent, this.eventEditDetailsComponent.getElement()); // офферы

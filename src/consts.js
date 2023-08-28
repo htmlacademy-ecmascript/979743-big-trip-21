@@ -19,6 +19,7 @@ const POINTS_COUNT = 9;
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const DEFAULT_TYPE = 'flight';
+const DEFAULT_OPEN_POINT_INDEX = 0;
 
 const EVENT_POINTS = [
   // --- 1 -----
@@ -185,4 +186,5 @@ export {
   POINTS_COUNT,
   POINT_TYPES,
   DEFAULT_TYPE,
+  DEFAULT_OPEN_POINT_INDEX,
 };
