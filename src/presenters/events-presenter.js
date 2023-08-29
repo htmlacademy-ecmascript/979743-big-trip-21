@@ -25,6 +25,11 @@ export default class EventsPresenter {
     this.offers = model.getOffers();
     this.points = model.getPoints();
     this.openPoint = model.adaptPointData(this.points[DEFAULT_OPEN_POINT_INDEX]);
+    // this.adaptedPoints = this.points.map(model.adaptPointData); // не работает, почему - не знаю
+    this.adaptedPoints = [];
+    for (let i = 0; i < this.points.length; i++) {
+      this.adaptedPoints.push(model.adaptPointData(this.points[i]));
+    }
   }
 
   sortComponent = new SortView();
@@ -37,6 +42,7 @@ export default class EventsPresenter {
   // eventEditDestinationComponent = new EventEditDestinationView(); // пункт назначения в форме
 
   init() {
+    console.log(this.adaptedPoints);
     render(this.sortComponent, this.container);
     render(this.eventsListComponent, this.container);
     render(this.eventEditComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND, true); // форма редактирования
@@ -63,9 +69,9 @@ export default class EventsPresenter {
       );
     }
 
-    // остальные точки в списке
-    for (let i = 0; i < EVENT_POINTS.length; i++) {
-      render(new EventItemView(EVENT_POINTS[i]), this.eventsListComponent.getElement());
+    //остальные точки в списке
+    for (let i = 1; i < this.points.length; i++) {
+      render(new EventItemView(this.adaptedPoints[i]), this.eventsListComponent.getElement());
     }
   }
 }

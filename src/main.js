@@ -16,10 +16,3 @@ headerPresenter.init();
 const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
 const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
 eventsPresenter.init();
-
-// --------------тестируем генерацию моков
-
-console.log('destinations', model.destinations);
-console.log('offers', model.offers);
-console.log('points', model.points);
-// console.log('adaptOpenPointsData', model.adaptOpenPointsData(0));

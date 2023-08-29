@@ -16,26 +16,28 @@ export default class Model {
     // возвр массив объектов офферов, помечает чекнутые
     const conformedOffers = this.offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
     const markedOffers = conformedOffers.map((offer) => {
+      // отметили чекнутые
       offer.isChecked = checkedOfferIds.includes(offer.id);
       return offer;
     });
     return markedOffers;
   }
 
+  getCheckedOffers(type, checkedOfferIds) {
+    const conformedOffers = this.offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
+    const checkedOffers = conformedOffers.filter((offer) => checkedOfferIds.includes(offer.id));
+    return checkedOffers;
+  }
+
   adaptPointData(originalPoint) {
-    // это для открытой точки
     // на входе объект, элемент из массива точек
     // на выходе тот же объект, дополненный полями с полной инфой по ПН и офферам
     return {
-      // id: originalPoint.id,
-      // type: capitalize(originalPoint.type),
-      // typeImg: `img/icons/${originalPoint.type}.png`,
       destinationName: this.getDestinationByID(originalPoint.destination).name,
       destinationDescription: this.getDestinationByID(originalPoint.destination).description,
       destinationPhotos: this.getDestinationByID(originalPoint.destination).photos, // массив объектов
-      // dateFrom: dayjs(originalPoint.dateFrom).format('DD/MM/YYTHH:mm'),
-      // dateTo: dayjs(originalPoint.dateTo).format('DD/MM/YYTHH:mm'),
-      offersInfo: this.getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов
+      offersInfo: this.getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов всех офферов для данного типа
+      checkedOffersInfo: this.getCheckedOffers(originalPoint.type, originalPoint.offers),
       ...originalPoint,
     };
   }

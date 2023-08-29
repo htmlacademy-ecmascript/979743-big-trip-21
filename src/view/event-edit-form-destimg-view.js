@@ -7,7 +7,6 @@ export default class EventEditDestImgView {
   }
 
   getTemplate() {
-    console.log(this.photo);
     return createEventEditDestImgTemplate(this.photo);
   }
 

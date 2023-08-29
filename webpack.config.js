@@ -2,6 +2,7 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { request } = require('http');
 const HtmlPlugin = require('html-webpack-plugin');
+// const duration = require('dayjs/plugin/duration');
 
 module.exports = {
   entry: './src/main.js', // Точка входа

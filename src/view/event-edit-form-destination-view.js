@@ -7,7 +7,6 @@ export default class EventEditDestinationView {
   }
 
   getTemplate() {
-    console.log(this.point);
     return createEventEditDestinationTemplate(this.point);
   }
 

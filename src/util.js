@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { DATA_FORMAT, DATA_SHORT_FORMAT, TIME_FORMAT, MSEC_IN_DAY, MSEC_IN_HOUR } from './consts';
 
 function getRandomInteger(a = 0, b = 1) {
@@ -12,17 +13,17 @@ function getRandomArrayElement(array) {
   return array[getRandomInteger(0, array.length - 1)];
 }
 
-function formatStringToDateTime(date) {
-  return dayjs(date).format(DATA_FORMAT);
-}
+// function formatStringToDateTime(date) {
+//   return dayjs(date).format(DATA_FORMAT);
+// }
 
-function formatStringToShortDate(date) {
-  return dayjs(date).format(DATA_SHORT_FORMAT);
-}
+// function formatStringToShortDate(date) {
+//   return dayjs(date).format(DATA_SHORT_FORMAT);
+// }
 
-function formatStringToTime(date) {
-  return dayjs(date).format(TIME_FORMAT);
-}
+// function formatStringToTime(date) {
+//   return dayjs(date).format(TIME_FORMAT);
+// }
 
 function capitalize(string) {
   // первая буква будет заглавная
@@ -36,6 +37,7 @@ function getPointDuration(dateFrom, dateTo) {
   // let duration = require('dayjs/plugin/duration');
   // dayjs.extend(duration);
   // console.log(dayjs.duration(100));
+  dayjs.extend(duration);
   const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom)); // возвращает разницу между датами/временем в миллисекундах
   let pointDuration = 0;
 
@@ -57,9 +59,9 @@ function getPointDuration(dateFrom, dateTo) {
 export {
   getRandomInteger,
   getRandomArrayElement,
-  formatStringToDateTime,
-  formatStringToShortDate,
-  formatStringToTime,
+  // formatStringToDateTime,
+  // formatStringToShortDate,
+  // formatStringToTime,
   capitalize,
   getPointDuration,
 };
