@@ -8,7 +8,24 @@ function generateDestination(city) {
     description: city.description,
     photos: [
       {
-        src: `https://loremflickr.com/228/152&random=${crypto.randomUUID()}`,
+        // src: `https://loremflickr.com/248/152?random=654`,
+        src: 'https://loremflickr.com/228/152?random=6513',
+        alt: `${city.name} photo`,
+      },
+      {
+        src: `https://loremflickr.com/248/152?random=${crypto.randomUUID()}`,
+        alt: `${city.name} photo`,
+      },
+      {
+        src: `https://loremflickr.com/248/152?random=${crypto.randomUUID()}`,
+        alt: `${city.name} photo`,
+      },
+      {
+        src: `https://loremflickr.com/248/152?random=${crypto.randomUUID()}`,
+        alt: `${city.name} photo`,
+      },
+      {
+        src: `https://loremflickr.com/248/152?random=${crypto.randomUUID()}`,
         alt: `${city.name} photo`,
       },
     ],

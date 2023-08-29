@@ -14,6 +14,8 @@ import EventEditOffersView from '../view/event-edit-form-offers-view';
 import EventEditOfferView from '../view/event-edit-form-offer-view';
 
 import EventEditDestinationView from '../view/event-edit-form-destination-view';
+import EventEditDestImgView from '../view/event-edit-form-destimg-view';
+
 import EventItemView from '../view/event-item-view';
 
 export default class EventsPresenter {
@@ -32,7 +34,7 @@ export default class EventsPresenter {
   // eventEditHeaderComponent = new EventEditHeaderView(); // header формы
   eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
   eventEditOffersComponent = new EventEditOffersView(); // офферы в форме
-  eventEditDestinationComponent = new EventEditDestinationView(); // пункт назначения в форме
+  // eventEditDestinationComponent = new EventEditDestinationView(); // пункт назначения в форме
 
   init() {
     render(this.sortComponent, this.container);
@@ -51,8 +53,15 @@ export default class EventsPresenter {
         this.eventEditOffersComponent.getElement().querySelector('.event__available-offers')
       );
     }
+    const eventEditDestinationComponent = new EventEditDestinationView(this.openPoint); // пункт назначения в форме
+    render(eventEditDestinationComponent, this.eventEditDetailsComponent.getElement());
 
-    render(this.eventEditDestinationComponent, this.eventEditDetailsComponent.getElement()); // пункт назначения
+    for (let i = 0; i < this.openPoint.destinationPhotos.length; i++) {
+      render(
+        new EventEditDestImgView(this.openPoint.destinationPhotos[i]),
+        eventEditDestinationComponent.getElement().querySelector('.event__photos-tape')
+      );
+    }
 
     // остальные точки в списке
     for (let i = 0; i < EVENT_POINTS.length; i++) {

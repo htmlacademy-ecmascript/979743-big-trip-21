@@ -17,8 +17,6 @@ export default class EventEditOfferView {
   }
 
   getTemplate() {
-    console.log(this.offer);
-    console.log(this.adaptOfferData());
     return createEventEditOfferTemplate(this.adaptOfferData());
   }
 

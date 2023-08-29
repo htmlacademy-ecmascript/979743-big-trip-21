@@ -32,7 +32,7 @@ export default class Model {
       // typeImg: `img/icons/${originalPoint.type}.png`,
       destinationName: this.getDestinationByID(originalPoint.destination).name,
       destinationDescription: this.getDestinationByID(originalPoint.destination).description,
-      descriptionPhotos: this.getDestinationByID(originalPoint.destination).photos, // массив объектов
+      destinationPhotos: this.getDestinationByID(originalPoint.destination).photos, // массив объектов
       // dateFrom: dayjs(originalPoint.dateFrom).format('DD/MM/YYTHH:mm'),
       // dateTo: dayjs(originalPoint.dateTo).format('DD/MM/YYTHH:mm'),
       offersInfo: this.getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов
