@@ -1,5 +1,5 @@
 // отрисовка компонентов списка событий
-import { EVENT_POINTS, DEFAULT_OPEN_POINT_INDEX } from '../consts';
+import { DEFAULT_OPEN_POINT_INDEX } from '../consts';
 import { render, RenderPosition } from '../render';
 
 // import Model from '../model/model';
@@ -36,13 +36,10 @@ export default class EventsPresenter {
   eventsListComponent = new EventsListView();
   eventEditComponent = new EventEditView(); // форма редактирования
 
-  // eventEditHeaderComponent = new EventEditHeaderView(); // header формы
   eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
   eventEditOffersComponent = new EventEditOffersView(); // офферы в форме
-  // eventEditDestinationComponent = new EventEditDestinationView(); // пункт назначения в форме
 
   init() {
-    console.log(this.adaptedPoints);
     render(this.sortComponent, this.container);
     render(this.eventsListComponent, this.container);
     render(this.eventEditComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND, true); // форма редактирования

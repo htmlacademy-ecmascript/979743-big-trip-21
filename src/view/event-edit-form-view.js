@@ -1,6 +1,6 @@
-// форма, все ее внутренности отрисовываются здесь
+// форма редактирования точки
 import { createEventEditTemplate } from '../templates/event-edit-form-template';
-import { createElement, render } from '../render';
+import { createElement } from '../render';
 export default class EventEditView {
   constructor(pointInfo) {
     this.pointInfo = pointInfo;

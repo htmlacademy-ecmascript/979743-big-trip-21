@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DATA_FORMAT, DATA_SHORT_FORMAT, TIME_FORMAT, MSEC_IN_DAY, MSEC_IN_HOUR } from './consts';
+import { MSEC_IN_DAY, MSEC_IN_HOUR } from './consts';
 
 function getRandomInteger(a = 0, b = 1) {
   const lower = Math.ceil(Math.min(a, b));
@@ -31,12 +31,6 @@ function capitalize(string) {
 }
 
 function getPointDuration(dateFrom, dateTo) {
-  // не работает, браузер выкидывает ошибку на dayjs.duration(timeDiff) - говорит что нет такой функции duration
-  // ретро 16:38
-  // вот в такой связке работает:
-  // let duration = require('dayjs/plugin/duration');
-  // dayjs.extend(duration);
-  // console.log(dayjs.duration(100));
   dayjs.extend(duration);
   const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom)); // возвращает разницу между датами/временем в миллисекундах
   let pointDuration = 0;
