@@ -1,5 +1,5 @@
 // элемент списка точек
-function checkedOffers(checkedOffersInfo) {
+function getCheckedOffers(checkedOffersInfo) {
   // возвращает строку разметки с выбранными офферами
   return checkedOffersInfo
     .map(
@@ -45,7 +45,7 @@ function createEventItemTemplate({
                 </p>
                 <h4 class="visually-hidden">Offers:</h4>
                 <ul class="event__selected-offers">
-                  ${checkedOffers(checkedOffersInfo)}
+                  ${getCheckedOffers(checkedOffersInfo)}
                 </ul>
                 <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
                   <span class="visually-hidden">Add to favorite</span>

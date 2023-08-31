@@ -4,8 +4,13 @@ import { createEventEditOffersTemplate } from '../templates/event-edit-form-offe
 import { createElement } from '../render';
 
 export default class EventEditOffersView {
+  constructor(offersInfo) {
+    this.offersInfo = offersInfo;
+  }
+
   getTemplate() {
-    return createEventEditOffersTemplate();
+    console.log(this.offersInfo);
+    return createEventEditOffersTemplate(this.offersInfo);
   }
 
   getElement() {

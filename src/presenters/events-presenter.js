@@ -2,8 +2,6 @@
 import { DEFAULT_OPEN_POINT_INDEX } from '../consts';
 import { render, RenderPosition } from '../render';
 
-// import Model from '../model/model';
-
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventEditView from '../view/event-edit-form-view';
@@ -11,10 +9,8 @@ import EventEditHeaderView from '../view/event-edit-form-header-view';
 
 import EventEditDetailsView from '../view/event-edit-form-details-view';
 import EventEditOffersView from '../view/event-edit-form-offers-view';
-import EventEditOfferView from '../view/event-edit-form-offer-view';
 
 import EventEditDestinationView from '../view/event-edit-form-destination-view';
-import EventEditDestImgView from '../view/event-edit-form-destimg-view';
 
 import EventItemView from '../view/event-item-view';
 
@@ -37,7 +33,6 @@ export default class EventsPresenter {
   eventEditComponent = new EventEditView(); // форма редактирования
 
   eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
-  eventEditOffersComponent = new EventEditOffersView(); // офферы в форме
 
   init() {
     render(this.sortComponent, this.container);
@@ -47,24 +42,19 @@ export default class EventsPresenter {
     const eventEditHeaderComponent = new EventEditHeaderView(this.destinations, this.openPoint); // header формы - передаем элемент для открытой точки
     render(eventEditHeaderComponent, this.eventEditComponent.getElement().querySelector('.event')); // header формы
     render(this.eventEditDetailsComponent, this.eventEditComponent.getElement().querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
-    render(this.eventEditOffersComponent, this.eventEditDetailsComponent.getElement()); // офферы
 
-    for (let i = 0; i < this.openPoint.offersInfo.length; i++) {
-      render(
-        // копка - оффер
-        new EventEditOfferView(this.openPoint.offersInfo[i]), // передаем один элемент массива офферов
-        this.eventEditOffersComponent.getElement().querySelector('.event__available-offers')
-      );
-    }
+    const eventEditOffersComponent = new EventEditOffersView(this.openPoint.offersInfo); // офферы в форме
+    render(eventEditOffersComponent, this.eventEditDetailsComponent.getElement()); // офферы
+
+    // for (let i = 0; i < this.openPoint.offersInfo.length; i++) {
+    //   render(
+    //     // копка - оффер
+    //     new EventEditOfferView(this.openPoint.offersInfo[i]), // передаем один элемент массива офферов
+    //     this.eventEditOffersComponent.getElement().querySelector('.event__available-offers')
+    //   );
+    // }
     const eventEditDestinationComponent = new EventEditDestinationView(this.openPoint); // пункт назначения в форме
     render(eventEditDestinationComponent, this.eventEditDetailsComponent.getElement());
-
-    for (let i = 0; i < this.openPoint.destinationPhotos.length; i++) {
-      render(
-        new EventEditDestImgView(this.openPoint.destinationPhotos[i]),
-        eventEditDestinationComponent.getElement().querySelector('.event__photos-tape')
-      );
-    }
 
     //остальные точки в списке
     for (let i = 1; i < this.points.length; i++) {

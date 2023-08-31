@@ -1,11 +1,8 @@
-// import dayjs from 'dayjs';
-// import { capitalize } from '../util';
-// import MockModel from './mock-model';
 export default class Model {
-  constructor(data) {
-    this.destinations = data.getDestinations();
-    this.offers = data.getOffers();
-    this.points = data.generatePoints();
+  constructor({ destinations, offers, points }) {
+    this.destinations = destinations;
+    this.offers = offers;
+    this.points = points;
   }
 
   getDestinationByID(id) {
