@@ -2,8 +2,12 @@ import { createEventEditDestinationTemplate } from '../templates/event-edit-form
 import { createElement } from '../render';
 
 export default class EventEditDestinationView {
+  constructor(point) {
+    this.point = point;
+  }
+
   getTemplate() {
-    return createEventEditDestinationTemplate();
+    return createEventEditDestinationTemplate(this.point);
   }
 
   getElement() {

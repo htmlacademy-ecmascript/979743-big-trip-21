@@ -1,9 +1,15 @@
+// находятся в детялях формы
+// контейнер для кнопок-офферов
 import { createEventEditOffersTemplate } from '../templates/event-edit-form-offers-templates';
 import { createElement } from '../render';
 
 export default class EventEditOffersView {
+  constructor(offersInfo) {
+    this.offersInfo = offersInfo;
+  }
+
   getTemplate() {
-    return createEventEditOffersTemplate();
+    return createEventEditOffersTemplate(this.offersInfo);
   }
 
   getElement() {
