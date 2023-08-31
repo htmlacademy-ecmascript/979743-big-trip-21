@@ -1,19 +1,8 @@
 import { createTripAbouteTemplate } from '../templates/trip-aboute-template';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class TripAbouteView {
-  getTemplate() {
+export default class TripAbouteView extends AbstractView {
+  get template() {
     return createTripAbouteTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

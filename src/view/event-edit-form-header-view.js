@@ -1,10 +1,12 @@
 // открытая точка, heder формы
 import { createEventEditHeaderTemplate } from '../templates/event-edit-form-header-template';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
+// import dayjs, { extend } from 'dayjs';
 import dayjs from 'dayjs';
 
-export default class EventEditHeaderView {
+export default class EventEditHeaderView extends AbstractView {
   constructor(destinations, point) {
+    super();
     this.destinations = destinations; // будут нужны для выпадающего списка -> потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
     this.point = point; // это адаптированный в модели объект, один элемент массива точек
   }
@@ -18,18 +20,7 @@ export default class EventEditHeaderView {
     };
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditHeaderTemplate(this.getAdaptPointData()); // передаем объект открытой точки
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

@@ -1,20 +1,9 @@
 // форма
 import { createFiltersTemplate } from '../templates/filters-temlate';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class TripFiltersView {
-  getTemplate() {
+export default class TripFiltersView extends AbstractView {
+  get template() {
     return createFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

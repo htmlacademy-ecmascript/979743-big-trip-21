@@ -1,25 +1,15 @@
 // находятся в детялях формы
 // контейнер для кнопок-офферов
 import { createEventEditOffersTemplate } from '../templates/event-edit-form-offers-templates';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class EventEditOffersView {
+export default class EventEditOffersView extends AbstractView {
   constructor(offersInfo) {
+    super();
     this.offersInfo = offersInfo;
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditOffersTemplate(this.offersInfo);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

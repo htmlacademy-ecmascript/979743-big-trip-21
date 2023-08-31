@@ -1,19 +1,8 @@
 import { createTripTotalTemplate } from '../templates/trip-total-template';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class TripTotalView {
-  getTemplate() {
+export default class TripTotalView extends AbstractView {
+  get template() {
     return createTripTotalTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

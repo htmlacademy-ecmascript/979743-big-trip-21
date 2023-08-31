@@ -1,6 +1,6 @@
 // отрисовка компонентов списка событий
 import { DEFAULT_OPEN_POINT_INDEX } from '../consts';
-import { render, RenderPosition } from '../render';
+import { render, RenderPosition } from '../framework/render';
 
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
@@ -37,28 +37,21 @@ export default class EventsPresenter {
   init() {
     render(this.sortComponent, this.container);
     render(this.eventsListComponent, this.container);
-    render(this.eventEditComponent, this.eventsListComponent.getElement(), RenderPosition.BEFOREEND, true); // форма редактирования
+    render(this.eventEditComponent, this.eventsListComponent.element, RenderPosition.BEFOREEND, true); // форма редактирования
 
     const eventEditHeaderComponent = new EventEditHeaderView(this.destinations, this.openPoint); // header формы - передаем элемент для открытой точки
-    render(eventEditHeaderComponent, this.eventEditComponent.getElement().querySelector('.event')); // header формы
-    render(this.eventEditDetailsComponent, this.eventEditComponent.getElement().querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
+    render(eventEditHeaderComponent, this.eventEditComponent.element.querySelector('.event')); // header формы
+    render(this.eventEditDetailsComponent, this.eventEditComponent.element.querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
 
     const eventEditOffersComponent = new EventEditOffersView(this.openPoint.offersInfo); // офферы в форме
-    render(eventEditOffersComponent, this.eventEditDetailsComponent.getElement()); // офферы
+    render(eventEditOffersComponent, this.eventEditDetailsComponent.element); // офферы
 
-    // for (let i = 0; i < this.openPoint.offersInfo.length; i++) {
-    //   render(
-    //     // копка - оффер
-    //     new EventEditOfferView(this.openPoint.offersInfo[i]), // передаем один элемент массива офферов
-    //     this.eventEditOffersComponent.getElement().querySelector('.event__available-offers')
-    //   );
-    // }
     const eventEditDestinationComponent = new EventEditDestinationView(this.openPoint); // пункт назначения в форме
-    render(eventEditDestinationComponent, this.eventEditDetailsComponent.getElement());
+    render(eventEditDestinationComponent, this.eventEditDetailsComponent.element);
 
     //остальные точки в списке
     for (let i = 1; i < this.points.length; i++) {
-      render(new EventItemView(this.adaptedPoints[i]), this.eventsListComponent.getElement());
+      render(new EventItemView(this.adaptedPoints[i]), this.eventsListComponent.element);
     }
   }
 }

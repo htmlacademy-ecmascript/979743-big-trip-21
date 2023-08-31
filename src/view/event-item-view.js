@@ -1,11 +1,12 @@
 // элемент списка точек
 import { createEventItemTemplate } from '../templates/event-item-template';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 import { getPointDuration } from '../util';
 
-export default class EventItemView {
+export default class EventItemView extends AbstractView {
   constructor(pointInfo) {
+    super();
     this.pointInfo = pointInfo;
   }
 
@@ -23,18 +24,7 @@ export default class EventItemView {
     };
   }
 
-  getTemplate() {
+  get template() {
     return createEventItemTemplate(this.adaptPointData());
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

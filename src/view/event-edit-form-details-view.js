@@ -1,20 +1,9 @@
 // секция, делатли в форме, контейнер для офферов и пункта назначения
 import { createEventEditDetailsTemplate } from '../templates/event-edit-form-details-templates';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
-export default class EventEditDetailsView {
-  getTemplate() {
+export default class EventEditDetailsView extends AbstractView {
+  get template() {
     return createEventEditDetailsTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

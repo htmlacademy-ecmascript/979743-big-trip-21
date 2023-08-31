@@ -1,5 +1,5 @@
 // отрисовка компонент header-а
-import { render, RenderPosition } from '../render';
+import { render, RenderPosition } from '../framework/render';
 import TripInfoView from '../view/trip-info-view';
 import TripAbouteView from '../view/trip-aboute-view';
 import TripTotalView from '../view/trip-total-view';
@@ -19,8 +19,8 @@ export default class HeaderPresenter {
 
   init() {
     render(this.tripInfoComponent, this.container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
-    render(this.tripAbouteComponent, this.tripInfoComponent.getElement());
-    render(this.tripTotalComponent, this.tripInfoComponent.getElement());
+    render(this.tripAbouteComponent, this.tripInfoComponent.element);
+    render(this.tripTotalComponent, this.tripInfoComponent.element);
     render(this.tripFiltersComponent, this.siteTripControlsElement);
   }
 }
