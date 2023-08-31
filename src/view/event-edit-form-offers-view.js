@@ -9,7 +9,6 @@ export default class EventEditOffersView {
   }
 
   getTemplate() {
-    console.log(this.offersInfo);
     return createEventEditOffersTemplate(this.offersInfo);
   }
 
