@@ -11,6 +11,7 @@ export default class EventEditOffersView extends AbstractView {
   }
 
   get template() {
+    // console.log(this.#offersInfo);
     return createEventEditOffersTemplate(this.#offersInfo);
   }
 }
