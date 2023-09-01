@@ -5,11 +5,10 @@ import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
 export default class EventEditHeaderView extends AbstractView {
-  #destinations;
   #point;
-  constructor(destinations, point) {
+  constructor(point) {
     super();
-    this.#destinations = destinations; // будут нужны для выпадающего списка, потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
+    //destinations будут нужны для выпадающего списка, потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
     this.#point = point; // это адаптированный в модели объект, один элемент массива точек
   }
 

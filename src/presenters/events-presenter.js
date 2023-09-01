@@ -36,24 +36,33 @@ export default class EventsPresenter {
 
   #eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
 
+  #renderEditFom(openPoint) {
+    const eventEditComponent = new EventEditView(); // форма редактирования
+    render(eventEditComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND); // форма редактирования
+
+    const eventEditHeaderComponent = new EventEditHeaderView(openPoint); // header формы - передаем элемент для открытой точки
+    render(eventEditHeaderComponent, eventEditComponent.element.querySelector('.event')); // header формы
+    render(this.#eventEditDetailsComponent, eventEditComponent.element.querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
+
+    const eventEditOffersComponent = new EventEditOffersView(openPoint.offersInfo); // офферы в форме
+    render(eventEditOffersComponent, this.#eventEditDetailsComponent.element); // офферы
+
+    const eventEditDestinationComponent = new EventEditDestinationView(openPoint); // пункт назначения в форме
+    render(eventEditDestinationComponent, this.#eventEditDetailsComponent.element);
+  }
+
+  #renderPoint(point) {
+    const eventItemView = new EventItemView(point);
+    render(eventItemView, this.#eventsListComponent.element);
+  }
+
   init() {
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
-    render(this.#eventEditComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND, true); // форма редактирования
-
-    const eventEditHeaderComponent = new EventEditHeaderView(this.#destinations, this.#openPointDefault); // header формы - передаем элемент для открытой точки
-    render(eventEditHeaderComponent, this.#eventEditComponent.element.querySelector('.event')); // header формы
-    render(this.#eventEditDetailsComponent, this.#eventEditComponent.element.querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
-
-    const eventEditOffersComponent = new EventEditOffersView(this.#openPointDefault.offersInfo); // офферы в форме
-    render(eventEditOffersComponent, this.#eventEditDetailsComponent.element); // офферы
-
-    const eventEditDestinationComponent = new EventEditDestinationView(this.#openPointDefault); // пункт назначения в форме
-    render(eventEditDestinationComponent, this.#eventEditDetailsComponent.element);
+    // открытая точка = форма редактирования, по умолчанию - первая точка в списке
+    this.#renderEditFom(this.#openPointDefault);
 
     //остальные точки в списке
-    for (let i = 1; i < this.#points.length; i++) {
-      render(new EventItemView(this.#adaptedPoints[i]), this.#eventsListComponent.element);
-    }
+    this.#adaptedPoints.forEach((point) => this.#renderPoint(point));
   }
 }
