@@ -1,7 +1,6 @@
 // открытая точка, heder формы
 import { createEventEditHeaderTemplate } from '../templates/event-edit-form-header-template';
 import AbstractView from '../framework/view/abstract-view';
-// import dayjs, { extend } from 'dayjs';
 import dayjs from 'dayjs';
 
 export default class EventEditHeaderView extends AbstractView {
@@ -18,6 +17,7 @@ export default class EventEditHeaderView extends AbstractView {
       destinationName: this.#point.destinationName,
       dateFrom: dayjs(this.#point.dateFrom).format('DD/MM/YY'),
       dateTo: dayjs(this.#point.dateTo).format('DD/MM/YY'),
+      basePrice: this.#point.basePrice,
     };
   }
 

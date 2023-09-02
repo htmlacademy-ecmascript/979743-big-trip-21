@@ -1,6 +1,5 @@
 // отрисовка компонентов списка событий
-import { DEFAULT_OPEN_POINT_INDEX } from '../consts';
-import { render, replace, RenderPosition } from '../framework/render';
+import { render, replace } from '../framework/render';
 
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
