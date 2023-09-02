@@ -1,4 +1,4 @@
-function createEventEditHeaderTemplate({ type, destinationName, dateFrom, dateTo }) {
+function createEventEditHeaderTemplate({ type, destinationName, dateFrom, dateTo, basePrice }) {
   // выпадающий список типов точек не передаем данными? список в константах.
   //id открытой точки куда добавить?
   return `
@@ -72,7 +72,7 @@ function createEventEditHeaderTemplate({ type, destinationName, dateFrom, dateTo
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-1">
         <span class="visually-hidden">Price</span>
-        &euro;
+        &euro; ${basePrice}
       </label>
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
     </div>

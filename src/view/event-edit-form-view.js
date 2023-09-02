@@ -1,23 +1,16 @@
 // форма редактирования точки
 import { createEventEditTemplate } from '../templates/event-edit-form-template';
-import { createElement } from '../render';
-export default class EventEditView {
-  constructor(pointInfo) {
-    this.pointInfo = pointInfo;
+import AbstractView from '../framework/view/abstract-view';
+export default class EventEditView extends AbstractView {
+  #onFormSubmit = null;
+  constructor(onFormSubmit) {
+    // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
+    super();
+    this.#onFormSubmit = onFormSubmit;
+    this.element.querySelector('.event').addEventListener('submit', this.#onFormSubmit);
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

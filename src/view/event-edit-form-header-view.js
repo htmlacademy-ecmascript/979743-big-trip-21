@@ -1,35 +1,27 @@
 // открытая точка, heder формы
 import { createEventEditHeaderTemplate } from '../templates/event-edit-form-header-template';
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
-export default class EventEditHeaderView {
-  constructor(destinations, point) {
-    this.destinations = destinations; // будут нужны для выпадающего списка -> потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
-    this.point = point; // это адаптированный в модели объект, один элемент массива точек
+export default class EventEditHeaderView extends AbstractView {
+  #point;
+  constructor(point) {
+    super();
+    //destinations будут нужны для выпадающего списка, потом сделаю; возм в модели сделать ф-ю, которая выдернет только названия
+    this.#point = point; // это адаптированный в модели объект, один элемент массива точек
   }
 
-  getAdaptPointData() {
+  #getAdaptPointData() {
     return {
-      type: this.point.type,
-      destinationName: this.point.destinationName,
-      dateFrom: dayjs(this.point.dateFrom).format('DD/MM/YY'),
-      dateTo: dayjs(this.point.dateTo).format('DD/MM/YY'),
+      type: this.#point.type,
+      destinationName: this.#point.destinationName,
+      dateFrom: dayjs(this.#point.dateFrom).format('DD/MM/YY'),
+      dateTo: dayjs(this.#point.dateTo).format('DD/MM/YY'),
+      basePrice: this.#point.basePrice,
     };
   }
 
-  getTemplate() {
-    return createEventEditHeaderTemplate(this.getAdaptPointData()); // передаем объект открытой точки
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEventEditHeaderTemplate(this.#getAdaptPointData()); // передаем объект открытой точки
   }
 }
