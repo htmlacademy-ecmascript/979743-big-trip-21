@@ -15,46 +15,28 @@ import EventItemView from '../view/event-item-view';
 
 export default class EventsPresenter {
   #container;
-  #destinations;
-  #offers;
-  #points;
   #adaptedPoints;
-  #openPointDefault;
 
   constructor(container, model) {
     this.#container = container;
-    this.#destinations = model.destinations;
-    // this.offers = model.offers; - не нужны
-    this.#points = model.points;
     this.#adaptedPoints = model.adaptedPoints;
-    this.#openPointDefault = this.#adaptedPoints[DEFAULT_OPEN_POINT_INDEX];
   }
 
   #sortComponent = new SortView();
   #eventsListComponent = new EventsListView();
-  #eventEditComponent = new EventEditView(); // форма редактирования
-
-  #eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, конт-р для офферов и пункта назна-я
-
-  #renderEditFom(openPoint) {
-    const eventEditComponent = new EventEditView(); // форма редактирования
-    render(eventEditComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND); // форма редактирования
-
-    const eventEditHeaderComponent = new EventEditHeaderView(openPoint); // header формы - передаем элемент для открытой точки
-    render(eventEditHeaderComponent, eventEditComponent.element.querySelector('.event')); // header формы
-    render(this.#eventEditDetailsComponent, eventEditComponent.element.querySelector('.event')); // детали в форме, конт-р для офферов и пункта назна-я
-
-    const eventEditOffersComponent = new EventEditOffersView(openPoint.offersInfo); // офферы в форме
-    render(eventEditOffersComponent, this.#eventEditDetailsComponent.element); // офферы
-
-    const eventEditDestinationComponent = new EventEditDestinationView(openPoint); // пункт назначения в форме
-    render(eventEditDestinationComponent, this.#eventEditDetailsComponent.element);
-  }
 
   #renderPoint(point) {
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
     // создаем компонент закрытой точки
     const eventItemView = new EventItemView(point, () => {
       replacePointToForm();
+      document.addEventListener('keydown', onEscKeyDown);
     });
 
     // создаем компоненты формы редактирования
@@ -68,8 +50,6 @@ export default class EventsPresenter {
     // рисуем закрытую точку
     render(eventItemView, this.#eventsListComponent.element);
 
-    //рисуем форму редактирования
-    // render(eventEditComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND); // форма редактирования
     function replacePointToForm() {
       replace(eventItemView, eventEditComponent, [
         eventEditHeaderComponent,
@@ -86,9 +66,6 @@ export default class EventsPresenter {
   init() {
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
-
-    // открытая точка = форма редактирования, по умолчанию - первая точка в списке
-    // this.#renderEditFom(this.#openPointDefault);
 
     //остальные точки в списке
     this.#adaptedPoints.forEach((point) => this.#renderPoint(point));
