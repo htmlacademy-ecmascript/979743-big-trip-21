@@ -1,6 +1,7 @@
 // отрисовка компонентов списка событий
 import { render, replace } from '../framework/render';
 
+import NoPointsView from '../view/no-points-view';
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventEditView from '../view/event-edit-form-view';
@@ -19,6 +20,7 @@ export default class EventsPresenter {
   constructor(container, model) {
     this.#container = container;
     this.#adaptedPoints = model.adaptedPoints;
+    // this.#adaptedPoints = []; // для теста заглушки
   }
 
   #sortComponent = new SortView();
@@ -68,6 +70,14 @@ export default class EventsPresenter {
   }
 
   init() {
+    // если точек нет = массив.length=0, то выводим заглушку
+    // вынести в отдельную функцию -?
+    if (this.#adaptedPoints.length === 0) {
+      const noPointsView = new NoPointsView();
+      render(noPointsView, this.#container);
+      return;
+    }
+
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
 

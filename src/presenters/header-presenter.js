@@ -7,8 +7,12 @@ import TripFiltersView from '../view/filters-view';
 
 export default class HeaderPresenter {
   #container;
-  constructor(container) {
+  #adaptedPoints;
+
+  constructor(container, model) {
     this.#container = container;
+    this.#adaptedPoints = model.adaptedPoints;
+    // this.#adaptedPoints = []; // для теста заглушки
   }
 
   #tripInfoComponent = new TripInfoView();
@@ -19,9 +23,14 @@ export default class HeaderPresenter {
   #tripFiltersComponent = new TripFiltersView();
 
   init() {
+    render(this.#tripFiltersComponent, this.#siteTripControlsElement);
+    // если точек нет = массивюlength=0, то ничего больше не выводим
+    // вынести в отдельную функцию?
+    if (this.#adaptedPoints.length === 0) {
+      return;
+    }
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
     render(this.#tripTotalComponent, this.#tripInfoComponent.element);
-    render(this.#tripFiltersComponent, this.#siteTripControlsElement);
   }
 }
