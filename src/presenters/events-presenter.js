@@ -1,6 +1,6 @@
 // отрисовка компонентов списка событий
 import { DEFAULT_OPEN_POINT_INDEX } from '../consts';
-import { render, RenderPosition } from '../framework/render';
+import { render, replace, RenderPosition } from '../framework/render';
 
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
@@ -52,15 +52,43 @@ export default class EventsPresenter {
   }
 
   #renderPoint(point) {
-    const eventItemView = new EventItemView(point);
+    // создаем компонент закрытой точки
+    const eventItemView = new EventItemView(point, () => {
+      replacePointToForm();
+    });
+
+    // создаем компоненты формы редактирования
+    const eventEditComponent = new EventEditView(() => {
+      replaceFormToPoint();
+    }); // форма редактирования
+    const eventEditHeaderComponent = new EventEditHeaderView(point); // header формы - передаем элемент для открытой точки
+    const eventEditOffersComponent = new EventEditOffersView(point.offersInfo); // офферы в форме
+    const eventEditDestinationComponent = new EventEditDestinationView(point); // пункт назначения в форме
+
+    // рисуем закрытую точку
     render(eventItemView, this.#eventsListComponent.element);
+
+    //рисуем форму редактирования
+    // render(eventEditComponent, this.#eventsListComponent.element, RenderPosition.BEFOREEND); // форма редактирования
+    function replacePointToForm() {
+      replace(eventItemView, eventEditComponent, [
+        eventEditHeaderComponent,
+        eventEditOffersComponent,
+        eventEditDestinationComponent,
+      ]);
+    }
+
+    function replaceFormToPoint() {
+      replace(eventEditComponent, eventItemView);
+    }
   }
 
   init() {
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
+
     // открытая точка = форма редактирования, по умолчанию - первая точка в списке
-    this.#renderEditFom(this.#openPointDefault);
+    // this.#renderEditFom(this.#openPointDefault);
 
     //остальные точки в списке
     this.#adaptedPoints.forEach((point) => this.#renderPoint(point));

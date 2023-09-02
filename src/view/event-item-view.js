@@ -6,9 +6,14 @@ import { getPointDuration } from '../util';
 
 export default class EventItemView extends AbstractView {
   #pointInfo;
-  constructor(pointInfo) {
+  #onEditClick = null;
+
+  constructor(pointInfo, onEditClick) {
+    // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
     this.#pointInfo = pointInfo;
+    this.#onEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClick);
   }
 
   #adaptPointData() {

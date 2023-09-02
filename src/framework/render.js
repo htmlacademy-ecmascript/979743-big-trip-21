@@ -32,7 +32,7 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
   }
 
   if (container === null) {
-    throw new Error('Container element doesn\'t exist');
+    throw new Error('Container element doesnt exist');
   }
 
   container.insertAdjacentElement(place, component.element);
@@ -40,10 +40,10 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
 
 /**
  * Функция для замены одного компонента на другой
- * @param {AbstractView} newComponent Компонент, который нужно показать
  * @param {AbstractView} oldComponent Компонент, который нужно скрыть
+ *  @param {AbstractView} newComponent Компонент, который нужно показать
  */
-function replace(newComponent, oldComponent) {
+function replace(oldComponent, newComponent, insideNewComponent = []) {
   if (!(newComponent instanceof AbstractView && oldComponent instanceof AbstractView)) {
     throw new Error('Can replace only components');
   }
@@ -54,10 +54,13 @@ function replace(newComponent, oldComponent) {
   const parent = oldElement.parentElement;
 
   if (parent === null) {
-    throw new Error('Parent element doesn\'t exist');
+    throw new Error('Parent element doesnt exist');
   }
-
   parent.replaceChild(newElement, oldElement);
+  //добавляем отрисовку вложенных компонентов, если они есть
+  if (insideNewComponent.length > 0) {
+    insideNewComponent.forEach((component) => render(component, newElement.querySelector('.event')));
+  }
 }
 
 /**
@@ -77,4 +80,4 @@ function remove(component) {
   component.removeElement();
 }
 
-export {RenderPosition, createElement, render, replace, remove};
+export { RenderPosition, createElement, render, replace, remove };
