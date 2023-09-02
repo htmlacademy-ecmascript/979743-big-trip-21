@@ -44,20 +44,22 @@ export default class EventsPresenter {
       replaceFormToPoint();
     }); // форма редактирования
     const eventEditHeaderComponent = new EventEditHeaderView(point); // header формы - передаем элемент для открытой точки
+    const eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, контейнер для офферов и ПН
     const eventEditOffersComponent = new EventEditOffersView(point.offersInfo); // офферы в форме
     const eventEditDestinationComponent = new EventEditDestinationView(point); // пункт назначения в форме
 
     // рисуем закрытую точку
     render(eventItemView, this.#eventsListComponent.element);
-
+    // открытие формы
     function replacePointToForm() {
       replace(eventItemView, eventEditComponent, [
-        eventEditHeaderComponent,
-        eventEditOffersComponent,
-        eventEditDestinationComponent,
+        { component: eventEditHeaderComponent, conteinrClass: '.event' },
+        { component: eventEditDetailsComponent, conteinrClass: '.event' },
+        { component: eventEditOffersComponent, conteinrClass: '.event__details' },
+        { component: eventEditDestinationComponent, conteinrClass: '.event__details' },
       ]);
     }
-
+    // закрытие формы
     function replaceFormToPoint() {
       replace(eventEditComponent, eventItemView);
     }

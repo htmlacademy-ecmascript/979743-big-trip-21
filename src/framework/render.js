@@ -59,7 +59,9 @@ function replace(oldComponent, newComponent, insideNewComponent = []) {
   parent.replaceChild(newElement, oldElement);
   //добавляем отрисовку вложенных компонентов, если они есть
   if (insideNewComponent.length > 0) {
-    insideNewComponent.forEach((component) => render(component, newElement.querySelector('.event')));
+    insideNewComponent.forEach((componentInfo) =>
+      render(componentInfo.component, newElement.querySelector(componentInfo.conteinrClass))
+    );
   }
 }
 
