@@ -43,7 +43,7 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
  * @param {AbstractView} oldComponent Компонент, который нужно скрыть
  *  @param {AbstractView} newComponent Компонент, который нужно показать
  */
-function replace(oldComponent, newComponent, insideNewComponent = []) {
+function replace(newComponent, oldComponent) {
   if (!(newComponent instanceof AbstractView && oldComponent instanceof AbstractView)) {
     throw new Error('Can replace only components');
   }
@@ -57,12 +57,6 @@ function replace(oldComponent, newComponent, insideNewComponent = []) {
     throw new Error('Parent element doesnt exist');
   }
   parent.replaceChild(newElement, oldElement);
-  //добавляем отрисовку вложенных компонентов, если они есть
-  if (insideNewComponent.length > 0) {
-    insideNewComponent.forEach((componentInfo) =>
-      render(componentInfo.component, newElement.querySelector(componentInfo.conteinrClass))
-    );
-  }
 }
 
 /**

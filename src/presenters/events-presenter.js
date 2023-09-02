@@ -41,8 +41,12 @@ export default class EventsPresenter {
 
     // создаем компоненты формы редактирования
     const eventEditComponent = new EventEditView(() => {
+      // форма редактирования
       replaceFormToPoint();
-    }); // форма редактирования
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    // внутренности формы редактирования
     const eventEditHeaderComponent = new EventEditHeaderView(point); // header формы - передаем элемент для открытой точки
     const eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, контейнер для офферов и ПН
     const eventEditOffersComponent = new EventEditOffersView(point.offersInfo); // офферы в форме
@@ -52,16 +56,15 @@ export default class EventsPresenter {
     render(eventItemView, this.#eventsListComponent.element);
     // открытие формы
     function replacePointToForm() {
-      replace(eventItemView, eventEditComponent, [
-        { component: eventEditHeaderComponent, conteinrClass: '.event' },
-        { component: eventEditDetailsComponent, conteinrClass: '.event' },
-        { component: eventEditOffersComponent, conteinrClass: '.event__details' },
-        { component: eventEditDestinationComponent, conteinrClass: '.event__details' },
-      ]);
+      replace(eventEditComponent, eventItemView);
+      render(eventEditHeaderComponent, eventEditComponent.element.querySelector('.event'));
+      render(eventEditDetailsComponent, eventEditComponent.element.querySelector('.event'));
+      render(eventEditOffersComponent, eventEditComponent.element.querySelector('.event__details'));
+      render(eventEditDestinationComponent, eventEditComponent.element.querySelector('.event__details'));
     }
     // закрытие формы
     function replaceFormToPoint() {
-      replace(eventEditComponent, eventItemView);
+      replace(eventItemView, eventEditComponent);
     }
   }
 
