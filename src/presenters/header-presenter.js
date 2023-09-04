@@ -11,7 +11,7 @@ export default class HeaderPresenter {
 
   constructor(container, model) {
     this.#container = container;
-    this.#adaptedPoints = model.adaptedPoints;
+    this.#adaptedPoints = model.adaptedPoints; // приводит к ошибке, почему??
     // this.#adaptedPoints = []; // для теста заглушки
   }
 
@@ -20,10 +20,11 @@ export default class HeaderPresenter {
   #tripTotalComponent = new TripTotalView();
 
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
-  #tripFiltersComponent = new TripFiltersView();
+  // #tripFiltersComponent = new TripFiltersView();
 
   init() {
-    render(this.#tripFiltersComponent, this.#siteTripControlsElement);
+    const tripFiltersComponent = new TripFiltersView(() => console.log('кликнули фильтр'));
+    render(tripFiltersComponent, this.#siteTripControlsElement);
     // если точек нет = массивюlength=0, то ничего больше не выводим
     // вынести в отдельную функцию?
     if (this.#adaptedPoints.length === 0) {

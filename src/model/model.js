@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 export default class Model {
   #destinations;
   #offers;
@@ -7,6 +10,32 @@ export default class Model {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#points = points;
+  }
+
+  //-------------фильтры
+  getFuturePoints() {
+    // возвращает сырые данные!!
+    // дата начала события больше текущей даты
+    const currentDate = dayjs();
+    return this.#points.filter((point) => currentDate.isBefore(point.dateFrom, 'date'));
+  }
+
+  getPresentPoints() {
+    // возвращает сырые данные!!
+    // дата начала события меньше (или равна) текущей даты, а дата окончания больше (или равна) текущей даты
+    const currentDate = dayjs();
+    dayjs.extend(isSameOrAfter);
+    dayjs.extend(isSameOrBefore);
+    return this.#points.filter(
+      (point) => currentDate.isSameOrAfter(point.dateFrom, 'date') && currentDate.isSameOrBefore(point.dateTo, 'date')
+    );
+  }
+
+  getPastPoints() {
+    // возвращает сырые данные!!
+    // дата окончания маршрута меньше, чем текущая
+    const currentDate = dayjs();
+    return this.#points.filter((point) => currentDate.isAfter(point.dateTo, 'date'));
   }
 
   #getDestinationByID(id) {
@@ -57,6 +86,7 @@ export default class Model {
   }
 
   get adaptedPoints() {
+    console.log(this.#points);
     return this.#points.map((point) => this.#adaptPointData(point));
   }
 }

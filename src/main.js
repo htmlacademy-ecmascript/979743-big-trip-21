@@ -13,10 +13,14 @@ const model = new Model({ destinations, offers, points });
 
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
-const headerPresenter = new HeaderPresenter(siteTripMainElement);
+const headerPresenter = new HeaderPresenter(siteTripMainElement, model);
 headerPresenter.init();
 
 //---------------------------- Events Presenter ------------------------------------------
 const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
 const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
 eventsPresenter.init();
+
+console.log(model.getFuturePoints());
+console.log(model.getPresentPoints());
+console.log(model.getPastPoints());
