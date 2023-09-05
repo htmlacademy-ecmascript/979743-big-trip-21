@@ -8,10 +8,13 @@ import TripFiltersView from '../view/filters-view';
 export default class HeaderPresenter {
   #container;
   #adaptedPoints;
+  #transmitEvent;
 
-  constructor(container, model) {
+  constructor(container, model, transmitEvent) {
     this.#container = container;
-    this.#adaptedPoints = model.adaptedPoints; // приводит к ошибке, почему??
+    this.#adaptedPoints = model.allAdaptedPoints; // надо ли сохранять? или вызывать функ-ю из модели в процессе?
+    this.#transmitEvent = transmitEvent; // это функция
+
     // this.#adaptedPoints = []; // для теста заглушки
   }
 
@@ -20,13 +23,15 @@ export default class HeaderPresenter {
   #tripTotalComponent = new TripTotalView();
 
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
-  // #tripFiltersComponent = new TripFiltersView();
 
   init() {
-    const tripFiltersComponent = new TripFiltersView(() => console.log('кликнули фильтр'));
+    const tripFiltersComponent = new TripFiltersView(() => {
+      console.log('кликнули фильтр');
+      // передаем событие в observer = вызываем ф-ю transmitEvent
+      this.#transmitEvent('filterFuture');
+    });
     render(tripFiltersComponent, this.#siteTripControlsElement);
     // если точек нет = массивюlength=0, то ничего больше не выводим
-    // вынести в отдельную функцию?
     if (this.#adaptedPoints.length === 0) {
       return;
     }

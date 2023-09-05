@@ -15,11 +15,11 @@ import EventItemView from '../view/event-item-view';
 
 export default class EventsPresenter {
   #container;
-  #adaptedPoints;
+  #allAdaptedPoints;
 
   constructor(container, model) {
     this.#container = container;
-    this.#adaptedPoints = model.adaptedPoints;
+    this.#allAdaptedPoints = model.allAdaptedPoints; // надо ли сохранять? или вызывать функ-ю из модели в процессе?
     // this.#adaptedPoints = []; // для теста заглушки
   }
 
@@ -27,6 +27,7 @@ export default class EventsPresenter {
   #eventsListComponent = new EventsListView();
 
   #renderPoint(point) {
+    // на входе адаптированная точка
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -69,10 +70,15 @@ export default class EventsPresenter {
     }
   }
 
+  renderPoints(pointsArray) {
+    // на входе - массив точек, сырые данные
+    pointsArray.forEach((point) => this.#renderPoint(point));
+  }
+
   init() {
     // если точек нет = массив.length=0, то выводим заглушку
     // вынести в отдельную функцию -?
-    if (this.#adaptedPoints.length === 0) {
+    if (this.#allAdaptedPoints.length === 0) {
       const noPointsView = new NoPointsView();
       render(noPointsView, this.#container);
       return;
@@ -81,7 +87,7 @@ export default class EventsPresenter {
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
 
-    //остальные точки в списке
-    this.#adaptedPoints.forEach((point) => this.#renderPoint(point));
+    //закртытые точки в списке
+    this.renderPoints(this.#allAdaptedPoints);
   }
 }

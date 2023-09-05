@@ -7,35 +7,10 @@ export default class Model {
   #points;
 
   constructor({ destinations, offers, points }) {
+    //сырые данные
     this.#destinations = destinations;
     this.#offers = offers;
     this.#points = points;
-  }
-
-  //-------------фильтры
-  getFuturePoints() {
-    // возвращает сырые данные!!
-    // дата начала события больше текущей даты
-    const currentDate = dayjs();
-    return this.#points.filter((point) => currentDate.isBefore(point.dateFrom, 'date'));
-  }
-
-  getPresentPoints() {
-    // возвращает сырые данные!!
-    // дата начала события меньше (или равна) текущей даты, а дата окончания больше (или равна) текущей даты
-    const currentDate = dayjs();
-    dayjs.extend(isSameOrAfter);
-    dayjs.extend(isSameOrBefore);
-    return this.#points.filter(
-      (point) => currentDate.isSameOrAfter(point.dateFrom, 'date') && currentDate.isSameOrBefore(point.dateTo, 'date')
-    );
-  }
-
-  getPastPoints() {
-    // возвращает сырые данные!!
-    // дата окончания маршрута меньше, чем текущая
-    const currentDate = dayjs();
-    return this.#points.filter((point) => currentDate.isAfter(point.dateTo, 'date'));
   }
 
   #getDestinationByID(id) {
@@ -72,6 +47,43 @@ export default class Model {
     };
   }
 
+  // #adaptPoints(pointsArray) { // поднадобится для сортировки
+  //   // на входе массив сырых точек, на выходе массив тех же точек адаптированных
+  //   return pointsArray.map((point) => this.#adaptPointData(point));
+  // }
+
+  get allAdaptedPoints() {
+    // возвращает адаптированными все точки
+    return this.#points.map((point) => this.#adaptPointData(point));
+  }
+
+  //-------------фильтры-----------------------------------------------------
+  get futurePoints() {
+    // дата начала события больше текущей даты
+    const currentDate = dayjs();
+    const filterdPoints = this.#points.filter((point) => currentDate.isBefore(point.dateFrom, 'date'));
+    return filterdPoints.map((point) => this.#adaptPointData(point));
+  }
+
+  get presentPoints() {
+    // дата начала события меньше (или равна) текущей даты, а дата окончания больше (или равна) текущей даты
+    const currentDate = dayjs();
+    dayjs.extend(isSameOrAfter);
+    dayjs.extend(isSameOrBefore);
+    const filterdPoints = this.#points.filter(
+      (point) => currentDate.isSameOrAfter(point.dateFrom, 'date') && currentDate.isSameOrBefore(point.dateTo, 'date')
+    );
+    return filterdPoints.map((point) => this.#adaptPointData(point));
+  }
+
+  get pastPoints() {
+    // дата окончания маршрута меньше, чем текущая
+    const currentDate = dayjs();
+    const filterdPoints = this.#points.filter((point) => currentDate.isAfter(point.dateTo, 'date'));
+    return filterdPoints.map((point) => this.#adaptPointData(point));
+  }
+
+  // ----------- возвращаем сырые данные - надо ли?-----------------------------
   get destinations() {
     return this.#destinations;
   }
@@ -81,12 +93,6 @@ export default class Model {
   }
 
   get points() {
-    // сырые данные
     return this.#points;
-  }
-
-  get adaptedPoints() {
-    console.log(this.#points);
-    return this.#points.map((point) => this.#adaptPointData(point));
   }
 }
