@@ -4,12 +4,12 @@ import { render, replace } from '../framework/render';
 import NoPointsView from '../view/no-points-view';
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
-import EventEditView from '../view/event-edit-form-view';
-import EventEditHeaderView from '../view/event-edit-form-header-view';
+import EventEditView from '../view/edit-form/edit-form-view';
+import EventEditHeaderView from '../view/edit-form/header-view';
 
-import EventEditDetailsView from '../view/event-edit-form-details-view';
-import EventEditOffersView from '../view/event-edit-form-offers-view';
-import EventEditDestinationView from '../view/event-edit-form-destination-view';
+import EventEditDetailsView from '../view/edit-form/details-view';
+import EventEditOffersView from '../view/edit-form/offers-view';
+import EventEditDestinationView from '../view/edit-form/destination-view';
 
 import EventItemView from '../view/event-item-view';
 
@@ -59,10 +59,22 @@ export default class EventsPresenter {
     // открытие формы
     function replacePointToForm() {
       replace(eventEditComponent, eventItemView);
-      render(eventEditHeaderComponent, eventEditComponent.element.querySelector('.event'));
-      render(eventEditDetailsComponent, eventEditComponent.element.querySelector('.event'));
-      render(eventEditOffersComponent, eventEditComponent.element.querySelector('.event__details'));
-      render(eventEditDestinationComponent, eventEditComponent.element.querySelector('.event__details'));
+      render(
+        eventEditHeaderComponent,
+        eventEditComponent.element.querySelector('.event')
+      );
+      render(
+        eventEditDetailsComponent,
+        eventEditComponent.element.querySelector('.event')
+      );
+      render(
+        eventEditOffersComponent,
+        eventEditComponent.element.querySelector('.event__details')
+      );
+      render(
+        eventEditDestinationComponent,
+        eventEditComponent.element.querySelector('.event__details')
+      );
     }
     // закрытие формы
     function replaceFormToPoint() {

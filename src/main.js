@@ -2,7 +2,6 @@ import HeaderPresenter from './presenters/header-presenter';
 import EventsPresenter from './presenters/events-presenter';
 import Model from './model/model';
 import MockModel from './model/mock-model';
-import EventObserver from './presenters/event-observer';
 
 const mocks = new MockModel();
 
@@ -11,11 +10,10 @@ const offers = mocks.getOffers();
 const points = mocks.generatePoints();
 
 const model = new Model({ destinations, offers, points });
-const observer = new EventObserver();
 
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
-const headerPresenter = new HeaderPresenter(siteTripMainElement, model, observer.transmitEvent);
+const headerPresenter = new HeaderPresenter(siteTripMainElement, model);
 headerPresenter.init();
 
 //---------------------------- Events Presenter ------------------------------------------
