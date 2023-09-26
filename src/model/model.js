@@ -1,6 +1,8 @@
-import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import {
+  filterFuturePoints,
+  filterPresentPoints,
+  filterPastPoints,
+} from './filters';
 export default class Model {
   #destinations;
   #offers;
@@ -19,7 +21,9 @@ export default class Model {
 
   #getMarkedOffers(type, checkedOfferIds) {
     // возвр массив объектов офферов, помечает чекнутые
-    const conformedOffers = this.#offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
+    const conformedOffers = this.#offers.find(
+      (offer) => offer.type === type
+    ).offers; // выбрали все офферы по типу
     const markedOffers = conformedOffers.map((offer) => {
       // отметили чекнутые
       offer.isChecked = checkedOfferIds.includes(offer.id);
@@ -29,8 +33,12 @@ export default class Model {
   }
 
   #getCheckedOffers(type, checkedOfferIds) {
-    const conformedOffers = this.#offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
-    const checkedOffers = conformedOffers.filter((offer) => checkedOfferIds.includes(offer.id));
+    const conformedOffers = this.#offers.find(
+      (offer) => offer.type === type
+    ).offers; // выбрали все офферы по типу
+    const checkedOffers = conformedOffers.filter((offer) =>
+      checkedOfferIds.includes(offer.id)
+    );
     return checkedOffers;
   }
 
@@ -39,18 +47,22 @@ export default class Model {
     // на выходе тот же объект, дополненный полями с полной инфой по ПН и офферам
     return {
       destinationName: this.#getDestinationByID(originalPoint.destination).name,
-      destinationDescription: this.#getDestinationByID(originalPoint.destination).description,
-      destinationPhotos: this.#getDestinationByID(originalPoint.destination).photos, // массив объектов
-      offersInfo: this.#getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов всех офферов для данного типа
-      checkedOffersInfo: this.#getCheckedOffers(originalPoint.type, originalPoint.offers),
+      destinationDescription: this.#getDestinationByID(
+        originalPoint.destination
+      ).description,
+      destinationPhotos: this.#getDestinationByID(originalPoint.destination)
+        .photos, // массив объектов
+      offersInfo: this.#getMarkedOffers(
+        originalPoint.type,
+        originalPoint.offers
+      ), // массив объектов всех офферов для данного типа
+      checkedOffersInfo: this.#getCheckedOffers(
+        originalPoint.type,
+        originalPoint.offers
+      ),
       ...originalPoint,
     };
   }
-
-  // #adaptPoints(pointsArray) { // поднадобится для сортировки
-  //   // на входе массив сырых точек, на выходе массив тех же точек адаптированных
-  //   return pointsArray.map((point) => this.#adaptPointData(point));
-  // }
 
   get allAdaptedPoints() {
     // возвращает адаптированными все точки
@@ -59,28 +71,21 @@ export default class Model {
 
   //-------------фильтры-----------------------------------------------------
   get futurePoints() {
-    // дата начала события больше текущей даты
-    const currentDate = dayjs();
-    const filterdPoints = this.#points.filter((point) => currentDate.isBefore(point.dateFrom, 'date'));
-    return filterdPoints.map((point) => this.#adaptPointData(point));
+    return filterFuturePoints(this.#points).map((point) =>
+      this.#adaptPointData(point)
+    );
   }
 
   get presentPoints() {
-    // дата начала события меньше (или равна) текущей даты, а дата окончания больше (или равна) текущей даты
-    const currentDate = dayjs();
-    dayjs.extend(isSameOrAfter);
-    dayjs.extend(isSameOrBefore);
-    const filterdPoints = this.#points.filter(
-      (point) => currentDate.isSameOrAfter(point.dateFrom, 'date') && currentDate.isSameOrBefore(point.dateTo, 'date')
+    return filterPresentPoints(this.#points).map((point) =>
+      this.#adaptPointData(point)
     );
-    return filterdPoints.map((point) => this.#adaptPointData(point));
   }
 
   get pastPoints() {
-    // дата окончания маршрута меньше, чем текущая
-    const currentDate = dayjs();
-    const filterdPoints = this.#points.filter((point) => currentDate.isAfter(point.dateTo, 'date'));
-    return filterdPoints.map((point) => this.#adaptPointData(point));
+    return filterPastPoints(this.#points).map((point) =>
+      this.#adaptPointData(point)
+    );
   }
 
   // ----------- возвращаем сырые данные - надо ли?-----------------------------
