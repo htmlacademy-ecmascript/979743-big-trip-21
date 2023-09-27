@@ -2,19 +2,11 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
-//-------------------------функция для преобразования объекта с фильтрами в массив для отрисовки
-function adapteFilters(filters) {
-  //на входе объект
-  filters.entries().map();
-}
-
 //-------------функции для фильтрации данных-----------------------------------------------------
 function filterFuturePoints(points) {
   // дата начала события больше текущей даты
   const currentDate = dayjs();
-  const filterdPoints = points.filter((point) =>
-    currentDate.isBefore(point.dateFrom, 'date')
-  );
+  const filterdPoints = points.filter((point) => currentDate.isBefore(point.dateFrom, 'date'));
   return filterdPoints;
 }
 
@@ -24,9 +16,7 @@ function filterPresentPoints(points) {
   dayjs.extend(isSameOrAfter);
   dayjs.extend(isSameOrBefore);
   const filterdPoints = points.filter(
-    (point) =>
-      currentDate.isSameOrAfter(point.dateFrom, 'date') &&
-      currentDate.isSameOrBefore(point.dateTo, 'date')
+    (point) => currentDate.isSameOrAfter(point.dateFrom, 'date') && currentDate.isSameOrBefore(point.dateTo, 'date')
   );
   return filterdPoints;
 }
@@ -34,15 +24,12 @@ function filterPresentPoints(points) {
 function filterPastPoints(points) {
   // дата окончания маршрута меньше, чем текущая
   const currentDate = dayjs();
-  const filterdPoints = points.filter((point) =>
-    currentDate.isAfter(point.dateTo, 'date')
-  );
+  const filterdPoints = points.filter((point) => currentDate.isAfter(point.dateTo, 'date'));
   return filterdPoints;
 }
 
-export {
-  filterFuturePoints,
-  filterPresentPoints,
-  filterPastPoints,
-  adapteFilters,
-};
+function filterEverything(points) {
+  return points;
+}
+
+export { filterEverything, filterFuturePoints, filterPresentPoints, filterPastPoints };

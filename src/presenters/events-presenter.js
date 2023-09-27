@@ -59,22 +59,10 @@ export default class EventsPresenter {
     // открытие формы
     function replacePointToForm() {
       replace(eventEditComponent, eventItemView);
-      render(
-        eventEditHeaderComponent,
-        eventEditComponent.element.querySelector('.event')
-      );
-      render(
-        eventEditDetailsComponent,
-        eventEditComponent.element.querySelector('.event')
-      );
-      render(
-        eventEditOffersComponent,
-        eventEditComponent.element.querySelector('.event__details')
-      );
-      render(
-        eventEditDestinationComponent,
-        eventEditComponent.element.querySelector('.event__details')
-      );
+      render(eventEditHeaderComponent, eventEditComponent.element.querySelector('.event'));
+      render(eventEditDetailsComponent, eventEditComponent.element.querySelector('.event'));
+      render(eventEditOffersComponent, eventEditComponent.element.querySelector('.event__details'));
+      render(eventEditDestinationComponent, eventEditComponent.element.querySelector('.event__details'));
     }
     // закрытие формы
     function replaceFormToPoint() {
@@ -83,13 +71,12 @@ export default class EventsPresenter {
   }
 
   renderPoints(pointsArray) {
-    // на входе - массив точек, сырые данные
+    // на входе - массив точек
     pointsArray.forEach((point) => this.#renderPoint(point));
   }
 
   init() {
     // если точек нет = массив.length=0, то выводим заглушку
-    // вынести в отдельную функцию -?
     if (this.#allAdaptedPoints.length === 0) {
       const noPointsView = new NoPointsView();
       render(noPointsView, this.#container);

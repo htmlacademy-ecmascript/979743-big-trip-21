@@ -22,6 +22,7 @@ const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
 eventsPresenter.init();
 
 console.log(model.allAdaptedPoints);
-console.log(model.futurePoints);
-console.log(model.presentPoints);
-console.log(model.pastPoints);
+// console.log(model.adapteFilters);
+// console.log(model.futurePoints);
+// console.log(model.presentPoints);
+// console.log(model.pastPoints);
