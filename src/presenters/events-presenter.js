@@ -1,4 +1,5 @@
 // отрисовка компонентов списка событий
+import { SortType } from '../consts';
 import { render, replace } from '../framework/render';
 
 import NoPointsView from '../view/no-points-view';
@@ -23,7 +24,10 @@ export default class EventsPresenter {
     // this.#adaptedPoints = []; // для теста заглушки
   }
 
-  #sortComponent = new SortView();
+  //--------------готовим данные о сортировках для отрисовки
+  // #sortings = SORT_TYPES.map((sorting) => ({ sortingName: sorting }));
+
+  #sortComponent = new SortView(SortType);
   #eventsListComponent = new EventsListView();
 
   #renderPoint(point) {

@@ -23,7 +23,37 @@ const DEFAULT_OPEN_POINT_INDEX = 0;
 
 const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
 
-const SORT_TYPES = ['day', 'time', 'price'];
+// const FilterType = {
+//   EVERYRHING: 'everything',
+//   FUTURE: 'future',
+//   PRESENT: 'present',
+//   PAST: 'past',
+// };
+
+// const SORT_TYPES = ['day', 'time', 'price'];
+
+const SortType = [
+  {
+    sortingName: 'day',
+    isAnable: true,
+  },
+  {
+    sortingName: 'event',
+    isAnable: false,
+  },
+  {
+    sortingName: 'time',
+    isAnable: true,
+  },
+  {
+    sortingName: 'price',
+    isAnable: true,
+  },
+  {
+    sortingName: 'offers',
+    isAnable: false,
+  },
+];
 
 export {
   DATA_FORMAT,
@@ -38,5 +68,7 @@ export {
   DEFAULT_TYPE,
   DEFAULT_OPEN_POINT_INDEX,
   FILTER_TYPES,
-  SORT_TYPES,
+  // FilterType,
+  // SORT_TYPES,
+  SortType,
 };

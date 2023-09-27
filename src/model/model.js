@@ -1,6 +1,4 @@
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './filters';
-
-import { FILTER_TYPES, SORT_TYPES } from '../consts';
 export default class Model {
   #destinations;
   #offers;
@@ -52,13 +50,6 @@ export default class Model {
     return this.#points.map((point) => this.#adaptPointData(point));
   }
 
-  // ------------ преобразуем массив фильтров в массив объектов, чтобы потом добавить к нему функц-обработчики
-  get filters() {
-    const filters = FILTER_TYPES.map((filter) => ({ filterName: filter, isChecked: false }));
-    filters[0].isChecked = true; // фильтр, чекнутый по умолчанию
-    return filters;
-  }
-
   //-------------фильтры - возвращают отфильтроанный массив точек----------------------------------------------------
   get futurePoints() {
     return filterFuturePoints(this.#points).map((point) => this.#adaptPointData(point));
@@ -71,8 +62,4 @@ export default class Model {
   get pastPoints() {
     return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
   }
-  // ------------ преобразуем массив сорировок в массив объектов, чтобы потом добавить к нему функц-обработчики
-  // get sortings() {
-  //   return SORT_TYPES.map((sorting) => ({ sortType: sorting }));
-  // }
 }
