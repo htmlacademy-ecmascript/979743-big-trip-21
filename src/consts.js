@@ -21,7 +21,9 @@ const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-i
 const DEFAULT_TYPE = 'flight';
 const DEFAULT_OPEN_POINT_INDEX = 0;
 
-const FILTER_TYPES = ['Everything', 'Future', 'Present', 'Past'];
+const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
+
+const SORT_TYPES = ['day', 'time', 'price'];
 
 export {
   DATA_FORMAT,
@@ -36,4 +38,5 @@ export {
   DEFAULT_TYPE,
   DEFAULT_OPEN_POINT_INDEX,
   FILTER_TYPES,
+  SORT_TYPES,
 };
