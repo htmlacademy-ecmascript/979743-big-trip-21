@@ -2,6 +2,12 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+//-------------------------функция для преобразования объекта с фильтрами в массив для отрисовки
+function adapteFilters(filters) {
+  //на входе объект
+  filters.entries().map();
+}
+
 //-------------функции для фильтрации данных-----------------------------------------------------
 function filterFuturePoints(points) {
   // дата начала события больше текущей даты
@@ -34,4 +40,9 @@ function filterPastPoints(points) {
   return filterdPoints;
 }
 
-export { filterFuturePoints, filterPresentPoints, filterPastPoints };
+export {
+  filterFuturePoints,
+  filterPresentPoints,
+  filterPastPoints,
+  adapteFilters,
+};
