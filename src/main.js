@@ -17,6 +17,6 @@ const headerPresenter = new HeaderPresenter(siteTripMainElement, model);
 headerPresenter.init();
 
 //---------------------------- Events Presenter ------------------------------------------
-const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
-const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
-eventsPresenter.init();
+// const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
+// const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
+// eventsPresenter.init();
