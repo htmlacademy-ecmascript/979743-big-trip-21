@@ -20,9 +20,3 @@ headerPresenter.init();
 const siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
 const eventsPresenter = new EventsPresenter(siteTripEventsElement, model);
 eventsPresenter.init();
-
-console.log(model.allAdaptedPoints);
-// console.log(model.adapteFilters);
-// console.log(model.futurePoints);
-// console.log(model.presentPoints);
-// console.log(model.pastPoints);

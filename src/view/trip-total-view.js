@@ -10,7 +10,6 @@ export default class TripTotalView extends AbstractView {
   }
 
   get template() {
-    console.log(this.#totalPrice);
     return createTripTotalTemplate(this.#totalPrice);
   }
 }
