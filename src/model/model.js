@@ -1,4 +1,4 @@
-import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './filters';
+import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
 export default class Model {
   #destinations;
   #offers;
@@ -48,6 +48,15 @@ export default class Model {
   get allAdaptedPoints() {
     // возвращает адаптированными все точки
     return this.#points.map((point) => this.#adaptPointData(point));
+  }
+
+  //-------------вычисляем общую стоимость---------
+  get totalPrice() {
+    // ----- добавить еще стоимость офферов (!!!)
+    const initialCost = 0;
+    return this.#points
+      .map((point) => point.basePrice)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
   }
 
   //-------------фильтры - возвращают отфильтроанный массив точек----------------------------------------------------

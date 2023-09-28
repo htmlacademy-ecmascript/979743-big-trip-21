@@ -9,16 +9,18 @@ import TripFiltersView from '../view/filters-view';
 export default class HeaderPresenter {
   #container;
   #allAdaptedPoints;
+  #totalPrice;
 
   constructor(container, model) {
     this.#container = container;
     this.#allAdaptedPoints = model.allAdaptedPoints; // надо ли сохранять? или вызывать функ-ю из модели в процессе?
     // this.#adaptedPoints = []; // для теста заглушки
+    this.#totalPrice = model.totalPrice;
   }
 
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
-  #tripTotalComponent = new TripTotalView();
+  // #tripTotalComponent = new TripTotalView(this.#totalPrice);
 
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
@@ -34,6 +36,7 @@ export default class HeaderPresenter {
     }
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
-    render(this.#tripTotalComponent, this.#tripInfoComponent.element);
+    const tripTotalComponent = new TripTotalView(this.#totalPrice);
+    render(tripTotalComponent, this.#tripInfoComponent.element);
   }
 }
