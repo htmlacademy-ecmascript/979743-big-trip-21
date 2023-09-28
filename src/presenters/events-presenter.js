@@ -1,30 +1,37 @@
 // отрисовка компонентов списка событий
+import { SortType } from '../consts';
 import { render, replace } from '../framework/render';
 
+import NoPointsView from '../view/no-points-view';
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
-import EventEditView from '../view/event-edit-form-view';
-import EventEditHeaderView from '../view/event-edit-form-header-view';
+import EventEditView from '../view/edit-form/edit-form-view';
+import EventEditHeaderView from '../view/edit-form/header-view';
 
-import EventEditDetailsView from '../view/event-edit-form-details-view';
-import EventEditOffersView from '../view/event-edit-form-offers-view';
-import EventEditDestinationView from '../view/event-edit-form-destination-view';
+import EventEditDetailsView from '../view/edit-form/details-view';
+import EventEditOffersView from '../view/edit-form/offers-view';
+import EventEditDestinationView from '../view/edit-form/destination-view';
 
 import EventItemView from '../view/event-item-view';
 
 export default class EventsPresenter {
   #container;
-  #adaptedPoints;
+  #allAdaptedPoints;
 
   constructor(container, model) {
     this.#container = container;
-    this.#adaptedPoints = model.adaptedPoints;
+    this.#allAdaptedPoints = model.allAdaptedPoints; // надо ли сохранять? или вызывать функ-ю из модели в процессе?
+    // this.#adaptedPoints = []; // для теста заглушки
   }
 
-  #sortComponent = new SortView();
+  //--------------готовим данные о сортировках для отрисовки
+  // #sortings = SORT_TYPES.map((sorting) => ({ sortingName: sorting }));
+
+  #sortComponent = new SortView(SortType);
   #eventsListComponent = new EventsListView();
 
   #renderPoint(point) {
+    // на входе адаптированная точка
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -67,11 +74,23 @@ export default class EventsPresenter {
     }
   }
 
+  renderPoints(pointsArray) {
+    // на входе - массив точек
+    pointsArray.forEach((point) => this.#renderPoint(point));
+  }
+
   init() {
+    // если точек нет = массив.length=0, то выводим заглушку
+    if (this.#allAdaptedPoints.length === 0) {
+      const noPointsView = new NoPointsView();
+      render(noPointsView, this.#container);
+      return;
+    }
+
     render(this.#sortComponent, this.#container);
     render(this.#eventsListComponent, this.#container);
 
-    //остальные точки в списке
-    this.#adaptedPoints.forEach((point) => this.#renderPoint(point));
+    //закртытые точки в списке
+    this.renderPoints(this.#allAdaptedPoints);
   }
 }

@@ -1,5 +1,5 @@
-import { createEventEditDestinationTemplate } from '../templates/event-edit-form-destination-templates';
-import AbstractView from '../framework/view/abstract-view';
+import { createEventEditDestinationTemplate } from '../../templates/edit-form/destination-template';
+import AbstractView from '../../framework/view/abstract-view';
 
 export default class EventEditDestinationView extends AbstractView {
   #point;

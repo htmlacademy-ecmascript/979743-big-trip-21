@@ -1,6 +1,6 @@
 // открытая точка, heder формы
-import { createEventEditHeaderTemplate } from '../templates/event-edit-form-header-template';
-import AbstractView from '../framework/view/abstract-view';
+import { createEventEditHeaderTemplate } from '../../templates/edit-form/header-template';
+import AbstractView from '../../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
 export default class EventEditHeaderView extends AbstractView {

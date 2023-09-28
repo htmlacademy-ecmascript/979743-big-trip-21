@@ -59,5 +59,3 @@ export {
   capitalize,
   getPointDuration,
 };
-
-// getPointDuration см 16:39+
