@@ -33,11 +33,11 @@ export default class EventPresenter {
 
   // открытие формы
   #replacePointToForm(point) {
-    // создаем компоненты формы редактирования
-    this.#eventEditComponent = new EventEditView(() => {
-      this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-    });
+    // // создаем компоненты формы редактирования
+    // this.#eventEditComponent = new EventEditView(() => {
+    //   this.#replaceFormToPoint();
+    //   document.removeEventListener('keydown', this.#onEscKeyDown);
+    // });
     replace(this.#eventEditComponent, this.#eventItemComponent);
     this.#renderEditFormInsides(point);
   }
@@ -61,8 +61,12 @@ export default class EventPresenter {
     render(this.#eventEditDestinationComponent, this.#eventEditComponent.element.querySelector('.event__details'));
   }
 
+  #editClickHandler = (point) => {
+    this.#replacePointToForm(point);
+    document.addEventListener('keydown', this.#onEscKeyDown);
+  };
+
   #favoriteClickHandler = () => {
-    console.log('нажали звездочку');
     this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
     // присваиваем соотв класс элементу - во view
   };
@@ -80,7 +84,14 @@ export default class EventPresenter {
         this.#replacePointToForm(point);
         document.addEventListener('keydown', this.#onEscKeyDown);
       },
+      // onEditClick: this.#editClickHandler,
       favoriteClickHandler: this.#favoriteClickHandler,
+    });
+
+    // создаем компоненты формы редактирования
+    this.#eventEditComponent = new EventEditView(() => {
+      this.#replaceFormToPoint();
+      document.removeEventListener('keydown', this.#onEscKeyDown);
     });
 
     //проверяем первоначальную инициализацию
