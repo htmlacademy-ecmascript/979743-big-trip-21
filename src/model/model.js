@@ -48,6 +48,7 @@ export default class Model {
   get allAdaptedPoints() {
     // возвращает адаптированными все точки
     return this.#points.map((point) => this.#adaptPointData(point));
+    // return []; // для проверки заглушки
   }
 
   //-------------вычисляем общую стоимость---------

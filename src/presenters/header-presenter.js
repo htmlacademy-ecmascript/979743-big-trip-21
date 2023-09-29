@@ -7,7 +7,8 @@ import TripTotalView from '../view/trip-total-view';
 import TripFiltersView from '../view/filters-view';
 import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
-import EventsPresenter from './events-presenter';
+import EventPresenter from './event-presenter';
+import NoPointsView from '../view/no-points-view';
 
 export default class HeaderPresenter {
   #container = null;
@@ -16,7 +17,6 @@ export default class HeaderPresenter {
   constructor(container, model) {
     this.#container = container;
     this.#model = model;
-    // this.#model.adaptedPoints = []; // для теста заглушки
   }
 
   #tripInfoComponent = new TripInfoView();
@@ -45,9 +45,9 @@ export default class HeaderPresenter {
   }
 
   #renderEvent(point) {
-    //куда передавать данные точки: в конструктор или в метод??
-    const eventsPresenter = new EventsPresenter(this.#eventsListComponent.element, point);
-    eventsPresenter.init();
+    //куда лучше передавать данные точки: в конструктор или в метод??
+    const eventPresenter = new EventPresenter(this.#eventsListComponent.element);
+    eventPresenter.init(point);
   }
 
   #renderEvents(points) {
@@ -55,10 +55,15 @@ export default class HeaderPresenter {
     points.forEach((point) => this.#renderEvent(point));
   }
 
+  #renderNoPoints() {
+    render(new NoPointsView(), this.#siteTripEventsElement);
+  }
+
   init() {
     this.#renderFilters();
-    // если точек нет = массив.length=0, то ничего больше не выводим
+    // если точек нет, то выводим заглушку
     if (this.#model.allAdaptedPoints.length === 0) {
+      this.#renderNoPoints();
       return;
     }
     this.#renderTripInfo();
