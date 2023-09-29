@@ -13,6 +13,7 @@ import NoPointsView from '../view/no-points-view';
 export default class HeaderPresenter {
   #container = null;
   #model = null;
+  #eventPresenters = new Map();
 
   constructor(container, model) {
     this.#container = container;
@@ -48,6 +49,7 @@ export default class HeaderPresenter {
     //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter(this.#eventsListComponent.element);
     eventPresenter.init(point);
+    this.#eventPresenters.set(point.id, eventPresenter);
   }
 
   #renderEvents(points) {
@@ -57,6 +59,12 @@ export default class HeaderPresenter {
 
   #renderNoPoints() {
     render(new NoPointsView(), this.#siteTripEventsElement);
+  }
+
+  #clearEventsList() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+    //нужно ли удалять сам список-контейнер?
   }
 
   init() {
