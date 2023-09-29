@@ -9,6 +9,8 @@ import EventEditDestinationView from '../view/edit-form/destination-view';
 
 export default class EventPresenter {
   #container;
+  #onDataChange = null;
+  #point = null;
   #eventItemComponent = null;
   #eventEditComponent = null;
   #eventEditHeaderComponent = null;
@@ -16,8 +18,9 @@ export default class EventPresenter {
   #eventEditOffersComponent = null;
   #eventEditDestinationComponent = null;
 
-  constructor(container) {
+  constructor({ container, onDataChange }) {
     this.#container = container;
+    this.#onDataChange = onDataChange;
   }
 
   #onEscKeyDown = (evt) => {
@@ -58,15 +61,28 @@ export default class EventPresenter {
     render(this.#eventEditDestinationComponent, this.#eventEditComponent.element.querySelector('.event__details'));
   }
 
+  #favoriteClickHandler = () => {
+    console.log('нажали звездочку');
+    this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
+    // присваиваем соотв класс элементу - во view
+  };
+
   init(point) {
+    this.#point = point;
+
     const prevEventItemComponent = this.#eventItemComponent;
     const prevEventEditComponent = this.#eventEditComponent;
 
     // создаем компонент закрытой точки
-    this.#eventItemComponent = new EventItemView(point, () => {
-      this.#replacePointToForm(point);
-      document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#eventItemComponent = new EventItemView({
+      pointInfo: point,
+      onEditClick: () => {
+        this.#replacePointToForm(point);
+        document.addEventListener('keydown', this.#onEscKeyDown);
+      },
+      favoriteClickHandler: this.#favoriteClickHandler,
     });
+
     //проверяем первоначальную инициализацию
     if (prevEventItemComponent === null || prevEventEditComponent === null) {
       // рисуем закрытую точку

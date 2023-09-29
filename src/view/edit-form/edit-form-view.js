@@ -7,9 +7,8 @@ export default class EventEditView extends AbstractView {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
     this.#onFormSubmit = onFormSubmit;
-    this.element
-      .querySelector('.event')
-      .addEventListener('submit', this.#onFormSubmit);
+    this.element.querySelector('.event').addEventListener('submit', this.#onFormSubmit);
+    //для #onFormSubmit придется делать обертку, чтобы передать параметр = данные для отправки на сервер
   }
 
   get template() {

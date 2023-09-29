@@ -9,10 +9,12 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
+import { updateItem } from '../model/util/updatePoint';
 
 export default class HeaderPresenter {
   #container = null;
   #model = null;
+  #allPoints = [];
   #eventPresenters = new Map();
 
   constructor(container, model) {
@@ -47,7 +49,10 @@ export default class HeaderPresenter {
 
   #renderEvent(point) {
     //куда лучше передавать данные точки: в конструктор или в метод??
-    const eventPresenter = new EventPresenter(this.#eventsListComponent.element);
+    const eventPresenter = new EventPresenter({
+      container: this.#eventsListComponent.element,
+      onDataChange: this.#onPointChange,
+    });
     eventPresenter.init(point);
     this.#eventPresenters.set(point.id, eventPresenter);
   }
@@ -67,7 +72,14 @@ export default class HeaderPresenter {
     //нужно ли удалять сам список-контейнер?
   }
 
+  #onPointChange = (updatedPoint) => {
+    this.#allPoints = updateItem(this.#allPoints, updatedPoint);
+    this.#eventPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
   init() {
+    this.#allPoints = [...this.#model.allAdaptedPoints];
+
     this.#renderFilters();
     // если точек нет, то выводим заглушку
     if (this.#model.allAdaptedPoints.length === 0) {

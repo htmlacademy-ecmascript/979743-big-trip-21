@@ -7,13 +7,16 @@ import { getPointDuration } from '../util';
 export default class EventItemView extends AbstractView {
   #pointInfo;
   #onEditClick = null;
+  #favoriteClickHandler = null;
 
-  constructor(pointInfo, onEditClick) {
+  constructor({ pointInfo, onEditClick, favoriteClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
     this.#pointInfo = pointInfo;
     this.#onEditClick = onEditClick;
+    this.#favoriteClickHandler = favoriteClickHandler;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClick);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#onFavoriteClick);
   }
 
   #adaptPointData() {
@@ -29,6 +32,12 @@ export default class EventItemView extends AbstractView {
       isFavorite: this.#pointInfo.isFavorite,
     };
   }
+
+  #onFavoriteClick = () => {
+    this.#favoriteClickHandler(); // вносим изменения в данные, прилетела из презентара
+    this.element.querySelector('.event__favorite-btn').classList.toggle('event__favorite-btn--active');
+    //при клике фокус на кнопке сохраняется, поэтому она не серенькая становится, а светло-желтая
+  };
 
   get template() {
     // console.log('Item ', this.#adaptPointData());
