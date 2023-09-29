@@ -1,5 +1,5 @@
 // второстепенный презентер, отрисовывает одну точку в списке
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventEditView from '../view/edit-form/edit-form-view';
 import EventEditHeaderView from '../view/edit-form/header-view';
@@ -59,12 +59,35 @@ export default class EventPresenter {
   }
 
   init(point) {
+    const prevEventItemComponent = this.#eventItemComponent;
+    const prevEventEditComponent = this.#eventEditComponent;
+
     // создаем компонент закрытой точки
     this.#eventItemComponent = new EventItemView(point, () => {
       this.#replacePointToForm(point);
       document.addEventListener('keydown', this.#onEscKeyDown);
     });
-    // рисуем закрытую точку
-    render(this.#eventItemComponent, this.#container);
+    //проверяем первоначальную инициализацию
+    if (prevEventItemComponent === null || prevEventEditComponent === null) {
+      // рисуем закрытую точку
+      render(this.#eventItemComponent, this.#container);
+      return;
+    }
+    // проверяем на наличи элемента в DOM
+    if (this.#container.contains(prevEventItemComponent.element)) {
+      replace(this.#eventItemComponent, prevEventItemComponent);
+    }
+
+    if (this.#container.contains(prevEventEditComponent.element)) {
+      replace(this.#eventEditComponent, prevEventEditComponent);
+    }
+
+    remove(prevEventItemComponent);
+    remove(prevEventEditComponent);
+  }
+
+  destroy() {
+    remove(this.#eventItemComponent);
+    remove(this.#eventEditComponent);
   }
 }
