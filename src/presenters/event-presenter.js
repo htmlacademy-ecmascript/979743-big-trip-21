@@ -45,6 +45,7 @@ export default class EventPresenter {
   }
 
   #formSubmitHandler = () => {
+    // сюда будут пилетать данные для отправки на сервер
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
@@ -74,7 +75,7 @@ export default class EventPresenter {
     // создаем компоненты формы редактирования
     this.#eventEditComponent = new EventEditView({
       pointData: point,
-      onFormSubmit: this.#formSubmitHandler,
+      formSubmitHandler: this.#formSubmitHandler,
     });
 
     //проверяем первоначальную инициализацию
