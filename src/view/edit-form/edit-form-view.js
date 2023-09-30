@@ -1,7 +1,8 @@
 // форма редактирования точки - объединила все в одну view
 import { createEventEditTemplate } from '../../templates/edit-form/form-template';
-import AbstractView from '../../framework/view/abstract-view';
-export default class EventEditView extends AbstractView {
+// import AbstractView from '../../framework/view/abstract-view';
+import AbstractStatefulView from '../../framework/view/abstract-view';
+export default class EventEditView extends AbstractStatefulView {
   #pointData = null;
   #onFormSubmit = null;
   constructor({ pointData, onFormSubmit }) {
