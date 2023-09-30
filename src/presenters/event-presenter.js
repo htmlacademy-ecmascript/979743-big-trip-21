@@ -2,10 +2,6 @@
 import { render, replace, remove } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventEditView from '../view/edit-form/edit-form-view';
-import EventEditHeaderView from '../view/edit-form/header-view';
-import EventEditDetailsView from '../view/edit-form/details-view';
-import EventEditOffersView from '../view/edit-form/offers-view';
-import EventEditDestinationView from '../view/edit-form/destination-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -19,10 +15,6 @@ export default class EventPresenter {
   #point = null;
   #eventItemComponent = null;
   #eventEditComponent = null;
-  #eventEditHeaderComponent = null;
-  #eventEditDetailsComponent = null;
-  #eventEditOffersComponent = null;
-  #eventEditDestinationComponent = null;
   #mode = Mode.DEFAULT;
 
   constructor({ container, onDataChange, onModeChange }) {
@@ -35,7 +27,6 @@ export default class EventPresenter {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#replaceFormToPoint();
-      // document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
@@ -51,20 +42,6 @@ export default class EventPresenter {
     replace(this.#eventItemComponent, this.#eventEditComponent);
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#onEscKeyDown);
-  }
-
-  #renderEditFormInsides(point) {
-    // внутренности формы редактирования
-    this.#eventEditHeaderComponent = new EventEditHeaderView(point); // header формы - передаем элемент для открытой точки
-    this.#eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, контейнер для офферов и ПН
-    this.#eventEditOffersComponent = new EventEditOffersView(point.offersInfo); // офферы в форме
-    this.#eventEditDestinationComponent = new EventEditDestinationView(point); // пункт назначения в форме
-
-    // render(this.#eventEditComponent, this.#container); // это позволит отрисовать форму полностью
-    render(this.#eventEditHeaderComponent, this.#eventEditComponent.element.querySelector('.event'));
-    render(this.#eventEditDetailsComponent, this.#eventEditComponent.element.querySelector('.event'));
-    render(this.#eventEditOffersComponent, this.#eventEditComponent.element.querySelector('.event__details'));
-    render(this.#eventEditDestinationComponent, this.#eventEditComponent.element.querySelector('.event__details'));
   }
 
   #favoriteClickHandler = () => {
@@ -89,11 +66,13 @@ export default class EventPresenter {
     });
 
     // создаем компоненты формы редактирования
-    this.#eventEditComponent = new EventEditView(() => {
-      this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#eventEditComponent = new EventEditView({
+      pointData: point,
+      onFormSubmit: () => {
+        this.#replaceFormToPoint();
+        document.removeEventListener('keydown', this.#onEscKeyDown);
+      },
     });
-    this.#renderEditFormInsides(point);
 
     //проверяем первоначальную инициализацию
     if (prevEventItemComponent === null || prevEventEditComponent === null) {
