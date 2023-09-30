@@ -44,6 +44,16 @@ export default class EventPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
+  #formSubmitHandler = () => {
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #editClickHandler = () => {
+    this.#replacePointToForm();
+    document.addEventListener('keydown', this.#onEscKeyDown);
+  };
+
   #favoriteClickHandler = () => {
     this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
   };
@@ -57,21 +67,14 @@ export default class EventPresenter {
     // создаем компонент закрытой точки
     this.#eventItemComponent = new EventItemView({
       pointInfo: point,
-      onEditClick: () => {
-        this.#replacePointToForm();
-        document.addEventListener('keydown', this.#onEscKeyDown);
-      },
-      // onEditClick: this.#editClickHandler,
+      onEditClick: this.#editClickHandler,
       favoriteClickHandler: this.#favoriteClickHandler,
     });
 
     // создаем компоненты формы редактирования
     this.#eventEditComponent = new EventEditView({
       pointData: point,
-      onFormSubmit: () => {
-        this.#replaceFormToPoint();
-        document.removeEventListener('keydown', this.#onEscKeyDown);
-      },
+      onFormSubmit: this.#formSubmitHandler,
     });
 
     //проверяем первоначальную инициализацию
