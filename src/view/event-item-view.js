@@ -35,12 +35,10 @@ export default class EventItemView extends AbstractView {
 
   #onFavoriteClick = () => {
     this.#favoriteClickHandler(); // вносим изменения в данные, прилетела из презентара
-    this.element.querySelector('.event__favorite-btn').classList.toggle('event__favorite-btn--active');
     //при клике фокус на кнопке сохраняется, поэтому она не серенькая становится, а светло-желтая
   };
 
   get template() {
-    // console.log('Item ', this.#adaptPointData());
     return createEventItemTemplate(this.#adaptPointData());
   }
 }

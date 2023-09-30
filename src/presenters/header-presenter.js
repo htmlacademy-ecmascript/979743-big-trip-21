@@ -51,7 +51,8 @@ export default class HeaderPresenter {
     //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
-      onDataChange: this.#onPointChange,
+      onDataChange: this.#pointChangeHandler,
+      onModeChange: this.#modeChangeHandler,
     });
     eventPresenter.init(point);
     this.#eventPresenters.set(point.id, eventPresenter);
@@ -72,9 +73,13 @@ export default class HeaderPresenter {
     //нужно ли удалять сам список-контейнер?
   }
 
-  #onPointChange = (updatedPoint) => {
+  #pointChangeHandler = (updatedPoint) => {
     this.#allPoints = updateItem(this.#allPoints, updatedPoint);
     this.#eventPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #modeChangeHandler = () => {
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
   init() {

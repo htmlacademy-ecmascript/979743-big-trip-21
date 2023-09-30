@@ -14,5 +14,3 @@ const model = new Model({ destinations, offers, points });
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
 const headerPresenter = new HeaderPresenter(siteTripMainElement, model);
 headerPresenter.init();
-
-console.log(points);

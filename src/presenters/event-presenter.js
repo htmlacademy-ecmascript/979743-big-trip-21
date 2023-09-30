@@ -7,9 +7,15 @@ import EventEditDetailsView from '../view/edit-form/details-view';
 import EventEditOffersView from '../view/edit-form/offers-view';
 import EventEditDestinationView from '../view/edit-form/destination-view';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class EventPresenter {
   #container;
   #onDataChange = null;
+  #onModeChange = null;
   #point = null;
   #eventItemComponent = null;
   #eventEditComponent = null;
@@ -17,34 +23,34 @@ export default class EventPresenter {
   #eventEditDetailsComponent = null;
   #eventEditOffersComponent = null;
   #eventEditDestinationComponent = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({ container, onDataChange }) {
+  constructor({ container, onDataChange, onModeChange }) {
     this.#container = container;
     this.#onDataChange = onDataChange;
+    this.#onModeChange = onModeChange;
   }
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
+      // document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
   // открытие формы
-  #replacePointToForm(point) {
-    // // создаем компоненты формы редактирования
-    // this.#eventEditComponent = new EventEditView(() => {
-    //   this.#replaceFormToPoint();
-    //   document.removeEventListener('keydown', this.#onEscKeyDown);
-    // });
+  #replacePointToForm() {
     replace(this.#eventEditComponent, this.#eventItemComponent);
-    this.#renderEditFormInsides(point);
+    this.#onModeChange(); // закрывает все открытые формы, если они есть
+    this.#mode = Mode.EDITING;
   }
 
   // закрытие формы
   #replaceFormToPoint() {
     replace(this.#eventItemComponent, this.#eventEditComponent);
+    this.#mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
   #renderEditFormInsides(point) {
@@ -61,14 +67,8 @@ export default class EventPresenter {
     render(this.#eventEditDestinationComponent, this.#eventEditComponent.element.querySelector('.event__details'));
   }
 
-  #editClickHandler = (point) => {
-    this.#replacePointToForm(point);
-    document.addEventListener('keydown', this.#onEscKeyDown);
-  };
-
   #favoriteClickHandler = () => {
     this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
-    // присваиваем соотв класс элементу - во view
   };
 
   init(point) {
@@ -81,7 +81,7 @@ export default class EventPresenter {
     this.#eventItemComponent = new EventItemView({
       pointInfo: point,
       onEditClick: () => {
-        this.#replacePointToForm(point);
+        this.#replacePointToForm();
         document.addEventListener('keydown', this.#onEscKeyDown);
       },
       // onEditClick: this.#editClickHandler,
@@ -93,6 +93,7 @@ export default class EventPresenter {
       this.#replaceFormToPoint();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
+    this.#renderEditFormInsides(point);
 
     //проверяем первоначальную инициализацию
     if (prevEventItemComponent === null || prevEventEditComponent === null) {
@@ -101,16 +102,22 @@ export default class EventPresenter {
       return;
     }
     // проверяем на наличи элемента в DOM
-    if (this.#container.contains(prevEventItemComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#eventItemComponent, prevEventItemComponent);
     }
 
-    if (this.#container.contains(prevEventEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#eventEditComponent, prevEventEditComponent);
     }
 
     remove(prevEventItemComponent);
     remove(prevEventEditComponent);
+  }
+
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
   }
 
   destroy() {
