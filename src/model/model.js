@@ -1,4 +1,5 @@
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
+import { getConformedOffers } from './util/updatePoint';
 export default class Model {
   #destinations;
   #offers;
@@ -17,17 +18,19 @@ export default class Model {
 
   #getMarkedOffers(type, checkedOfferIds) {
     // возвр массив объектов офферов, помечает чекнутые
-    const conformedOffers = this.#offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
+    const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
     const markedOffers = conformedOffers.map((offer) => {
       // отметили чекнутые
       offer.isChecked = checkedOfferIds.includes(offer.id);
       return offer;
     });
+    // const markedOffers = conformedOffers;
     return markedOffers;
   }
 
   #getCheckedOffers(type, checkedOfferIds) {
-    const conformedOffers = this.#offers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
+    // возвр массив объектов чекнутых офферов
+    const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
     const checkedOffers = conformedOffers.filter((offer) => checkedOfferIds.includes(offer.id));
     return checkedOffers;
   }

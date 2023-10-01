@@ -4,4 +4,8 @@ function updateItem(items, update) {
   return items.map((item) => (item.id === update.id ? update : item));
 }
 
-export { updateItem };
+function getConformedOffers(type, allOffers) {
+  return allOffers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
+}
+
+export { updateItem, getConformedOffers };
