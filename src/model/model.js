@@ -72,4 +72,13 @@ export default class Model {
   get pastPoints() {
     return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
   }
+
+  //-------------возвращаем все офферы по типам для выбора их в форме редактирования точки ---------------------------------------
+  get offers() {
+    return this.#offers;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
 }

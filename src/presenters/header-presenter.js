@@ -51,6 +51,8 @@ export default class HeaderPresenter {
     //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
+      offers: this.#model.offers,
+      destnations: this.#model.destnations,
       onDataChange: this.#pointChangeHandler,
       onModeChange: this.#modeChangeHandler,
     });

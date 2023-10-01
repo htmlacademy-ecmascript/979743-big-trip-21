@@ -9,7 +9,9 @@ const Mode = {
 };
 
 export default class EventPresenter {
-  #container;
+  #container = null;
+  #offers = null;
+  #destnations = null;
   #onDataChange = null;
   #onModeChange = null;
   #point = null;
@@ -17,8 +19,10 @@ export default class EventPresenter {
   #eventEditComponent = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ container, onDataChange, onModeChange }) {
+  constructor({ container, offers, destnations, onDataChange, onModeChange }) {
     this.#container = container;
+    this.#offers = offers;
+    this.#destnations = destnations;
     this.#onDataChange = onDataChange;
     this.#onModeChange = onModeChange;
   }
@@ -75,6 +79,8 @@ export default class EventPresenter {
     // создаем компоненты формы редактирования
     this.#eventEditComponent = new EventEditView({
       pointData: point,
+      offers: this.#offers,
+      destnations: this.#destnations,
       formSubmitHandler: this.#formSubmitHandler,
     });
 
