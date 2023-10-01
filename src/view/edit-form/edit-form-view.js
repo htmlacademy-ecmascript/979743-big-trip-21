@@ -5,11 +5,12 @@ import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { getConformedOffers } from '../../model/util/updatePoint';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
+  #resetClickHandler = null;
   #offers = null;
   #destinations = null;
   // ф-я для выбора комплекта офферов при новом типе точки
 
-  constructor({ pointData, offers, destinations, formSubmitHandler }) {
+  constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     //constructor({point = BLANK_POINT, onFormSubmit})
     super();
@@ -17,7 +18,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
-    //this.#formResetHandler = formResetHandler; // ретро 10:03
+    this.#resetClickHandler = resetClickHandler; // ретро 10:03
     this._restoreHandlers(); // ретро 9:58
   }
 
@@ -29,6 +30,14 @@ export default class EventEditView extends AbstractStatefulView {
     });
   }
 
+  reset = (point) => {
+    //ретро 22:05 и в презентере ретро 22:52
+    console.log('point ', point.id); // чтобы проверить из какого именно компонента вызывается метод
+    console.log(point);
+    this.updateElement({ point });
+    this.element.querySelector('form.event').reset(); // - ???
+  };
+
   _restoreHandlers = () => {
     // ретро 10:25 и 15:59
     // this.element.querySelector('event__rollup-btn').addEventListener('click', this.#onResetClick);
@@ -37,6 +46,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetClickHandler);
 
     // this.#setDatepickers();
   };
@@ -49,16 +59,13 @@ export default class EventEditView extends AbstractStatefulView {
     this.updateElement({
       ...this._state,
       type: evt.target.value,
-      offersInfo: getConformedOffers(evt.target.value, this.#offers), // подтягиваем новый комплект офферов - offersInfo, getMarkedOffers берем из модели
+      offersInfo: getConformedOffers(evt.target.value, this.#offers).map((offer) => ({ isChecked: false, ...offer })), // подтягиваем новый комплект офферов, без поля isChecked
       offers: [], // обнуляем чекнутые офферы - offers
-      // перенести желтый маркер в списке на выбранную точку
     });
   };
 
   #onDestinationChange = (evt) => {
     // ретро 17:31
-    console.log('выбрали пункт назначения');
-    console.log(this.#destinations);
     const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value); // ПН вводится с клавиатуры, не выбирается из списка !!
 
     if (selectedDestination) {
@@ -82,7 +89,8 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onOffersChange = () => {
-    console.log('выбрали офферы');
+    //ретро 18:20
+    const checkedOffers = Array.from(this.element.querySelectorAll('event__offer-checkbox:checked'));
   };
 
   #onPriceChange = () => {

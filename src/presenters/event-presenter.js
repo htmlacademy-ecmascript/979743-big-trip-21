@@ -30,6 +30,7 @@ export default class EventPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#eventEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
@@ -63,6 +64,11 @@ export default class EventPresenter {
     this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
   };
 
+  #resetClickHandler = () => {
+    this.#eventEditComponent.reset(this.#point);
+    this.#replaceFormToPoint();
+  };
+
   init(point) {
     this.#point = point;
 
@@ -82,6 +88,7 @@ export default class EventPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       formSubmitHandler: this.#formSubmitHandler,
+      resetClickHandler: this.#resetClickHandler,
     });
 
     //проверяем первоначальную инициализацию
@@ -105,6 +112,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#eventEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
