@@ -11,7 +11,7 @@ const Mode = {
 export default class EventPresenter {
   #container = null;
   #offers = null;
-  #destnations = null;
+  #destinations = null;
   #onDataChange = null;
   #onModeChange = null;
   #point = null;
@@ -19,10 +19,10 @@ export default class EventPresenter {
   #eventEditComponent = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ container, offers, destnations, onDataChange, onModeChange }) {
+  constructor({ container, offers, destinations, onDataChange, onModeChange }) {
     this.#container = container;
     this.#offers = offers;
-    this.#destnations = destnations;
+    this.#destinations = destinations;
     this.#onDataChange = onDataChange;
     this.#onModeChange = onModeChange;
   }
@@ -80,7 +80,7 @@ export default class EventPresenter {
     this.#eventEditComponent = new EventEditView({
       pointData: point,
       offers: this.#offers,
-      destnations: this.#destnations,
+      destinations: this.#destinations,
       formSubmitHandler: this.#formSubmitHandler,
     });
 

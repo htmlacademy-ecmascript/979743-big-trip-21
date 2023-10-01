@@ -17,3 +17,4 @@ headerPresenter.init();
 
 console.log(points);
 console.log(offers);
+console.log(destinations);

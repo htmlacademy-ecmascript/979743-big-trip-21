@@ -1,4 +1,4 @@
-function createEventEditHeaderTemplate({ id, type, destinationName, dateFrom, dateTo, basePrice }) {
+function createEventEditHeaderTemplate({ id, type, destination, destinationName, dateFrom, dateTo, basePrice }) {
   // выпадающий список типов точек не передаем данными? список в константах.
   //id открытой точки куда добавить?
   return `
@@ -64,7 +64,9 @@ function createEventEditHeaderTemplate({ id, type, destinationName, dateFrom, da
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationName}" list="destination-list-${id}">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${
+    destination ? destinationName : ''
+  }" list="destination-list-${id}">
       <datalist id="destination-list-${id}">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>

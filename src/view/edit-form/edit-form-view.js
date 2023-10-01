@@ -6,27 +6,26 @@ import { getConformedOffers } from '../../model/util/updatePoint';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #offers = null;
-  #destnations = null;
+  #destinations = null;
   // ф-я для выбора комплекта офферов при новом типе точки
 
-  constructor({ pointData, offers, destnations, formSubmitHandler }) {
+  constructor({ pointData, offers, destinations, formSubmitHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     //constructor({point = BLANK_POINT, onFormSubmit})
     super();
     this._setState(EventEditView.parsePointToState(pointData)); // значение будет храниться в унаследованном поле _state
     this.#offers = offers;
-    this.#destnations = destnations;
+    this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
     //this.#formResetHandler = formResetHandler; // ретро 10:03
     this._restoreHandlers(); // ретро 9:58
   }
 
   get template() {
-    console.log(this._state);
     return createEventEditTemplate({
       pointState: this._state,
       offers: this.#offers,
-      destnations: this.#destnations,
+      destinations: this.#destinations,
     });
   }
 
@@ -56,8 +55,30 @@ export default class EventEditView extends AbstractStatefulView {
     });
   };
 
-  #onDestinationChange = () => {
+  #onDestinationChange = (evt) => {
+    // ретро 17:31
     console.log('выбрали пункт назначения');
+    console.log(this.#destinations);
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value); // ПН вводится с клавиатуры, не выбирается из списка !!
+
+    if (selectedDestination) {
+      this.updateElement({
+        ...this._state,
+        destination: selectedDestination.id,
+        destinationDescription: selectedDestination.description,
+        destinationName: selectedDestination.name,
+        destinationPhotos: selectedDestination.photos,
+      });
+    } else {
+      this.updateElement({
+        ...this._state,
+        destination: null,
+        destinationDescription: null,
+        destinationName: null,
+        destinationPhotos: null,
+      });
+    }
+    // const selectedDestinationId = selectedDestination ? selectedDestination.destination : null; // обрабатывать как??
   };
 
   #onOffersChange = () => {

@@ -8,4 +8,8 @@ function getConformedOffers(type, allOffers) {
   return allOffers.find((offer) => offer.type === type).offers; // выбрали все офферы по типу
 }
 
-export { updateItem, getConformedOffers };
+function getDestinationByID(id, allDestinations) {
+  return allDestinations.find((dest) => dest.id === id);
+}
+
+export { updateItem, getConformedOffers, getDestinationByID };

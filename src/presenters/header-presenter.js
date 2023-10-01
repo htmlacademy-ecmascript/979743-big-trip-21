@@ -52,7 +52,7 @@ export default class HeaderPresenter {
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
       offers: this.#model.offers,
-      destnations: this.#model.destnations,
+      destinations: this.#model.destinations,
       onDataChange: this.#pointChangeHandler,
       onModeChange: this.#modeChangeHandler,
     });
