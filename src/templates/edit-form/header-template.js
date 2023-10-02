@@ -64,9 +64,12 @@ function createEventEditHeaderTemplate({ id, type, destination, destinationName,
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${
-    destination ? destinationName : ''
-  }" list="destination-list-${id}">
+      <input
+        class="event__input  event__input--destination" id="event-destination-${id}"
+        type="text"
+        name="event-destination"
+        value="${destination ? destinationName : ''}"
+        list="destination-list-${id}">
       <datalist id="destination-list-${id}">
         <option value="Amsterdam"></option>
         <option value="Geneva"></option>
