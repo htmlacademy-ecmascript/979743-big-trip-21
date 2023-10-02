@@ -1,6 +1,7 @@
 import { createEventEditHeaderTemplate } from './header-template';
 import { createEventEditDetailsTemplate } from './details-template';
-function createEventEditTemplate({ pointState, offers, destnations }) {
+function createEventEditTemplate({ pointState }) {
+  // return 'шаблон формы';
   return `
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">

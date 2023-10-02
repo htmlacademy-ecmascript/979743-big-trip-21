@@ -37,6 +37,8 @@ export default class EventPresenter {
 
   // открытие формы
   #replacePointToForm() {
+    // console.log(this.#eventEditComponent instanceof AbstractView);
+    // console.log(this.#eventItemComponent instanceof AbstractView);
     replace(this.#eventEditComponent, this.#eventItemComponent);
     this.#onModeChange(); // закрывает все открытые формы, если они есть
     this.#mode = Mode.EDITING;
@@ -70,6 +72,7 @@ export default class EventPresenter {
   };
 
   init(point) {
+    // получаем сырые данные
     this.#point = point;
 
     const prevEventItemComponent = this.#eventItemComponent;
@@ -77,7 +80,9 @@ export default class EventPresenter {
 
     // создаем компонент закрытой точки
     this.#eventItemComponent = new EventItemView({
-      pointInfo: point,
+      pointData: point,
+      offers: this.#offers,
+      destinations: this.#destinations,
       onEditClick: this.#editClickHandler,
       favoriteClickHandler: this.#favoriteClickHandler,
     });

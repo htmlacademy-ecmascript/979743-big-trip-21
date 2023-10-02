@@ -1,5 +1,5 @@
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
-import { getConformedOffers } from './util/updatePoint';
+// import { getConformedOffers } from './util/data-adapters';
 export default class Model {
   #destinations;
   #offers;
@@ -12,47 +12,47 @@ export default class Model {
     this.#points = points;
   }
 
-  #getDestinationByID(id) {
-    return this.#destinations.find((dest) => dest.id === id);
-  }
+  // #getDestinationByID(id) {
+  //   return this.#destinations.find((dest) => dest.id === id);
+  // }
 
-  #getMarkedOffers(type, checkedOfferIds) {
-    // возвр массив объектов офферов, помечает чекнутые
-    const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
-    const markedOffers = conformedOffers.map((offer) => {
-      // отметили чекнутые
-      offer.isChecked = checkedOfferIds.includes(offer.id);
-      return offer;
-    });
-    // const markedOffers = conformedOffers;
-    return markedOffers;
-  }
+  // #getMarkedOffers(type, checkedOfferIds) {
+  //   // возвр массив объектов офферов, помечает чекнутые
+  //   const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
+  //   const markedOffers = conformedOffers.map((offer) => {
+  //     // отметили чекнутые
+  //     offer.isChecked = checkedOfferIds.includes(offer.id);
+  //     return offer;
+  //   });
+  //   // const markedOffers = conformedOffers;
+  //   return markedOffers;
+  // }
 
-  #getCheckedOffers(type, checkedOfferIds) {
-    // возвр массив объектов чекнутых офферов
-    const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
-    const checkedOffers = conformedOffers.filter((offer) => checkedOfferIds.includes(offer.id));
-    return checkedOffers;
-  }
+  // #getCheckedOffers(type, checkedOfferIds) {
+  //   // возвр массив объектов чекнутых офферов
+  //   const conformedOffers = getConformedOffers(type, this.#offers); // выбрали все офферы по типу
+  //   const checkedOffers = conformedOffers.filter((offer) => checkedOfferIds.includes(offer.id));
+  //   return checkedOffers;
+  // }
 
-  #adaptPointData(originalPoint) {
-    // на входе объект, элемент из массива точек
-    // на выходе тот же объект, дополненный полями с полной инфой по ПН и офферам
-    return {
-      destinationName: this.#getDestinationByID(originalPoint.destination).name,
-      destinationDescription: this.#getDestinationByID(originalPoint.destination).description,
-      destinationPhotos: this.#getDestinationByID(originalPoint.destination).photos, // массив объектов
-      offersInfo: this.#getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов всех офферов для данного типа
-      checkedOffersInfo: this.#getCheckedOffers(originalPoint.type, originalPoint.offers),
-      ...originalPoint,
-    };
-  }
+  // #adaptPointData(originalPoint) {
+  //   // на входе объект, элемент из массива точек
+  //   // на выходе тот же объект, дополненный полями с полной инфой по ПН и офферам
+  //   return {
+  //     destinationName: this.#getDestinationByID(originalPoint.destination).name,
+  //     destinationDescription: this.#getDestinationByID(originalPoint.destination).description,
+  //     destinationPhotos: this.#getDestinationByID(originalPoint.destination).photos, // массив объектов
+  //     offersInfo: this.#getMarkedOffers(originalPoint.type, originalPoint.offers), // массив объектов всех офферов для данного типа
+  //     checkedOffersInfo: this.#getCheckedOffers(originalPoint.type, originalPoint.offers),
+  //     ...originalPoint,
+  //   };
+  // }
 
-  get allAdaptedPoints() {
-    // возвращает адаптированными все точки
-    return this.#points.map((point) => this.#adaptPointData(point));
-    // return []; // для проверки заглушки
-  }
+  // get allAdaptedPoints() {
+  //   // возвращает адаптированными все точки
+  //   return this.#points.map((point) => this.#adaptPointData(point));
+  //   // return []; // для проверки заглушки
+  // }
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
@@ -64,24 +64,29 @@ export default class Model {
   }
 
   //-------------фильтры - возвращают отфильтроанный массив точек----------------------------------------------------
-  get futurePoints() {
-    return filterFuturePoints(this.#points).map((point) => this.#adaptPointData(point));
-  }
+  // переделать, чтоы принимали сырые данные на вход, не адаптированные
+  // get futurePoints() {
+  //   return filterFuturePoints(this.#points).map((point) => this.#adaptPointData(point));
+  // }
 
-  get presentPoints() {
-    return filterPresentPoints(this.#points).map((point) => this.#adaptPointData(point));
-  }
+  // get presentPoints() {
+  //   return filterPresentPoints(this.#points).map((point) => this.#adaptPointData(point));
+  // }
 
-  get pastPoints() {
-    return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
-  }
+  // get pastPoints() {
+  //   return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
+  // }
 
-  //-------------возвращаем все офферы по типам для выбора их в форме редактирования точки ---------------------------------------
+  //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
   get offers() {
     return this.#offers;
   }
 
   get destinations() {
     return this.#destinations;
+  }
+
+  get points() {
+    return this.#points;
   }
 }

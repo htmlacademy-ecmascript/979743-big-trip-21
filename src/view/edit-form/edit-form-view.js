@@ -1,22 +1,22 @@
 // форма редактирования точки - объединила все в одну view
 import { createEventEditTemplate } from '../../templates/edit-form/form-template';
-// import AbstractView from '../../framework/view/abstract-view';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
-import { getConformedOffers } from '../../model/util/updatePoint';
+import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../model/util/data-adapters';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
+  #pointData = null;
   #offers = null;
   #destinations = null;
-  // ф-я для выбора комплекта офферов при новом типе точки
 
   constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     //constructor({point = BLANK_POINT, onFormSubmit})
     super();
-    this._setState(EventEditView.parsePointToState(pointData)); // значение будет храниться в унаследованном поле _state
-    this.#offers = offers;
-    this.#destinations = destinations;
+    this._setState(EventEditView.parsePointToState(pointData, offers, destinations)); // значение будет храниться в унаследованном поле _state
+    // this.#pointData = pointData;
+    // this.#offers = offers;
+    // this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
     this.#resetClickHandler = resetClickHandler; // ретро 10:03
     this._restoreHandlers(); // ретро 9:58
@@ -25,15 +25,11 @@ export default class EventEditView extends AbstractStatefulView {
   get template() {
     return createEventEditTemplate({
       pointState: this._state,
-      offers: this.#offers,
-      destinations: this.#destinations,
     });
   }
 
   reset = (point) => {
     //ретро 22:05 и в презентере ретро 22:52
-    console.log('point ', point.id); // чтобы проверить из какого именно компонента вызывается метод
-    console.log(point);
     this.updateElement({ point });
     this.element.querySelector('form.event').reset(); // - ???
   };
@@ -97,15 +93,20 @@ export default class EventEditView extends AbstractStatefulView {
     console.log('изменили цену');
   };
 
-  static parsePointToState(pointData) {
-    return { ...pointData }; // потом подумаю, нужно ли что-то сюда добавлять
+  static parsePointToState(pointData, offers, destinations) {
+    return {
+      destinationName: getDestinationByID(pointData.destination, destinations).name,
+      destinationDescription: getDestinationByID(pointData.destination, destinations).description,
+      destinationPhotos: getDestinationByID(pointData.destination, destinations).photos,
+      offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
+      ...pointData,
+    };
   }
 
-  static parseStateToTask(state) {
+  static parseStateToPoint(state) {
     // ретро 7:24
     const pointData = { ...state };
     //обратное преобразование к формату данных, удаляем лишние поля
-    // у меня пока point и state одинаковые
 
     // delete task.isDueDate;
     // delete task.isRepeating;
