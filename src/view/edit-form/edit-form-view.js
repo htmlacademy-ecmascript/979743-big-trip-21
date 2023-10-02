@@ -44,7 +44,8 @@ export default class EventEditView extends AbstractStatefulView {
     // this.#setDatepickers();
   };
 
-  #onFormSubmit = () => {
+  #onFormSubmit = (evt) => {
+    evt.preventDefault(); // надо?
     this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем данные для отправки на сервер, state после parse
   };
 
@@ -90,6 +91,8 @@ export default class EventEditView extends AbstractStatefulView {
       offers: checkedOffers.map((el) => el.id), // id чекнутых офферов
       offersInfo: getMarkedOffers(this._state.type, checkedOfferIds, this.#offers),
     });
+    // переделать, чтобы отрисовывалась не вся точка, а только офферы
+    // можно использовать не updateElement, а только this._setState(update);
   };
 
   #onPriceChange = () => {};

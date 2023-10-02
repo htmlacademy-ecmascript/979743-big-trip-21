@@ -2,6 +2,7 @@
 import { render, replace, remove } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventEditView from '../view/edit-form/edit-form-view';
+import { UserAction, UpdateType } from '../consts';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -23,7 +24,7 @@ export default class EventPresenter {
     this.#container = container;
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#onDataChange = onDataChange;
+    this.#onDataChange = onDataChange; // #handleViewAction из header-presenter
     this.#onModeChange = onModeChange;
   }
 
@@ -49,8 +50,9 @@ export default class EventPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
-  #formSubmitHandler = () => {
-    // сюда будут пилетать данные для отправки на сервер
+  #formSubmitHandler = (point) => {
+    // сюда прилетают данные для отправки на сервер
+    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point); //
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
@@ -61,7 +63,11 @@ export default class EventPresenter {
   };
 
   #favoriteClickHandler = () => {
-    this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
+    // this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
+    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {
+      ...this.#point,
+      isFavorite: !this.#point.isFavorite,
+    });
   };
 
   #resetClickHandler = () => {

@@ -9,17 +9,20 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
-import { updateItem } from '../model/util/updatePoint';
+// import { updateItem } from '../model/util/updatePoint';
+import { UserAction, UpdateType } from '../consts';
 
 export default class HeaderPresenter {
   #container = null;
   #model = null;
-  #allPoints = [];
+  // #allPoints = [];
   #eventPresenters = new Map();
 
   constructor(container, model) {
     this.#container = container;
     this.#model = model;
+
+    this.#model.addObserver(this.#handleModelEvent);
   }
 
   #tripInfoComponent = new TripInfoView();
@@ -53,7 +56,8 @@ export default class HeaderPresenter {
       container: this.#eventsListComponent.element,
       offers: this.#model.offers,
       destinations: this.#model.destinations,
-      onDataChange: this.#pointChangeHandler,
+      // onDataChange: this.#pointChangeHandler,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#modeChangeHandler,
     });
     eventPresenter.init(point); //передаем сырые данные
@@ -75,17 +79,65 @@ export default class HeaderPresenter {
     //нужно ли удалять сам список-контейнер?
   }
 
-  #pointChangeHandler = (updatedPoint) => {
-    this.#allPoints = updateItem(this.#allPoints, updatedPoint);
-    this.#eventPresenters.get(updatedPoint.id).init(updatedPoint);
+  // #pointChangeHandler = (updatedPoint) => {
+  //   // используется пока для изменения данных при клике на звездочку
+  //   // this.#allPoints = updateItem(this.#allPoints, updatedPoint);
+  //   // Здесь будем вызывать обновление модели
+  //   this.#eventPresenters.get(updatedPoint.id).init(updatedPoint); // элемент перерисую, но данные не изменятся
+  // };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    // вместо pointChangeHandler - передается в event-presenter
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#model.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#model.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#model.deletePoint(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    //вызывается из _notify
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // обновляем только точку
+        this.#eventPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        // обновляем список (сортировка, фильтрация)
+        break;
+      case UpdateType.MAJOR:
+      // обновляем все, в т.ч. хедер
+    }
   };
 
   #modeChangeHandler = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
+  get pointData() {
+    return this.#model.points;
+    // сюда добавится логика сортировки
+    // разбор 1 05:13
+  }
+
   init() {
-    this.#allPoints = [...this.#model.points];
+    // this.#allPoints = [...this.#model.points];
 
     this.#renderFilters();
     // если точек нет, то выводим заглушку

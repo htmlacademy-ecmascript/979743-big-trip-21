@@ -2,7 +2,7 @@ function createSortItem({ sortingName, isAnable }, isChecked) {
   return `
     <div class="trip-sort__item  trip-sort__item--${sortingName}">
       <input
-        id="sort-day"
+        id="sort-${sortingName}"
         class="trip-sort__input  visually-hidden"
         type="radio"
         name="trip-sort"

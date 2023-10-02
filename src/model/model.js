@@ -1,11 +1,12 @@
 // import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
-// import { getConformedOffers } from './util/data-adapters';
-export default class Model {
+import Observable from '../framework/observable';
+export default class Model extends Observable {
   #destinations;
   #offers;
   #points;
 
   constructor({ destinations, offers, points }) {
+    super();
     //сырые данные
     this.#destinations = destinations;
     this.#offers = offers;
@@ -34,6 +35,48 @@ export default class Model {
   // get pastPoints() {
   //   return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
   // }
+
+  updatePoint(updateType, update) {
+    // update - это объект точки
+    const pointIndex = this.#points.findIndex((point) => point.id === update.id);
+    if (pointIndex === -1) {
+      throw new Error("Can't update unexisting point");
+    }
+
+    this.#points = [
+      // заменяем объект в массиве
+      ...this.#points.slice(0, pointIndex),
+      update,
+      ...this.#points.slice(pointIndex + 1),
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  addPoint(updateType, update) {
+    this.#points = [
+      // добавляем объект в массив
+      update,
+      ...this.#points,
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deletePoint(updateType, update) {
+    const pointIndex = this.#points.findIndex((point) => point.id === update.id);
+    if (pointIndex === -1) {
+      throw new Error("Can't delete unexisting point");
+    }
+
+    this.#points = [
+      // исключаем элемент из массива
+      ...this.#points.slice(0, pointIndex),
+      ...this.#points.slice(pointIndex + 1),
+    ];
+
+    this._notify(updateType);
+  }
 
   //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
   get offers() {
