@@ -37,7 +37,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('form.event').addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeChange); // это fieldset
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
-    // this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange); // зачем??
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetClickHandler); // cancel btn
 
@@ -84,13 +84,12 @@ export default class EventEditView extends AbstractStatefulView {
   #onOffersChange = () => {
     //ретро 18:20
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    const checkedOfferIds = checkedOffers.map((el) => el.id);
     this.updateElement({
       ...this._state,
-      offers: [], // id чекнутых офферов
-      // offersInfo: getMarkedOffers(this._state.type, offers, this.#offers),
+      offers: checkedOffers.map((el) => el.id), // id чекнутых офферов
+      offersInfo: getMarkedOffers(this._state.type, checkedOfferIds, this.#offers),
     });
-    console.log(checkedOffers);
-    console.log(this._state);
   };
 
   #onPriceChange = () => {};
