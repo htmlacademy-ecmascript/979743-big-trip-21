@@ -5,7 +5,6 @@ import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../m
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
-  #pointData = null;
   #offers = null;
   #destinations = null;
 
@@ -14,9 +13,8 @@ export default class EventEditView extends AbstractStatefulView {
     //constructor({point = BLANK_POINT, onFormSubmit})
     super();
     this._setState(EventEditView.parsePointToState(pointData, offers, destinations)); // значение будет храниться в унаследованном поле _state
-    // this.#pointData = pointData;
-    // this.#offers = offers;
-    // this.#destinations = destinations;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
     this.#resetClickHandler = resetClickHandler; // ретро 10:03
     this._restoreHandlers(); // ретро 9:58
@@ -28,34 +26,33 @@ export default class EventEditView extends AbstractStatefulView {
     });
   }
 
-  reset = (point) => {
+  reset = (pointData, offers, destinations) => {
     //ретро 22:05 и в презентере ретро 22:52
-    this.updateElement({ point });
-    this.element.querySelector('form.event').reset(); // - ???
+    this.updateElement(EventEditView.parsePointToState(pointData, offers, destinations));
   };
 
   _restoreHandlers = () => {
     // ретро 10:25 и 15:59
-    // this.element.querySelector('event__rollup-btn').addEventListener('click', this.#onResetClick);
+    // this.element.querySelector('event__rollup-btn').addEventListener('click', this.#onResetClick); // нет этого элемента в разметке
     this.element.querySelector('form.event').addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeChange); // это fieldset
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetClickHandler);
+    // this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange); // зачем??
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetClickHandler); // cancel btn
 
     // this.#setDatepickers();
   };
 
   #onFormSubmit = () => {
-    this.#formSubmitHandler(EventEditView.parseStateToTask(this._state)); // сюда передаем данные для отправки на сервер, state после parse
+    this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем данные для отправки на сервер, state после parse
   };
 
   #onEventTypeChange = (evt) => {
     this.updateElement({
       ...this._state,
       type: evt.target.value,
-      offersInfo: getConformedOffers(evt.target.value, this.#offers).map((offer) => ({ isChecked: false, ...offer })), // подтягиваем новый комплект офферов, без поля isChecked
+      offersInfo: getConformedOffers(evt.target.value, this.#offers).map((offer) => ({ isChecked: false, ...offer })), // подтягиваем новый комплект офферов
       offers: [], // обнуляем чекнутые офферы - offers
     });
   };
@@ -86,12 +83,17 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onOffersChange = () => {
     //ретро 18:20
-    const checkedOffers = Array.from(this.element.querySelectorAll('event__offer-checkbox:checked'));
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    this.updateElement({
+      ...this._state,
+      offers: [], // id чекнутых офферов
+      // offersInfo: getMarkedOffers(this._state.type, offers, this.#offers),
+    });
+    console.log(checkedOffers);
+    console.log(this._state);
   };
 
-  #onPriceChange = () => {
-    console.log('изменили цену');
-  };
+  #onPriceChange = () => {};
 
   static parsePointToState(pointData, offers, destinations) {
     return {
