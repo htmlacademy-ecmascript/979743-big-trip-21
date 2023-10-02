@@ -30,7 +30,7 @@ export default class EventPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#eventEditComponent.reset(this.#point);
+      this.#eventEditComponent.reset(this.#point, this.#offers, this.#destinations);
       this.#replaceFormToPoint();
     }
   };
@@ -115,7 +115,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#eventEditComponent.reset(this.#point);
+      this.#eventEditComponent.reset(this.#point, this.#offers, this.#destinations);
       this.#replaceFormToPoint();
     }
   }

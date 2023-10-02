@@ -105,12 +105,22 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   static parseStateToPoint(state) {
+    // приводим к структуре сырых данных
     // ретро 7:24
-    const pointData = { ...state };
-    //обратное преобразование к формату данных, удаляем лишние поля
-
-    // delete task.isDueDate;
-    // delete task.isRepeating;
+    const pointData = {
+      basePrice: state.basePrice,
+      dateFrom: state.dateFrom,
+      dateTo: state.dateTo,
+      destination: state.destination,
+      id: state.id,
+      isFavorite: state.isFavorite,
+      offers: state.offers,
+      type: state.type,
+    };
+    //обратное преобразование к формату данных, сохраняем только нужные поля из _state
+    // может, можно как-то попроще это реализовать? удалить ненужные поля
+    // delete pointData.destinationName; // как-то так?
+    // delete pointData.destinationDescription;
 
     return pointData;
   }
