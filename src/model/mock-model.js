@@ -3,7 +3,7 @@
 import { generateOffersByType } from '../mocks/offer';
 import { generateAllDestinations } from '../mocks/destination';
 import { generatePoint } from '../mocks/point';
-import { getRandomArrayElement, getRandomInteger } from '../util';
+import { getRandomArrayElement, getRandomInteger } from '../util/common';
 import { POINTS_COUNT, POINT_TYPES } from '../consts';
 
 export default class MockModel {

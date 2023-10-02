@@ -1,6 +1,6 @@
 // возвращает данные о пунктах назначения в том виде, как они типа на сервере хранятся
 // из них будет выборка и по ним потом поиск будет
-import { getRandomInteger } from '../util';
+import { getRandomInteger } from '../util/common';
 import { PRICE, ALL_OFFERS } from './const';
 import { POINT_TYPES } from '../consts';
 

@@ -2,17 +2,22 @@
 import { createEventItemTemplate } from '../templates/event-item-template';
 import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
-import { getPointDuration } from '../util';
+import { getPointDuration } from '../util/common';
+import { getDestinationByID, getCheckedOffers } from '../model/util/data-adapters';
 
 export default class EventItemView extends AbstractView {
-  #pointInfo;
+  #pointData = null;
+  #offers = null;
+  #destinations = null;
   #onEditClick = null;
   #favoriteClickHandler = null;
 
-  constructor({ pointInfo, onEditClick, favoriteClickHandler }) {
+  constructor({ pointData, offers, destinations, onEditClick, favoriteClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
-    this.#pointInfo = pointInfo;
+    this.#pointData = pointData;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#onEditClick = onEditClick;
     this.#favoriteClickHandler = favoriteClickHandler;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClick);
@@ -21,15 +26,15 @@ export default class EventItemView extends AbstractView {
 
   #adaptPointData() {
     return {
-      type: this.#pointInfo.type,
-      destinationName: this.#pointInfo.destinationName,
-      date: dayjs(this.#pointInfo.dateFrom).format('MMM DD'), // пока это возьмем в ка-ве даты события
-      timeStart: dayjs(this.#pointInfo.dateFrom).format('HH:mm'),
-      timeEnd: dayjs(this.#pointInfo.dateTo).format('HH:mm'),
-      duration: getPointDuration(this.#pointInfo.dateFrom, this.#pointInfo.dateTo),
-      basePrice: this.#pointInfo.basePrice,
-      checkedOffersInfo: this.#pointInfo.checkedOffersInfo,
-      isFavorite: this.#pointInfo.isFavorite,
+      type: this.#pointData.type,
+      destinationName: getDestinationByID(this.#pointData.destination, this.#destinations).name,
+      date: dayjs(this.#pointData.dateFrom).format('MMM DD'), // пока это возьмем в ка-ве даты события
+      timeStart: dayjs(this.#pointData.dateFrom).format('HH:mm'),
+      timeEnd: dayjs(this.#pointData.dateTo).format('HH:mm'),
+      duration: getPointDuration(this.#pointData.dateFrom, this.#pointData.dateTo),
+      basePrice: this.#pointData.basePrice,
+      checkedOffersInfo: getCheckedOffers(this.#pointData.type, this.#pointData.offers, this.#offers),
+      isFavorite: this.#pointData.isFavorite,
     };
   }
 

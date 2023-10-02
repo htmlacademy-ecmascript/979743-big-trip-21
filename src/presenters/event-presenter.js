@@ -2,10 +2,6 @@
 import { render, replace, remove } from '../framework/render';
 import EventItemView from '../view/event-item-view';
 import EventEditView from '../view/edit-form/edit-form-view';
-import EventEditHeaderView from '../view/edit-form/header-view';
-import EventEditDetailsView from '../view/edit-form/details-view';
-import EventEditOffersView from '../view/edit-form/offers-view';
-import EventEditDestinationView from '../view/edit-form/destination-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -13,20 +9,20 @@ const Mode = {
 };
 
 export default class EventPresenter {
-  #container;
+  #container = null;
+  #offers = null;
+  #destinations = null;
   #onDataChange = null;
   #onModeChange = null;
   #point = null;
   #eventItemComponent = null;
   #eventEditComponent = null;
-  #eventEditHeaderComponent = null;
-  #eventEditDetailsComponent = null;
-  #eventEditOffersComponent = null;
-  #eventEditDestinationComponent = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ container, onDataChange, onModeChange }) {
+  constructor({ container, offers, destinations, onDataChange, onModeChange }) {
     this.#container = container;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#onDataChange = onDataChange;
     this.#onModeChange = onModeChange;
   }
@@ -34,8 +30,8 @@ export default class EventPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#eventEditComponent.reset(this.#point, this.#offers, this.#destinations);
       this.#replaceFormToPoint();
-      // document.removeEventListener('keydown', this.#onEscKeyDown);
     }
   };
 
@@ -53,25 +49,28 @@ export default class EventPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   }
 
-  #renderEditFormInsides(point) {
-    // внутренности формы редактирования
-    this.#eventEditHeaderComponent = new EventEditHeaderView(point); // header формы - передаем элемент для открытой точки
-    this.#eventEditDetailsComponent = new EventEditDetailsView(); // детали в форме, контейнер для офферов и ПН
-    this.#eventEditOffersComponent = new EventEditOffersView(point.offersInfo); // офферы в форме
-    this.#eventEditDestinationComponent = new EventEditDestinationView(point); // пункт назначения в форме
+  #formSubmitHandler = () => {
+    // сюда будут пилетать данные для отправки на сервер
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
 
-    // render(this.#eventEditComponent, this.#container); // это позволит отрисовать форму полностью
-    render(this.#eventEditHeaderComponent, this.#eventEditComponent.element.querySelector('.event'));
-    render(this.#eventEditDetailsComponent, this.#eventEditComponent.element.querySelector('.event'));
-    render(this.#eventEditOffersComponent, this.#eventEditComponent.element.querySelector('.event__details'));
-    render(this.#eventEditDestinationComponent, this.#eventEditComponent.element.querySelector('.event__details'));
-  }
+  #editClickHandler = () => {
+    this.#replacePointToForm();
+    document.addEventListener('keydown', this.#onEscKeyDown);
+  };
 
   #favoriteClickHandler = () => {
     this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
   };
 
+  #resetClickHandler = () => {
+    this.#eventEditComponent.reset(this.#point, this.#offers, this.#destinations);
+    this.#replaceFormToPoint();
+  };
+
   init(point) {
+    // получаем сырые данные
     this.#point = point;
 
     const prevEventItemComponent = this.#eventItemComponent;
@@ -79,21 +78,21 @@ export default class EventPresenter {
 
     // создаем компонент закрытой точки
     this.#eventItemComponent = new EventItemView({
-      pointInfo: point,
-      onEditClick: () => {
-        this.#replacePointToForm();
-        document.addEventListener('keydown', this.#onEscKeyDown);
-      },
-      // onEditClick: this.#editClickHandler,
+      pointData: point,
+      offers: this.#offers,
+      destinations: this.#destinations,
+      onEditClick: this.#editClickHandler,
       favoriteClickHandler: this.#favoriteClickHandler,
     });
 
     // создаем компоненты формы редактирования
-    this.#eventEditComponent = new EventEditView(() => {
-      this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#eventEditComponent = new EventEditView({
+      pointData: point,
+      offers: this.#offers,
+      destinations: this.#destinations,
+      formSubmitHandler: this.#formSubmitHandler,
+      resetClickHandler: this.#resetClickHandler,
     });
-    this.#renderEditFormInsides(point);
 
     //проверяем первоначальную инициализацию
     if (prevEventItemComponent === null || prevEventEditComponent === null) {
@@ -116,6 +115,7 @@ export default class EventPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#eventEditComponent.reset(this.#point, this.#offers, this.#destinations);
       this.#replaceFormToPoint();
     }
   }

@@ -51,11 +51,13 @@ export default class HeaderPresenter {
     //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
+      offers: this.#model.offers,
+      destinations: this.#model.destinations,
       onDataChange: this.#pointChangeHandler,
       onModeChange: this.#modeChangeHandler,
     });
-    eventPresenter.init(point);
-    this.#eventPresenters.set(point.id, eventPresenter);
+    eventPresenter.init(point); //передаем сырые данные
+    this.#eventPresenters.set(point.id, eventPresenter); // складываем очередной презентер в коллекцию - MAP
   }
 
   #renderEvents(points) {
@@ -83,16 +85,17 @@ export default class HeaderPresenter {
   };
 
   init() {
-    this.#allPoints = [...this.#model.allAdaptedPoints];
+    this.#allPoints = [...this.#model.points];
 
     this.#renderFilters();
     // если точек нет, то выводим заглушку
-    if (this.#model.allAdaptedPoints.length === 0) {
+    if (this.#model.points.length === 0) {
       this.#renderNoPoints();
       return;
     }
     this.#renderTripInfo();
     this.#renderSort();
-    this.#renderEvents(this.#model.allAdaptedPoints);
+    // this.#renderEvents(this.#model.allAdaptedPoints);
+    this.#renderEvents(this.#model.points); // отдаем сырые данные
   }
 }

@@ -1,5 +1,5 @@
 // генерирует объект для одной точки
-import { getRandomInteger } from '../util';
+import { getRandomInteger } from '../util/common';
 import { PRICE } from './const';
 import { getDate } from './util';
 
