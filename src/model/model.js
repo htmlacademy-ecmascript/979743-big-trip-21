@@ -2,15 +2,21 @@
 import Observable from '../framework/observable';
 export default class Model extends Observable {
   #destinations;
-  #offers;
-  #points;
+  #offers = null;
+  #points = null;
+  #pointApiService = null;
 
-  constructor({ destinations, offers, points }) {
+  constructor({ destinations, offers, points, pointApiService }) {
     super();
     //сырые данные
     this.#destinations = destinations;
     this.#offers = offers;
     this.#points = points;
+    this.#pointApiService = pointApiService;
+
+    this.#pointApiService.points.then((pointsData) => console.log(pointsData));
+    this.#pointApiService.destinations.then((destinationsData) => console.log(destinationsData));
+    this.#pointApiService.offers.then((offersData) => console.log(offersData));
   }
 
   //-------------вычисляем общую стоимость---------
