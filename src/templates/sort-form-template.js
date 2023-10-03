@@ -1,16 +1,16 @@
-function createSortItem({ sortingName, isAnable }, isChecked) {
+function createSortItem({ name, isAnable }, isChecked) {
   return `
-    <div class="trip-sort__item  trip-sort__item--${sortingName}">
+    <div class="trip-sort__item  trip-sort__item--${name}">
       <input
-        id="sort-${sortingName}"
+        id="sort-${name}"
         class="trip-sort__input  visually-hidden"
         type="radio"
         name="trip-sort"
-        value="sort-${sortingName}"
+        value="sort-${name}"
         ${isAnable ? '' : 'disabled'}
         ${isChecked ? 'checked' : ''}
         >
-      <label class="trip-sort__btn" for="sort-${sortingName}">${sortingName}</label>
+      <label class="trip-sort__btn" for="sort-${name}">${name}</label>
     </div>
   `;
 }

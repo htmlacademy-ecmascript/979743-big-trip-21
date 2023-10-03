@@ -29,31 +29,53 @@ const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
 //   PRESENT: 'present',
 //   PAST: 'past',
 // };
-
-const SortType = [
+const SortType = {
   // передается в шаблон для отрисовки блока с сортировкой
-  //переделать в объект, чтобы передавать в презентер (разбор 7.1 коммит 7.2)
-  {
-    sortingName: 'day',
+  DAY: {
+    name: 'day',
     isAnable: true,
   },
-  {
-    sortingName: 'event',
+  EVENT: {
+    name: 'event',
     isAnable: false,
   },
-  {
-    sortingName: 'time',
+  TIME: {
+    name: 'time',
     isAnable: true,
   },
-  {
-    sortingName: 'price',
+  PRICE: {
+    name: 'price',
     isAnable: true,
   },
-  {
-    sortingName: 'offers',
+  OFFERS: {
+    name: 'offers',
     isAnable: false,
   },
-];
+};
+// const SortType = [
+//   // передается в шаблон для отрисовки блока с сортировкой
+//   //переделать в объект, чтобы передавать в презентер (разбор 7.1 коммит 7.2)
+//   {
+//     sortingName: 'day',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'event',
+//     isAnable: false,
+//   },
+//   {
+//     sortingName: 'time',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'price',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'offers',
+//     isAnable: false,
+//   },
+// ];
 
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',

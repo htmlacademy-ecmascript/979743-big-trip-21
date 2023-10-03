@@ -9,7 +9,12 @@ export default class SortView extends AbstractView {
     this.#sortings = sortings;
   }
 
+  #adaptSorting(sortings) {
+    return Object.entries(sortings).map((sort) => ({ ...sort[1] }));
+  }
+
   get template() {
-    return createSortTemplate(this.#sortings);
+    console.log(this.#adaptSorting(this.#sortings));
+    return createSortTemplate(this.#adaptSorting(this.#sortings));
   }
 }
