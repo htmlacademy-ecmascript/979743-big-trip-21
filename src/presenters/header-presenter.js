@@ -148,7 +148,7 @@ export default class HeaderPresenter {
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
-        this.#clearAll();
+        this.#clearAll({ resetRenderedTaskCount: true });
         this.#renderAll();
     }
   };

@@ -39,7 +39,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange); // зачем??
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetClickHandler); // cancel btn
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // cancel btn
 
     // this.#setDatepickers();
   };
