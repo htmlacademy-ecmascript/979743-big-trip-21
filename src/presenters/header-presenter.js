@@ -11,12 +11,14 @@ import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
+import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 
 export default class HeaderPresenter {
   #container = null;
   #model = null;
   // #allPoints = [];
   #eventPresenters = new Map();
+  #currentSortType = SortType.DAY.name;
 
   constructor(container, model) {
     this.#container = container;
@@ -30,7 +32,19 @@ export default class HeaderPresenter {
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
   #siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
-  #sortComponent = new SortView(SortType);
+
+  #sortTypeChangeHandler = (sortType) => {
+    // аргумент приходит из view
+    console.log(sortType);
+    this.#currentSortType = sortType;
+    this.#clearEventsList();
+    this.#renderEvents(this.pointData);
+  };
+
+  #sortComponent = new SortView({
+    sortTypeChangeHandler: this.#sortTypeChangeHandler,
+  });
+
   #eventsListComponent = new EventsListView();
 
   #renderFilters() {
@@ -79,20 +93,8 @@ export default class HeaderPresenter {
     //нужно ли удалять сам список-контейнер?
   }
 
-  // #pointChangeHandler = (updatedPoint) => {
-  //   // используется пока для изменения данных при клике на звездочку
-  //   // this.#allPoints = updateItem(this.#allPoints, updatedPoint);
-  //   // Здесь будем вызывать обновление модели
-  //   this.#eventPresenters.get(updatedPoint.id).init(updatedPoint); // элемент перерисую, но данные не изменятся
-  // };
-
   #handleViewAction = (actionType, updateType, update) => {
     // вместо pointChangeHandler - передается в event-presenter
-    console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#model.updatePoint(updateType, update);
@@ -131,8 +133,18 @@ export default class HeaderPresenter {
   };
 
   get pointData() {
-    return this.#model.points;
-    // сюда добавится логика сортировки
+    // возвращает данные о точках с учетом текущей сортировки
+    const allPoints = this.#model.points;
+
+    switch (this.#currentSortType) {
+      case SortType.PRICE.name:
+        return allPoints.sort(sortByPrice); // от большего к меньшему
+      case SortType.TIME.name:
+        return allPoints.sort(sortByTime);
+      case SortType.DAY:
+        return allPoints.sort(sortByDate);
+    }
+    return allPoints;
     // разбор 1 05:13
   }
 
