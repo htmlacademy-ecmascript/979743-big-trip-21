@@ -25,3 +25,5 @@ const headerPresenter = new HeaderPresenter(siteTripMainElement, model);
 headerPresenter.init();
 
 console.log(points);
+console.log(destinations);
+console.log(offers);

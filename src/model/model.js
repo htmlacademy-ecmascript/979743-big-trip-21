@@ -1,5 +1,6 @@
 // import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
 import Observable from '../framework/observable';
+import dayjs from 'dayjs';
 export default class Model extends Observable {
   #destinations;
   #offers = null;
@@ -14,9 +15,13 @@ export default class Model extends Observable {
     this.#points = points;
     this.#pointApiService = pointApiService;
 
-    this.#pointApiService.points.then((pointsData) => console.log(pointsData));
-    this.#pointApiService.destinations.then((destinationsData) => console.log(destinationsData));
-    this.#pointApiService.offers.then((offersData) => console.log(offersData));
+    this.#pointApiService.points.then((pointsData) => {
+      console.log(pointsData.map(this.#adaptPointToClient));
+    });
+    this.#pointApiService.destinations.then((destinationsData) =>
+      console.log(destinationsData.map(this.#adaptDestinationToClient))
+    );
+    this.#pointApiService.offers.then((offersData) => console.log(offersData.map(this.#adaptOfferToClient)));
   }
 
   //-------------вычисляем общую стоимость---------
@@ -46,7 +51,7 @@ export default class Model extends Observable {
     // update - это объект точки
     const pointIndex = this.#points.findIndex((point) => point.id === update.id);
     if (pointIndex === -1) {
-      throw new Error("Can't update unexisting point");
+      throw new Error('Cant update unexisting point');
     }
 
     this.#points = [
@@ -72,7 +77,7 @@ export default class Model extends Observable {
   deletePoint(updateType, update) {
     const pointIndex = this.#points.findIndex((point) => point.id === update.id);
     if (pointIndex === -1) {
-      throw new Error("Can't delete unexisting point");
+      throw new Error('Cant delete unexisting point');
     }
 
     this.#points = [
@@ -82,6 +87,47 @@ export default class Model extends Observable {
     ];
 
     this._notify(updateType);
+  }
+
+  //------------- адаптация данных ---------------------------------------
+
+  #adaptPointToClient(point) {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point.base_price,
+      isFavorite: point.is_favorite,
+      dateFrom: dayjs(point.date_from),
+      dateTo: dayjs(point.date_to),
+    };
+
+    // delete adaptedPoint['base_price'];
+    // delete adaptedPoint['is_favorite'];
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.is_favorite;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+
+    return adaptedPoint;
+  }
+
+  #adaptDestinationToClient(destination) {
+    const adaptedDestination = {
+      ...destination,
+      photos: destination.pictures.map((picture) => ({ alt: picture.description, src: picture.src })),
+    };
+
+    delete adaptedDestination.pictures;
+
+    return adaptedDestination;
+  }
+
+  #adaptOfferToClient(offer) {
+    // адаптировать не надо, структура соответствует; на всяк случай
+    const adaptedOffer = {
+      ...offer,
+    };
+
+    return adaptedOffer;
   }
 
   //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
