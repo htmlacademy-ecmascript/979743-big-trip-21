@@ -141,7 +141,7 @@ export default class HeaderPresenter {
         return allPoints.sort(sortByPrice); // от большего к меньшему
       case SortType.TIME.name:
         return allPoints.sort(sortByTime);
-      case SortType.DAY:
+      case SortType.DAY.name:
         return allPoints.sort(sortByDate);
     }
     return allPoints;

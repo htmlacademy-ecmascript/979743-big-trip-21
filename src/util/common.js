@@ -59,7 +59,9 @@ function sortByTime(a, b) {
 }
 
 function sortByDate(a, b) {
-  return Number(a.dateFrom.isBefore(b.dateFrom)) - 0.5; //true = 1, false = 0
+  const dateA = dayjs(a.dateFrom);
+  const dateB = dayjs(b.dateFrom);
+  return Number(dateB.isBefore(dateA)) - 0.5; //true = 1, false = 0
 }
 
 export {
