@@ -12,12 +12,14 @@ import NoPointsView from '../view/no-points-view';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
+import { filterEverything, filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
 
 export default class HeaderPresenter {
   #container = null;
   #model = null;
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY.name;
+  #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
 
   constructor(container, model) {
     this.#container = container;
@@ -39,6 +41,13 @@ export default class HeaderPresenter {
     this.#renderEvents(this.pointData);
   };
 
+  #filterTypeClickHandler = (filterType) => {
+    console.log(filterType);
+    this.#currentFilterType = filterType;
+    this.#clearEventsList();
+    this.#renderEvents(this.pointData);
+  };
+
   #sortComponent = new SortView({
     currentSortType: this.#currentSortType,
     sortTypeChangeHandler: this.#sortTypeChangeHandler,
@@ -49,7 +58,10 @@ export default class HeaderPresenter {
 
   #renderFilters() {
     const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
-    const tripFiltersComponent = new TripFiltersView(filters);
+    const tripFiltersComponent = new TripFiltersView({
+      filters: filters,
+      filterTypeClickHandler: this.#filterTypeClickHandler,
+    });
     render(tripFiltersComponent, this.#siteTripControlsElement);
   }
 
@@ -96,7 +108,7 @@ export default class HeaderPresenter {
     }
     this.#renderTripInfo();
     this.#renderSort();
-    this.#renderEvents(this.pointData); // отдаем сырые данные
+    this.#renderEvents(this.pointData); // какие данные сюда попадают?????
   }
 
   #clearEventsList() {
@@ -160,14 +172,30 @@ export default class HeaderPresenter {
   get pointData() {
     // возвращает данные о точках с учетом текущей сортировки
     const allPoints = this.#model.points;
+    let filteredPoint = [];
+
+    switch (this.#currentFilterType) {
+      case 'everything': // переделать структуру
+        filteredPoint = allPoints;
+        break;
+      case 'future':
+        filteredPoint = filterFuturePoints(allPoints); // от большего к меньшему
+        break;
+      case 'present':
+        filteredPoint = filterPresentPoints(allPoints);
+        break;
+      case 'past':
+        filteredPoint = filterPastPoints(allPoints);
+        break;
+    }
 
     switch (this.#currentSortType) {
       case SortType.PRICE.name:
-        return allPoints.sort(sortByPrice); // от большего к меньшему
+        return filteredPoint.sort(sortByPrice); // от большего к меньшему
       case SortType.TIME.name:
-        return allPoints.sort(sortByTime);
+        return filteredPoint.sort(sortByTime);
       case SortType.DAY.name:
-        return allPoints.sort(sortByDate);
+        return filteredPoint.sort(sortByDate);
     }
     return allPoints;
     // разбор 1 05:13
