@@ -51,10 +51,15 @@ export default class EventPresenter {
   }
 
   #formSubmitHandler = (point) => {
-    // сюда прилетают данные для отправки на сервер
-    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point); //
+    // сюда прилетают данные для отправки в модель
+    // добавить проверку: перерисовывать только точку или перерисовывать весь список
+    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #deleteClickHandler = (point) => {
+    this.#onDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 
   #editClickHandler = () => {
@@ -98,6 +103,7 @@ export default class EventPresenter {
       destinations: this.#destinations,
       formSubmitHandler: this.#formSubmitHandler,
       resetClickHandler: this.#resetClickHandler,
+      deleteClickHandler: this.#deleteClickHandler,
     });
 
     //проверяем первоначальную инициализацию

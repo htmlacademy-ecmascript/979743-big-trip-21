@@ -7,8 +7,9 @@ export default class EventEditView extends AbstractStatefulView {
   #resetClickHandler = null;
   #offers = null;
   #destinations = null;
+  #deleteClickHandler = null;
 
-  constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler }) {
+  constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler, deleteClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     //constructor({point = BLANK_POINT, onFormSubmit})
     super();
@@ -17,6 +18,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
     this.#resetClickHandler = resetClickHandler; // ретро 10:03
+    this.#deleteClickHandler = deleteClickHandler;
     this._restoreHandlers(); // ретро 9:58
   }
 
@@ -39,14 +41,15 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange); // зачем??
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // cancel btn
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClick); // delete btn
 
     // this.#setDatepickers();
   };
 
   #onFormSubmit = (evt) => {
     evt.preventDefault(); // надо?
-    this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем данные для отправки на сервер, state после parse
+    this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем измененные данные для перерисовки и сохранения
   };
 
   #onEventTypeChange = (evt) => {
@@ -96,6 +99,11 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onPriceChange = () => {};
+
+  #onDeleteClick = (evt) => {
+    evt.preventDefault();
+    this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state));
+  };
 
   static parsePointToState(pointData, offers, destinations) {
     return {

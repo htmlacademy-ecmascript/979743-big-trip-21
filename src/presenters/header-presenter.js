@@ -144,7 +144,7 @@ export default class HeaderPresenter {
       case UpdateType.MINOR:
         // обновляем список
         this.#clearEventsList();
-        this.#renderEvents();
+        this.#renderEvents(this.pointData);
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
