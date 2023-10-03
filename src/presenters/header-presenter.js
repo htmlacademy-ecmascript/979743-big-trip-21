@@ -1,6 +1,6 @@
 // это будет главный презентер
 import { FILTER_TYPES, SortType } from '../consts';
-import { render, RenderPosition } from '../framework/render';
+import { render, RenderPosition, remove } from '../framework/render';
 import TripInfoView from '../view/trip-info-view';
 import TripAbouteView from '../view/trip-aboute-view';
 import TripTotalView from '../view/trip-total-view';
@@ -16,7 +16,6 @@ import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 export default class HeaderPresenter {
   #container = null;
   #model = null;
-  // #allPoints = [];
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY.name;
 
@@ -35,17 +34,18 @@ export default class HeaderPresenter {
 
   #sortTypeChangeHandler = (sortType) => {
     // аргумент приходит из view
-    console.log(sortType);
     this.#currentSortType = sortType;
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
   };
 
   #sortComponent = new SortView({
+    currentSortType: this.#currentSortType,
     sortTypeChangeHandler: this.#sortTypeChangeHandler,
   });
 
   #eventsListComponent = new EventsListView();
+  #noPointsComponent = new NoPointsView();
 
   #renderFilters() {
     const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
@@ -84,13 +84,39 @@ export default class HeaderPresenter {
   }
 
   #renderNoPoints() {
-    render(new NoPointsView(), this.#siteTripEventsElement);
+    render(this.#noPointsComponent, this.#siteTripEventsElement);
+  }
+
+  #renderAll() {
+    this.#renderFilters();
+    // если точек нет, то выводим заглушку
+    if (this.#model.points.length === 0) {
+      this.#renderNoPoints();
+      return;
+    }
+    this.#renderTripInfo();
+    this.#renderSort();
+    this.#renderEvents(this.pointData); // отдаем сырые данные
   }
 
   #clearEventsList() {
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
-    this.#eventPresenters.clear();
-    //нужно ли удалять сам список-контейнер?
+    this.#eventPresenters.clear(); // очищаем коллекцию презентеров
+    //список-контейнер не удалаю
+  }
+
+  #clearAll({ resetSortType = false } = {}) {
+    this.#clearEventsList();
+
+    remove(this.#tripInfoComponent);
+    remove(this.#tripAbouteComponent);
+    remove(this.#sortComponent);
+    remove(this.#eventsListComponent);
+    remove(this.#noPointsComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY.name; // сортировка по умолчанию
+    }
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -110,21 +136,20 @@ export default class HeaderPresenter {
 
   #handleModelEvent = (updateType, data) => {
     //вызывается из _notify
-    console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
         // обновляем только точку
         this.#eventPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // обновляем список (сортировка, фильтрация)
+        // обновляем список
+        this.#clearEventsList();
+        this.#renderEvents();
         break;
       case UpdateType.MAJOR:
-      // обновляем все, в т.ч. хедер
+        // обновляем все, в т.ч. хедер
+        this.#clearAll();
+        this.#renderAll();
     }
   };
 
@@ -149,17 +174,6 @@ export default class HeaderPresenter {
   }
 
   init() {
-    // this.#allPoints = [...this.#model.points];
-
-    this.#renderFilters();
-    // если точек нет, то выводим заглушку
-    if (this.#model.points.length === 0) {
-      this.#renderNoPoints();
-      return;
-    }
-    this.#renderTripInfo();
-    this.#renderSort();
-    // this.#renderEvents(this.#model.allAdaptedPoints);
-    this.#renderEvents(this.#model.points); // отдаем сырые данные
+    this.#renderAll();
   }
 }

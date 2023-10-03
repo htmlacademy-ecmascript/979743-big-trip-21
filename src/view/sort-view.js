@@ -4,10 +4,12 @@ import { SortType } from '../consts';
 
 export default class SortView extends AbstractView {
   #sortings = null;
+  #currentSortType = null;
   #sortTypeChangeHandler = null;
 
-  constructor({ sortTypeChangeHandler }) {
+  constructor({ currentSortType, sortTypeChangeHandler }) {
     super();
+    this.#currentSortType = currentSortType;
     this.#sortings = SortType;
     this.#sortTypeChangeHandler = sortTypeChangeHandler;
     this.element.addEventListener('change', this.#onSortTypeChange);
@@ -22,6 +24,6 @@ export default class SortView extends AbstractView {
   }
 
   get template() {
-    return createSortTemplate(this.#adaptSorting(this.#sortings));
+    return createSortTemplate(this.#adaptSorting(this.#sortings), this.#currentSortType);
   }
 }
