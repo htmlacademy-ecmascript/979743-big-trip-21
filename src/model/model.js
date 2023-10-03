@@ -1,11 +1,15 @@
 // import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
 import Observable from '../framework/observable';
 import dayjs from 'dayjs';
+import { UpdateType } from '../consts';
 export default class Model extends Observable {
   #destinations;
   #offers = null;
   #points = null;
   #pointApiService = null;
+  #pointsData = [];
+  #destinationsData = [];
+  #offersData = [];
 
   constructor({ destinations, offers, points, pointApiService }) {
     super();
@@ -15,22 +19,23 @@ export default class Model extends Observable {
     this.#points = points;
     this.#pointApiService = pointApiService;
 
-    this.#pointApiService.points.then((pointsData) => {
-      console.log(pointsData.map(this.#adaptPointToClient));
-    });
-    this.#pointApiService.destinations.then((destinationsData) =>
-      console.log(destinationsData.map(this.#adaptDestinationToClient))
-    );
-    this.#pointApiService.offers.then((offersData) => console.log(offersData.map(this.#adaptOfferToClient)));
+    // this.#pointApiService.points.then((pointsData) => {
+    //   console.log(pointsData.map(this.#adaptPointToClient));
+    // });
+    // this.#pointApiService.destinations.then((destinationsData) =>
+    //   console.log(destinationsData.map(this.#adaptDestinationToClient))
+    // );
+    // this.#pointApiService.offers.then((offersData) => console.log(offersData.map(this.#adaptOfferToClient)));
   }
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
     // ----- добавить еще стоимость офферов (!!!)
-    const initialCost = 0;
-    return this.#points
-      .map((point) => point.basePrice)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
+    // const initialCost = 0;
+    // return this.#points
+    //   .map((point) => point.basePrice)
+    //   .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
+    return '3456';
   }
 
   //-------------фильтры - возвращают отфильтроанный массив точек----------------------------------------------------
@@ -46,6 +51,35 @@ export default class Model extends Observable {
   // get pastPoints() {
   //   return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
   // }
+
+  async init() {
+    try {
+      const serverPoints = await this.#pointApiService.points;
+      this.#pointsData = serverPoints.map(this.#adaptPointToClient);
+    } catch (err) {
+      this.#pointsData = [];
+    }
+
+    try {
+      const serverDestinations = await this.#pointApiService.destinations;
+      this.#destinationsData = serverDestinations.map(this.#adaptDestinationToClient);
+    } catch (err) {
+      this.#destinationsData = [];
+    }
+
+    try {
+      const serverOffers = await this.#pointApiService.offers;
+      this.#offersData = serverOffers.map(this.#adaptOfferToClient);
+    } catch (err) {
+      this.#offersData = [];
+    }
+
+    console.log(this.#pointsData);
+    console.log(this.#destinationsData);
+    console.log(this.#offersData);
+
+    this._notify(UpdateType.INIT);
+  }
 
   updatePoint(updateType, update) {
     // update - это объект точки
@@ -132,14 +166,17 @@ export default class Model extends Observable {
 
   //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
   get offers() {
-    return this.#offers;
+    // return this.#offers;
+    return this.#offersData;
   }
 
   get destinations() {
-    return this.#destinations;
+    // return this.#destinations;
+    return this.#destinationsData;
   }
 
   get points() {
-    return this.#points;
+    // return this.#points;
+    return this.#pointsData;
   }
 }

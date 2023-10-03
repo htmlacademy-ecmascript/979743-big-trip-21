@@ -19,6 +19,8 @@ const model = new Model({
   pointApiService: new PointApiService(END_POINT, AUTHORIZATION),
 });
 
+model.init();
+
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info
 const headerPresenter = new HeaderPresenter(siteTripMainElement, model);

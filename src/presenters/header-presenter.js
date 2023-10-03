@@ -13,6 +13,7 @@ import NoPointsView from '../view/no-points-view';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 import { filterEverything, filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
+import LoadingView from '../view/loading-view';
 
 export default class HeaderPresenter {
   #container = null;
@@ -20,6 +21,7 @@ export default class HeaderPresenter {
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
+  #isLoading = true;
 
   constructor(container, model) {
     this.#container = container;
@@ -28,6 +30,7 @@ export default class HeaderPresenter {
     this.#model.addObserver(this.#handleModelEvent);
   }
 
+  #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
@@ -99,13 +102,17 @@ export default class HeaderPresenter {
     render(this.#noPointsComponent, this.#siteTripEventsElement);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#siteTripEventsElement);
+  }
+
   #renderAll() {
     this.#renderFilters();
-    // если точек нет, то выводим заглушку
-    if (this.#model.points.length === 0) {
-      this.#renderNoPoints();
-      return;
-    }
+    // // если точек нет, то выводим заглушку -- перенести в ф-ю после загрузки.
+    // if (this.#model.points.length === 0) {
+    //   this.#renderNoPoints();
+    //   return;
+    // }
     this.#renderTripInfo();
     this.#renderSort();
     this.#renderEvents(this.pointData); // какие данные сюда попадают?????
@@ -125,6 +132,7 @@ export default class HeaderPresenter {
     remove(this.#sortComponent);
     remove(this.#eventsListComponent);
     remove(this.#noPointsComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY.name; // сортировка по умолчанию
@@ -147,6 +155,7 @@ export default class HeaderPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
+    // обработчик событий модели
     //вызывается из _notify
     switch (updateType) {
       case UpdateType.PATCH:
@@ -162,6 +171,13 @@ export default class HeaderPresenter {
         // обновляем все, в т.ч. хедер
         this.#clearAll({ resetRenderedTaskCount: true });
         this.#renderAll();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        this.#clearAll();
+        remove(this.#loadingComponent);
+        this.#renderAll();
+        break;
     }
   };
 

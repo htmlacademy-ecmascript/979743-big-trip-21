@@ -7,4 +7,4 @@ export default class NoPointsView extends AbstractView {
   }
 }
 
-export { NoPointsView };
+// export { NoPointsView };
