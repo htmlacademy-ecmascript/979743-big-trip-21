@@ -51,6 +51,7 @@ export default class EventPresenter {
   }
 
   #formSubmitHandler = (point) => {
+    // сюда прилетает _state из view
     // сюда прилетают данные для отправки в модель
     // добавить проверку: перерисовывать только точку или перерисовывать весь список
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
@@ -83,7 +84,6 @@ export default class EventPresenter {
   init(point) {
     // получаем сырые данные
     this.#point = point;
-
     const prevEventItemComponent = this.#eventItemComponent;
     const prevEventEditComponent = this.#eventEditComponent;
 

@@ -4,6 +4,7 @@ import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../model/util/data-adapters';
 import dayjs from 'dayjs';
 import { DATA_FORMAT } from '../../consts';
+import { formatDateStr } from '../../util/common';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
@@ -122,10 +123,15 @@ export default class EventEditView extends AbstractStatefulView {
   static parseStateToPoint(state) {
     // приводим к структуре сырых данных
     // ретро 7:24
+    const transfotmedDateFromStr = formatDateStr(state.dateFrom);
+    const transfotmedDateToStr = formatDateStr(state.dateTo);
+
     const pointData = {
       basePrice: state.basePrice,
-      dateFrom: state.dateFrom,
-      dateTo: state.dateTo,
+      dateFrom: dayjs(transfotmedDateToStr),
+      dateTo: dayjs(transfotmedDateToStr),
+      // dateFrom: new Date(transfotmedDateFromStr),
+      // dateTo: new Date(transfotmedDateToStr),
       destination: state.destination,
       id: state.id,
       isFavorite: state.isFavorite,
@@ -134,8 +140,6 @@ export default class EventEditView extends AbstractStatefulView {
     };
     //обратное преобразование к формату данных, сохраняем только нужные поля из _state
     // может, можно как-то попроще это реализовать? удалить ненужные поля
-    // delete pointData.destinationName; // как-то так?
-    // delete pointData.destinationDescription;
 
     return pointData;
   }

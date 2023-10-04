@@ -3,15 +3,15 @@ import Observable from '../framework/observable';
 import dayjs from 'dayjs';
 import { UpdateType } from '../consts';
 export default class Model extends Observable {
-  #destinations;
-  #offers = null;
-  #points = null;
+  // #destinations;
+  // #offers = null;
+  // #points = null;
   #pointApiService = null;
   #pointsData = [];
   #destinationsData = [];
   #offersData = [];
 
-  constructor({ destinations, offers, points, pointApiService }) {
+  constructor({ pointApiService }) {
     super();
     // //сырые данные
     // this.#destinations = destinations;
@@ -45,8 +45,9 @@ export default class Model extends Observable {
   async init() {
     try {
       const serverPoints = await this.#pointApiService.points;
-      console.log(serverPoints);
+      // console.log(serverPoints);
       this.#pointsData = serverPoints.map(this.#adaptPointToClient);
+      // console.log(this.#pointsData[0].dateFrom instanceof Date); // true
     } catch (err) {
       this.#pointsData = [];
     }
@@ -86,6 +87,7 @@ export default class Model extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
+      console.log(err);
       throw new Error('Cant update task');
     }
   }

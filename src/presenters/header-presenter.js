@@ -13,7 +13,7 @@ import NewEventBtn from '../view/new-event-btn-view';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
-import { filterEverything, filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
+import { filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
 import LoadingView from '../view/loading-view';
 
 export default class HeaderPresenter {
@@ -178,7 +178,6 @@ export default class HeaderPresenter {
         remove(this.#loadingComponent);
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
-        console.log(this.pointData);
         break;
     }
   };

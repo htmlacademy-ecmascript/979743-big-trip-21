@@ -31,6 +31,7 @@ export default class PointApiService extends ApiService {
   }
 
   #adaptPointToServer(point) {
+    // console.log('adapt to server ', point.dateFrom instanceof dayjs); // true
     const adaptedPoint = {
       ...point,
       base_price: point.basePrice,
@@ -43,5 +44,7 @@ export default class PointApiService extends ApiService {
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
+
+    console.log(adaptedPoint);
   }
 }
