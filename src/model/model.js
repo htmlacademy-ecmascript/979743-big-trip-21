@@ -13,25 +13,22 @@ export default class Model extends Observable {
 
   constructor({ destinations, offers, points, pointApiService }) {
     super();
-    //сырые данные
-    this.#destinations = destinations;
-    this.#offers = offers;
-    this.#points = points;
+    // //сырые данные
+    // this.#destinations = destinations;
+    // this.#offers = offers;
+    // this.#points = points;
     this.#pointApiService = pointApiService;
   }
 
   get offers() {
-    // return this.#offers;
     return this.#offersData;
   }
 
   get destinations() {
-    // return this.#destinations;
     return this.#destinationsData;
   }
 
   get points() {
-    // return this.#points;
     return this.#pointsData;
   }
 
@@ -48,6 +45,7 @@ export default class Model extends Observable {
   async init() {
     try {
       const serverPoints = await this.#pointApiService.points;
+      console.log(serverPoints);
       this.#pointsData = serverPoints.map(this.#adaptPointToClient);
     } catch (err) {
       this.#pointsData = [];
@@ -128,8 +126,6 @@ export default class Model extends Observable {
       dateTo: dayjs(point.date_to).toDate(),
     };
 
-    // delete adaptedPoint['base_price'];
-    // delete adaptedPoint['is_favorite'];
     delete adaptedPoint.base_price;
     delete adaptedPoint.is_favorite;
     delete adaptedPoint.date_from;
