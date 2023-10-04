@@ -19,7 +19,6 @@ export default class PointApiService extends ApiService {
   }
 
   async updatePoint(point) {
-    console.log(point);
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
@@ -32,7 +31,6 @@ export default class PointApiService extends ApiService {
   }
 
   #adaptPointToServer(point) {
-    // console.log('adapt to server ', point.dateFrom instanceof dayjs); // true
     const adaptedPoint = {
       ...point,
       'base_price': point.basePrice,
@@ -47,10 +45,5 @@ export default class PointApiService extends ApiService {
     delete adaptedPoint.dateTo;
 
     return adaptedPoint;
-
-    // console.log(adaptedPoint);
-    // console.log('base_price ', typeof adaptedPoint.base_price);
-    // console.log('offers[0] ', typeof adaptedPoint.offers[0]);
-    // console.log('type ', typeof adaptedPoint.type);
   }
 }

@@ -128,18 +128,14 @@ export default class EventEditView extends AbstractStatefulView {
 
     const pointData = {
       basePrice: state.basePrice,
-      dateFrom: dayjs(transfotmedDateToStr),
+      dateFrom: dayjs(transfotmedDateFromStr),
       dateTo: dayjs(transfotmedDateToStr),
-      // dateFrom: new Date(transfotmedDateFromStr),
-      // dateTo: new Date(transfotmedDateToStr),
       destination: state.destination,
       id: state.id,
       isFavorite: state.isFavorite,
       offers: state.offers,
       type: state.type,
     };
-    //обратное преобразование к формату данных, сохраняем только нужные поля из _state
-    // может, можно как-то попроще это реализовать? удалить ненужные поля
 
     return pointData;
   }
