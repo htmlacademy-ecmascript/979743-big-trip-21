@@ -20,7 +20,7 @@ export default class PointApiService extends ApiService {
 
   async updatePoint(point) {
     const response = await this._load({
-      url: `big-trip/points/${point.id}`,
+      url: `points/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(point),
       headers: new Headers({ 'Content-Type': 'application/json' }),

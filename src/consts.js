@@ -1,5 +1,6 @@
 // константы
-const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
+// const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
+const DATA_FORMAT = 'DD/MM/YY HH:mm';
 
 const DATA_SHORT_FORMAT = 'MMM DD';
 

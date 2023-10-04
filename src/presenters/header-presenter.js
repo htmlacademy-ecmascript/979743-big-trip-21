@@ -178,6 +178,7 @@ export default class HeaderPresenter {
         remove(this.#loadingComponent);
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
+        console.log(this.pointData);
         break;
     }
   };

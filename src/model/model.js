@@ -18,14 +18,21 @@ export default class Model extends Observable {
     this.#offers = offers;
     this.#points = points;
     this.#pointApiService = pointApiService;
+  }
 
-    // this.#pointApiService.points.then((pointsData) => {
-    //   console.log(pointsData.map(this.#adaptPointToClient));
-    // });
-    // this.#pointApiService.destinations.then((destinationsData) =>
-    //   console.log(destinationsData.map(this.#adaptDestinationToClient))
-    // );
-    // this.#pointApiService.offers.then((offersData) => console.log(offersData.map(this.#adaptOfferToClient)));
+  get offers() {
+    // return this.#offers;
+    return this.#offersData;
+  }
+
+  get destinations() {
+    // return this.#destinations;
+    return this.#destinationsData;
+  }
+
+  get points() {
+    // return this.#points;
+    return this.#pointsData;
   }
 
   //-------------вычисляем общую стоимость---------
@@ -37,20 +44,6 @@ export default class Model extends Observable {
     //   .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
     return '3456';
   }
-
-  //-------------фильтры - возвращают отфильтроанный массив точек----------------------------------------------------
-  // переделать, чтобы принимали сырые данные на вход, не адаптированные
-  // get futurePoints() {
-  //   return filterFuturePoints(this.#points).map((point) => this.#adaptPointData(point));
-  // }
-
-  // get presentPoints() {
-  //   return filterPresentPoints(this.#points).map((point) => this.#adaptPointData(point));
-  // }
-
-  // get pastPoints() {
-  //   return filterPastPoints(this.#points).map((point) => this.#adaptPointData(point));
-  // }
 
   async init() {
     try {
@@ -77,43 +70,48 @@ export default class Model extends Observable {
     this._notify(UpdateType.INIT);
   }
 
-  updatePoint(updateType, update) {
+  async updatePoint(updateType, update) {
     // update - это объект точки
-    const pointIndex = this.#points.findIndex((point) => point.id === update.id);
+    const pointIndex = this.#pointsData.findIndex((point) => point.id === update.id);
     if (pointIndex === -1) {
       throw new Error('Cant update unexisting point');
     }
 
-    this.#points = [
-      // заменяем объект в массиве
-      ...this.#points.slice(0, pointIndex),
-      update,
-      ...this.#points.slice(pointIndex + 1),
-    ];
-
-    this._notify(updateType, update);
+    try {
+      const response = await this.#pointApiService.updatePoint(update);
+      const updatedPoint = this.#adaptPointToClient(response);
+      this.#pointsData = [
+        // заменяем объект в массиве
+        ...this.#pointsData.slice(0, pointIndex),
+        updatedPoint,
+        ...this.#pointsData.slice(pointIndex + 1),
+      ];
+      this._notify(updateType, update);
+    } catch (err) {
+      throw new Error('Cant update task');
+    }
   }
 
   addPoint(updateType, update) {
-    this.#points = [
+    this.#pointsData = [
       // добавляем объект в массив
       update,
-      ...this.#points,
+      ...this.#pointsData,
     ];
 
     this._notify(updateType, update);
   }
 
   deletePoint(updateType, update) {
-    const pointIndex = this.#points.findIndex((point) => point.id === update.id);
+    const pointIndex = this.#pointsData.findIndex((point) => point.id === update.id);
     if (pointIndex === -1) {
       throw new Error('Cant delete unexisting point');
     }
 
-    this.#points = [
+    this.#pointsData = [
       // исключаем элемент из массива
-      ...this.#points.slice(0, pointIndex),
-      ...this.#points.slice(pointIndex + 1),
+      ...this.#pointsData.slice(0, pointIndex),
+      ...this.#pointsData.slice(pointIndex + 1),
     ];
 
     this._notify(updateType);
@@ -126,8 +124,8 @@ export default class Model extends Observable {
       ...point,
       basePrice: point.base_price,
       isFavorite: point.is_favorite,
-      dateFrom: dayjs(point.date_from),
-      dateTo: dayjs(point.date_to),
+      dateFrom: dayjs(point.date_from).toDate(),
+      dateTo: dayjs(point.date_to).toDate(),
     };
 
     // delete adaptedPoint['base_price'];
@@ -161,18 +159,18 @@ export default class Model extends Observable {
   }
 
   //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
-  get offers() {
-    // return this.#offers;
-    return this.#offersData;
-  }
+  // get offers() {
+  //   // return this.#offers;
+  //   return this.#offersData;
+  // }
 
-  get destinations() {
-    // return this.#destinations;
-    return this.#destinationsData;
-  }
+  // get destinations() {
+  //   // return this.#destinations;
+  //   return this.#destinationsData;
+  // }
 
-  get points() {
-    // return this.#points;
-    return this.#pointsData;
-  }
+  // get points() {
+  //   // return this.#points;
+  //   return this.#pointsData;
+  // }
 }

@@ -2,6 +2,8 @@
 import { createEventEditTemplate } from '../../templates/edit-form/form-template';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../model/util/data-adapters';
+import dayjs from 'dayjs';
+import { DATA_FORMAT } from '../../consts';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
@@ -107,11 +109,13 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parsePointToState(pointData, offers, destinations) {
     return {
+      ...pointData,
       destinationName: getDestinationByID(pointData.destination, destinations).name,
       destinationDescription: getDestinationByID(pointData.destination, destinations).description,
       destinationPhotos: getDestinationByID(pointData.destination, destinations).photos,
       offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
-      ...pointData,
+      dateFrom: dayjs(pointData.dateFrom).format(DATA_FORMAT),
+      dateTo: dayjs(pointData.dateTo).format(DATA_FORMAT),
     };
   }
 
