@@ -9,10 +9,12 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
+import NewEventBtn from '../view/new-event-btn-view';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
-import { filterEverything, filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
+import { filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
+import LoadingView from '../view/loading-view';
 
 export default class HeaderPresenter {
   #container = null;
@@ -20,6 +22,7 @@ export default class HeaderPresenter {
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
+  #isLoading = true;
 
   constructor(container, model) {
     this.#container = container;
@@ -28,8 +31,11 @@ export default class HeaderPresenter {
     this.#model.addObserver(this.#handleModelEvent);
   }
 
+  #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
+  #newEventBtnComponent = new NewEventBtn();
+  #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
   #siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
@@ -42,7 +48,6 @@ export default class HeaderPresenter {
   };
 
   #filterTypeClickHandler = (filterType) => {
-    console.log(filterType);
     this.#currentFilterType = filterType;
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
@@ -99,11 +104,13 @@ export default class HeaderPresenter {
     render(this.#noPointsComponent, this.#siteTripEventsElement);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#siteTripEventsElement);
+  }
+
   #renderAll() {
-    this.#renderFilters();
-    // если точек нет, то выводим заглушку
-    if (this.#model.points.length === 0) {
-      this.#renderNoPoints();
+    if (this.#isLoading) {
+      this.#renderLoading();
       return;
     }
     this.#renderTripInfo();
@@ -125,6 +132,7 @@ export default class HeaderPresenter {
     remove(this.#sortComponent);
     remove(this.#eventsListComponent);
     remove(this.#noPointsComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY.name; // сортировка по умолчанию
@@ -147,6 +155,7 @@ export default class HeaderPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
+    // обработчик событий модели
     //вызывается из _notify
     switch (updateType) {
       case UpdateType.PATCH:
@@ -162,6 +171,14 @@ export default class HeaderPresenter {
         // обновляем все, в т.ч. хедер
         this.#clearAll({ resetRenderedTaskCount: true });
         this.#renderAll();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        // this.#clearAll();
+        remove(this.#loadingComponent);
+        this.#renderAll();
+        render(this.#newEventBtnComponent, this.#siteTripMainElement);
+        break;
     }
   };
 
@@ -202,6 +219,7 @@ export default class HeaderPresenter {
   }
 
   init() {
+    this.#renderFilters();
     this.#renderAll();
   }
 }

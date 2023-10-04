@@ -2,6 +2,9 @@
 import { createEventEditTemplate } from '../../templates/edit-form/form-template';
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../model/util/data-adapters';
+import dayjs from 'dayjs';
+import { DATA_FORMAT } from '../../consts';
+import { formatDateStr } from '../../util/common';
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
@@ -107,31 +110,32 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parsePointToState(pointData, offers, destinations) {
     return {
+      ...pointData,
       destinationName: getDestinationByID(pointData.destination, destinations).name,
       destinationDescription: getDestinationByID(pointData.destination, destinations).description,
       destinationPhotos: getDestinationByID(pointData.destination, destinations).photos,
       offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
-      ...pointData,
+      dateFrom: dayjs(pointData.dateFrom).format(DATA_FORMAT),
+      dateTo: dayjs(pointData.dateTo).format(DATA_FORMAT),
     };
   }
 
   static parseStateToPoint(state) {
     // приводим к структуре сырых данных
     // ретро 7:24
+    const transfotmedDateFromStr = formatDateStr(state.dateFrom);
+    const transfotmedDateToStr = formatDateStr(state.dateTo);
+
     const pointData = {
       basePrice: state.basePrice,
-      dateFrom: state.dateFrom,
-      dateTo: state.dateTo,
+      dateFrom: dayjs(transfotmedDateFromStr),
+      dateTo: dayjs(transfotmedDateToStr),
       destination: state.destination,
       id: state.id,
       isFavorite: state.isFavorite,
       offers: state.offers,
       type: state.type,
     };
-    //обратное преобразование к формату данных, сохраняем только нужные поля из _state
-    // может, можно как-то попроще это реализовать? удалить ненужные поля
-    // delete pointData.destinationName; // как-то так?
-    // delete pointData.destinationDescription;
 
     return pointData;
   }

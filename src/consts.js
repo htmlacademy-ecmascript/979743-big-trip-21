@@ -1,5 +1,6 @@
 // константы
-const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
+// const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
+const DATA_FORMAT = 'DD/MM/YY HH:mm';
 
 const DATA_SHORT_FORMAT = 'MMM DD';
 
@@ -52,30 +53,6 @@ const SortType = {
     isAnable: false,
   },
 };
-// const SortType = [
-//   // передается в шаблон для отрисовки блока с сортировкой
-//   //переделать в объект, чтобы передавать в презентер (разбор 7.1 коммит 7.2)
-//   {
-//     sortingName: 'day',
-//     isAnable: true,
-//   },
-//   {
-//     sortingName: 'event',
-//     isAnable: false,
-//   },
-//   {
-//     sortingName: 'time',
-//     isAnable: true,
-//   },
-//   {
-//     sortingName: 'price',
-//     isAnable: true,
-//   },
-//   {
-//     sortingName: 'offers',
-//     isAnable: false,
-//   },
-// ];
 
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
@@ -87,6 +64,7 @@ const UpdateType = {
   PATCH: 'PATCH', // перерисовка только точки
   MINOR: 'MINOR', // перерисовка всего списка
   MAJOR: 'MAJOR', // перерисовка всего приложения, в т.ч. хедер
+  INIT: 'INIT', // для уведомления о первоначальной загрузке данных
 };
 
 export {

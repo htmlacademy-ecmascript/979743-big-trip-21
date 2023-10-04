@@ -13,21 +13,15 @@ function getRandomArrayElement(array) {
   return array[getRandomInteger(0, array.length - 1)];
 }
 
-// function formatStringToDateTime(date) {
-//   return dayjs(date).format(DATA_FORMAT);
-// }
-
-// function formatStringToShortDate(date) {
-//   return dayjs(date).format(DATA_SHORT_FORMAT);
-// }
-
-// function formatStringToTime(date) {
-//   return dayjs(date).format(TIME_FORMAT);
-// }
-
 function capitalize(string) {
   // первая буква будет заглавная
   return `${string[0].toUpperCase()}${string.slice(1)}`;
+}
+
+function formatDateStr(originalDate) {
+  const transfotmedDateStr = `20${originalDate.slice(6, 8)}-${originalDate.slice(3, 5)}-
+      ${originalDate.slice(0, 2)} ${originalDate.slice(8)}`;
+  return transfotmedDateStr;
 }
 
 function getPointDuration(dateFrom, dateTo) {
@@ -67,9 +61,7 @@ function sortByDate(a, b) {
 export {
   getRandomInteger,
   getRandomArrayElement,
-  // formatStringToDateTime,
-  // formatStringToShortDate,
-  // formatStringToTime,
+  formatDateStr,
   capitalize,
   getPointDuration,
   sortByPrice,
