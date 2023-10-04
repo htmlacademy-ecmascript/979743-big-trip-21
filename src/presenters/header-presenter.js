@@ -107,12 +107,11 @@ export default class HeaderPresenter {
   }
 
   #renderAll() {
-    this.#renderFilters();
-    // // если точек нет, то выводим заглушку -- перенести в ф-ю после загрузки.
-    // if (this.#model.points.length === 0) {
-    //   this.#renderNoPoints();
-    //   return;
-    // }
+    // this.#renderFilters();
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     this.#renderTripInfo();
     this.#renderSort();
     this.#renderEvents(this.pointData); // какие данные сюда попадают?????
@@ -174,9 +173,10 @@ export default class HeaderPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.#clearAll();
+        // this.#clearAll();
         remove(this.#loadingComponent);
         this.#renderAll();
+        // this.#renderEvents(this.pointData);
         break;
     }
   };
@@ -218,6 +218,7 @@ export default class HeaderPresenter {
   }
 
   init() {
+    this.#renderFilters();
     this.#renderAll();
   }
 }

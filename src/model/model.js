@@ -74,10 +74,6 @@ export default class Model extends Observable {
       this.#offersData = [];
     }
 
-    console.log(this.#pointsData);
-    console.log(this.#destinationsData);
-    console.log(this.#offersData);
-
     this._notify(UpdateType.INIT);
   }
 
