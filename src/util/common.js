@@ -50,6 +50,20 @@ function getPointDuration(dateFrom, dateTo) {
   return pointDuration;
 }
 
+function sortByPrice(a, b) {
+  return b.basePrice - a.basePrice;
+}
+
+function sortByTime(a, b) {
+  return dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom));
+}
+
+function sortByDate(a, b) {
+  const dateA = dayjs(a.dateFrom);
+  const dateB = dayjs(b.dateFrom);
+  return Number(dateB.isBefore(dateA)) - 0.5; //true = 1, false = 0
+}
+
 export {
   getRandomInteger,
   getRandomArrayElement,
@@ -58,4 +72,7 @@ export {
   // formatStringToTime,
   capitalize,
   getPointDuration,
+  sortByPrice,
+  sortByTime,
+  sortByDate,
 };

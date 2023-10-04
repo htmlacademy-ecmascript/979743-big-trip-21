@@ -29,31 +29,65 @@ const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
 //   PRESENT: 'present',
 //   PAST: 'past',
 // };
-
-// const SORT_TYPES = ['day', 'time', 'price'];
-
-const SortType = [
-  {
-    sortingName: 'day',
+const SortType = {
+  // передается в шаблон для отрисовки блока с сортировкой
+  DAY: {
+    name: 'day',
     isAnable: true,
   },
-  {
-    sortingName: 'event',
+  EVENT: {
+    name: 'event',
     isAnable: false,
   },
-  {
-    sortingName: 'time',
+  TIME: {
+    name: 'time',
     isAnable: true,
   },
-  {
-    sortingName: 'price',
+  PRICE: {
+    name: 'price',
     isAnable: true,
   },
-  {
-    sortingName: 'offers',
+  OFFERS: {
+    name: 'offers',
     isAnable: false,
   },
-];
+};
+// const SortType = [
+//   // передается в шаблон для отрисовки блока с сортировкой
+//   //переделать в объект, чтобы передавать в презентер (разбор 7.1 коммит 7.2)
+//   {
+//     sortingName: 'day',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'event',
+//     isAnable: false,
+//   },
+//   {
+//     sortingName: 'time',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'price',
+//     isAnable: true,
+//   },
+//   {
+//     sortingName: 'offers',
+//     isAnable: false,
+//   },
+// ];
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH', // перерисовка только точки
+  MINOR: 'MINOR', // перерисовка всего списка
+  MAJOR: 'MAJOR', // перерисовка всего приложения, в т.ч. хедер
+};
 
 export {
   DATA_FORMAT,
@@ -71,4 +105,6 @@ export {
   // FilterType,
   // SORT_TYPES,
   SortType,
+  UserAction,
+  UpdateType,
 };
