@@ -20,6 +20,9 @@ const model = new Model({
 });
 
 model.init();
+// finally(() =>{
+//   render(newEventBtnComponent, siteTripMainElement);
+// });
 
 //----------------------------- header Presenter --------------------------
 const siteTripMainElement = document.querySelector('.trip-main'); //контейнер для trip-info

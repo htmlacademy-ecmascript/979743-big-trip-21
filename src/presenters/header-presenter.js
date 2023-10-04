@@ -9,6 +9,7 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
+import NewEventBtn from '../view/new-event-btn-view';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
@@ -33,6 +34,8 @@ export default class HeaderPresenter {
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
+  #newEventBtnComponent = new NewEventBtn();
+  #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
   #siteTripEventsElement = document.querySelector('.trip-events'); //контейнер для trip-sort и trip-events__list
@@ -45,7 +48,6 @@ export default class HeaderPresenter {
   };
 
   #filterTypeClickHandler = (filterType) => {
-    console.log(filterType);
     this.#currentFilterType = filterType;
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
@@ -107,7 +109,6 @@ export default class HeaderPresenter {
   }
 
   #renderAll() {
-    // this.#renderFilters();
     if (this.#isLoading) {
       this.#renderLoading();
       return;
@@ -176,7 +177,7 @@ export default class HeaderPresenter {
         // this.#clearAll();
         remove(this.#loadingComponent);
         this.#renderAll();
-        // this.#renderEvents(this.pointData);
+        render(this.#newEventBtnComponent, this.#siteTripMainElement);
         break;
     }
   };
