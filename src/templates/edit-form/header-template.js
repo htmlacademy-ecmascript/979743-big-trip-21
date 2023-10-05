@@ -1,6 +1,11 @@
-function createEventEditHeaderTemplate({ id, type, destination, destinationName, dateFrom, dateTo, basePrice }) {
-  // выпадающий список типов точек не передаем данными? список в константах.
-  //id открытой точки куда добавить?
+function getDestinationsListTemplate(destinationNames) {
+  return destinationNames.map((destinationName) => `<option value="${destinationName}"></option>`).join('');
+}
+
+function createEventEditHeaderTemplate(
+  { id, type, destination, destinationName, dateFrom, dateTo, basePrice },
+  destinationNames
+) {
   return `
   <header class="event__header">
     <div class="event__type-wrapper">
@@ -71,9 +76,7 @@ function createEventEditHeaderTemplate({ id, type, destination, destinationName,
         value="${destination ? destinationName : ''}"
         list="destination-list-${id}">
       <datalist id="destination-list-${id}">
-        <option value="Amsterdam"></option>
-        <option value="Geneva"></option>
-        <option value="Chamonix"></option>
+        ${getDestinationsListTemplate(destinationNames)}
       </datalist>
     </div>
     <div class="event__field-group  event__field-group--time">

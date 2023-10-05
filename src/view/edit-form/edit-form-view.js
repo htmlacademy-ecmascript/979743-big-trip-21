@@ -25,9 +25,15 @@ export default class EventEditView extends AbstractStatefulView {
     this._restoreHandlers(); // ретро 9:58
   }
 
+  // get destinationsList () {
+  //   return this.#destinations.map((destination) => destination.name);
+  // }
+
   get template() {
     return createEventEditTemplate({
       pointState: this._state,
+      destinationNames: this.#destinations.map((destination) => destination.name), //для отрисовки выпадаюющего списка ПН
+      // pointTypes: POINT_TYPES // из consts - для списка типов точек
     });
   }
 
@@ -43,7 +49,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeChange); // это fieldset
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange); // зачем??
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClick); // delete btn
 
@@ -66,7 +72,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onDestinationChange = (evt) => {
     // ретро 17:31
-    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value); // ПН вводится с клавиатуры, не выбирается из списка !!
+    const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
 
     if (selectedDestination) {
       this.updateElement({
@@ -85,6 +91,8 @@ export default class EventEditView extends AbstractStatefulView {
         destinationPhotos: null,
       });
     }
+
+    console.log(this._state);
     // const selectedDestinationId = selectedDestination ? selectedDestination.destination : null; // обрабатывать как??
   };
 
@@ -101,7 +109,15 @@ export default class EventEditView extends AbstractStatefulView {
     // можно использовать не updateElement, а только this._setState(update);
   };
 
-  #onPriceChange = () => {};
+  #onPriceChange = (evt) => {
+    const selectedPrice = evt.target.value;
+    if (selectedPrice) {
+      this.updateElement({
+        ...this._state,
+        basePrice: Number(evt.target.value),
+      });
+    }
+  };
 
   #onDeleteClick = (evt) => {
     evt.preventDefault();
