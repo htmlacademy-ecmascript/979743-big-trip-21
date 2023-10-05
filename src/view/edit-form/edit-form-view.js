@@ -5,12 +5,17 @@ import { getConformedOffers, getDestinationByID, getMarkedOffers } from '../../m
 import dayjs from 'dayjs';
 import { DATA_FORMAT } from '../../consts';
 import { formatDateStr } from '../../util/common';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
   #resetClickHandler = null;
   #offers = null;
   #destinations = null;
   #deleteClickHandler = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler, deleteClickHandler }) {
     // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
@@ -53,7 +58,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClick); // delete btn
 
-    // this.#setDatepickers();
+    this.#setDatepicker();
   };
 
   #onFormSubmit = (evt) => {
@@ -91,8 +96,6 @@ export default class EventEditView extends AbstractStatefulView {
         destinationPhotos: null,
       });
     }
-
-    console.log(this._state);
     // const selectedDestinationId = selectedDestination ? selectedDestination.destination : null; // обрабатывать как??
   };
 
@@ -124,6 +127,42 @@ export default class EventEditView extends AbstractStatefulView {
     this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state));
   };
 
+  #onDateFromChange = ([userDate]) => {
+    const selectedDate = [userDate];
+    this.updateElement({
+      ...this._state,
+      dateFrom: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
+    });
+  };
+
+  #onDateToChange = ([userDate]) => {
+    const selectedDate = [userDate];
+    this.updateElement({
+      ...this._state,
+      dateTo: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
+    });
+  };
+
+  #setDatepicker() {
+    this.#datepickerFrom = flatpickr(this.element.querySelector('#event-start-time'), {
+      dateFormat: 'd/m/y H:i',
+      defaultDate: this._state.dateFrom,
+      maxDate: this._state.dateTo,
+      enableTime: true,
+      time_24hr: true,
+      onChange: this.#onDateFromChange,
+    });
+
+    this.#datepickerTo = flatpickr(this.element.querySelector('#event-end-time'), {
+      dateFormat: 'd/m/y H:i',
+      defaultDate: this._state.dateTo,
+      minDate: this._state.dateFrom,
+      enableTime: true,
+      time_24hr: true,
+      onChange: this.#onDateToChange,
+    });
+  }
+
   static parsePointToState(pointData, offers, destinations) {
     return {
       ...pointData,
@@ -144,8 +183,10 @@ export default class EventEditView extends AbstractStatefulView {
 
     const pointData = {
       basePrice: state.basePrice,
-      dateFrom: dayjs(transfotmedDateFromStr),
-      dateTo: dayjs(transfotmedDateToStr),
+      // dateFrom: state.dateFrom,
+      // dateTo: state.dateTo,
+      dateFrom: transfotmedDateFromStr,
+      dateTo: transfotmedDateToStr,
       destination: state.destination,
       id: state.id,
       isFavorite: state.isFavorite,
@@ -154,5 +195,18 @@ export default class EventEditView extends AbstractStatefulView {
     };
 
     return pointData;
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
   }
 }

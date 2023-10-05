@@ -87,6 +87,7 @@ export default class Model extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
+      console.log(err);
       throw new Error('Cant update task');
     }
   }

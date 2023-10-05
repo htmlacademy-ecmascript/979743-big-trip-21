@@ -2,6 +2,8 @@
 import { createEventEditHeaderTemplate } from '../../templates/edit-form/header-template';
 import AbstractView from '../../framework/view/abstract-view';
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 export default class EventEditHeaderView extends AbstractView {
   #point;

@@ -80,11 +80,11 @@ function createEventEditHeaderTemplate(
       </datalist>
     </div>
     <div class="event__field-group  event__field-group--time">
-      <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateFrom} 00:00">
+      <label class="visually-hidden" for="event-start-time">From</label>
+      <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateFrom} 00:00">
         &mdash;
-      <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateTo} 00:00">
+      <label class="visually-hidden" for="event-end-time">To</label>
+      <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateTo} 00:00">
     </div>
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-${id}">
