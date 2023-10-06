@@ -81,10 +81,10 @@ function createEventEditHeaderTemplate(
     </div>
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time">From</label>
-      <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateFrom} 00:00">
+      <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateFrom}">
         &mdash;
       <label class="visually-hidden" for="event-end-time">To</label>
-      <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateTo} 00:00">
+      <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateTo}">
     </div>
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-${id}">
@@ -94,8 +94,8 @@ function createEventEditHeaderTemplate(
       <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
     </div>
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
+    <button class="event__reset-btn" type="reset">${id ? 'Delete' : 'Cancel'}</button>
+    <button class="edit-form-view ${id ? 'event__rollup-btn' : 'visually-hidden'}" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
   </header>

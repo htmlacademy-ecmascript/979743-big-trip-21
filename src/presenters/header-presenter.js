@@ -9,7 +9,8 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
-import NewEventBtn from '../view/new-event-btn-view';
+import NewEventBtnView from '../view/new-event-btn-view';
+import NewEventPresenter from './new-event-presenter';
 // import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
@@ -19,6 +20,7 @@ import LoadingView from '../view/loading-view';
 export default class HeaderPresenter {
   #container = null;
   #model = null;
+  #newEventPresenter = null;
   #eventPresenters = new Map();
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
@@ -34,7 +36,7 @@ export default class HeaderPresenter {
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
-  #newEventBtnComponent = new NewEventBtn();
+
   #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
@@ -53,12 +55,34 @@ export default class HeaderPresenter {
     this.#renderEvents(this.pointData);
   };
 
+  #destroyNewEvent = () => {
+    this.#newEventBtnComponent.element.disabled = false;
+    this.#newEventClickHandler = null;
+  };
+
+  #newEventClickHandler = () => {
+    this.#modeChangeHandler();
+    this.#newEventPresenter = new NewEventPresenter({
+      container: this.#eventsListComponent.element,
+      offers: this.#model.offers,
+      destinations: this.#model.destinations,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#destroyNewEvent,
+    });
+    this.#newEventPresenter.init();
+    // this.#newEventBtnComponent.element.disabled = true; // disable во View
+  };
+
   #sortComponent = new SortView({
     currentSortType: this.#currentSortType,
     sortTypeChangeHandler: this.#sortTypeChangeHandler,
   });
 
   #eventsListComponent = new EventsListView();
+  #newEventBtnComponent = new NewEventBtnView({
+    newEventClickHandler: this.#newEventClickHandler,
+  });
+
   #noPointsComponent = new NoPointsView();
 
   #renderFilters() {

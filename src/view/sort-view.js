@@ -9,7 +9,7 @@ export default class SortView extends AbstractView {
 
   constructor({ currentSortType, sortTypeChangeHandler }) {
     super();
-    this.#currentSortType = currentSortType;
+    this.#currentSortType = currentSortType; // по умолчанию??
     this.#sortings = SortType;
     this.#sortTypeChangeHandler = sortTypeChangeHandler;
     this.element.addEventListener('change', this.#onSortTypeChange);
@@ -17,6 +17,7 @@ export default class SortView extends AbstractView {
 
   #onSortTypeChange = (evt) => {
     this.#sortTypeChangeHandler(evt.target.value.slice(5));
+    // this.#currentSortType меняется в header-presenter
   };
 
   #adaptSorting(sortings) {

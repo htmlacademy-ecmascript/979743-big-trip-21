@@ -26,13 +26,9 @@ export default class EventEditView extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
     this.#resetClickHandler = resetClickHandler; // ретро 10:03
-    this.#deleteClickHandler = deleteClickHandler;
+    this.#deleteClickHandler = deleteClickHandler; // для новой точки - это пустая ф-я
     this._restoreHandlers(); // ретро 9:58
   }
-
-  // get destinationsList () {
-  //   return this.#destinations.map((destination) => destination.name);
-  // }
 
   get template() {
     return createEventEditTemplate({
@@ -49,13 +45,13 @@ export default class EventEditView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     // ретро 10:25 и 15:59
-    // this.element.querySelector('event__rollup-btn').addEventListener('click', this.#onResetClick); // нет этого элемента в разметке
     this.element.querySelector('form.event').addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeChange); // это fieldset
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
+    // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
+    this.element.querySelector('.edit-form-view').addEventListener('click', this.#resetClickHandler); // roll-up btn
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClick); // delete btn
 
     this.#setDatepicker();
@@ -124,7 +120,12 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onDeleteClick = (evt) => {
     evt.preventDefault();
-    this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state));
+    //проверка: выход без сохранения, если это новая точка, удаление данных, если это существующая
+    if (this._state.id) {
+      this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state)); // метод приходит из event-presenter
+    } else {
+      this.#resetClickHandler();
+    }
   };
 
   #onDateFromChange = ([userDate]) => {
@@ -166,12 +167,14 @@ export default class EventEditView extends AbstractStatefulView {
   static parsePointToState(pointData, offers, destinations) {
     return {
       ...pointData,
-      destinationName: getDestinationByID(pointData.destination, destinations).name,
-      destinationDescription: getDestinationByID(pointData.destination, destinations).description,
-      destinationPhotos: getDestinationByID(pointData.destination, destinations).photos,
+      destinationName: pointData.destination ? getDestinationByID(pointData.destination, destinations).name : '',
+      destinationDescription: pointData.destination
+        ? getDestinationByID(pointData.destination, destinations).description
+        : '',
+      destinationPhotos: pointData.destination ? getDestinationByID(pointData.destination, destinations).photos : '',
       offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
-      dateFrom: dayjs(pointData.dateFrom).format(DATA_FORMAT),
-      dateTo: dayjs(pointData.dateTo).format(DATA_FORMAT),
+      dateFrom: pointData.dateFrom ? dayjs(pointData.dateFrom).format(DATA_FORMAT) : '',
+      dateTo: pointData.dateto ? dayjs(pointData.dateTo).format(DATA_FORMAT) : '',
     };
   }
 

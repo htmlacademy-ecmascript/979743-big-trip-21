@@ -57,6 +57,8 @@ export default class EventPresenter {
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);
+    //вызвать перерисовку списка с учетом сортировки
+    // передать сюда ф-ю #sortTypeChangeHandler из header-presenter
   };
 
   #deleteClickHandler = (point) => {
