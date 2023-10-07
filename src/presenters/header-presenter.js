@@ -22,6 +22,7 @@ export default class HeaderPresenter {
   #model = null;
   #newEventPresenter = null;
   #eventPresenters = new Map();
+  #noPointsComponent = null;
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
   #isLoading = true;
@@ -70,7 +71,6 @@ export default class HeaderPresenter {
       onDestroy: this.#destroyNewEvent,
     });
     this.#newEventPresenter.init();
-    // this.#newEventBtnComponent.element.disabled = true; // disable во View
   };
 
   #sortComponent = new SortView({
@@ -82,8 +82,6 @@ export default class HeaderPresenter {
   #newEventBtnComponent = new NewEventBtnView({
     newEventClickHandler: this.#newEventClickHandler,
   });
-
-  #noPointsComponent = new NoPointsView();
 
   #renderFilters() {
     const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
@@ -106,12 +104,10 @@ export default class HeaderPresenter {
   }
 
   #renderEvent(point) {
-    //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
       offers: this.#model.offers,
       destinations: this.#model.destinations,
-      // onDataChange: this.#pointChangeHandler,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#modeChangeHandler,
     });
@@ -120,13 +116,22 @@ export default class HeaderPresenter {
   }
 
   #renderEvents(points) {
-    render(this.#eventsListComponent, this.#siteTripEventsElement);
-    points.forEach((point) => this.#renderEvent(point));
+    if (points.length === 0) {
+      this.#noPointsComponent = new NoPointsView({
+        currentFilter: this.#currentFilterType,
+      });
+      render(this.#noPointsComponent, this.#siteTripEventsElement);
+    } else {
+      // удалять заглушку, если она есть.
+      remove(this.#noPointsComponent);
+      render(this.#eventsListComponent, this.#siteTripEventsElement);
+      points.forEach((point) => this.#renderEvent(point));
+    }
   }
 
-  #renderNoPoints() {
-    render(this.#noPointsComponent, this.#siteTripEventsElement);
-  }
+  // #renderNoPoints() {
+  //   render(this.#noPointsComponent, this.#siteTripEventsElement);
+  // }
 
   #renderLoading() {
     render(this.#loadingComponent, this.#siteTripEventsElement);
