@@ -54,6 +54,7 @@ export default class EventPresenter {
     // сюда прилетает _state из view
     // сюда прилетают данные для отправки в модель
     // добавить проверку: перерисовывать только точку или перерисовывать весь список
+    console.log(point);
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);

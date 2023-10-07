@@ -50,7 +50,6 @@ export default class EventEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__available-offers').addEventListener('change', this.#onOffersChange);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#onPriceChange);
-    // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetClickHandler); // roll-up btn
     this.element.querySelector('.edit-form-view').addEventListener('click', this.#resetClickHandler); // roll-up btn
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteClick); // delete btn
 
@@ -58,8 +57,19 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onFormSubmit = (evt) => {
+    console.log('сохраните точку, пож');
     evt.preventDefault(); // надо?
     this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем измененные данные для перерисовки и сохранения
+  };
+
+  #onDeleteClick = (evt) => {
+    evt.preventDefault();
+    //проверка: выход без сохранения, если это новая точка, удаление данных, если это существующая
+    if (this._state.id) {
+      this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state)); // метод приходит из event-presenter
+    } else {
+      this.#resetClickHandler();
+    }
   };
 
   #onEventTypeChange = (evt) => {
@@ -84,64 +94,78 @@ export default class EventEditView extends AbstractStatefulView {
         destinationPhotos: selectedDestination.photos,
       });
     } else {
-      this.updateElement({
-        ...this._state,
-        destination: null,
-        destinationDescription: null,
-        destinationName: null,
-        destinationPhotos: null,
-      });
+      // this.updateElement({
+      //   ...this._state,
+      //   destination: null,
+      //   destinationDescription: null,
+      //   destinationName: null,
+      //   destinationPhotos: null,
+      // });
+      this.element.querySelector('.event__save-btn').disabled = true;
     }
-    // const selectedDestinationId = selectedDestination ? selectedDestination.destination : null; // обрабатывать как??
+    //проверка на заполненность полей для новой точки
+    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+      this.element.querySelector('.event__save-btn').disabled = false;
+    }
   };
 
   #onOffersChange = () => {
     //ретро 18:20
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
     const checkedOfferIds = checkedOffers.map((el) => el.id);
-    this.updateElement({
+    this._setState({
       ...this._state,
       offers: checkedOffers.map((el) => el.id), // id чекнутых офферов
       offersInfo: getMarkedOffers(this._state.type, checkedOfferIds, this.#offers),
     });
-    // переделать, чтобы отрисовывалась не вся точка, а только офферы
-    // можно использовать не updateElement, а только this._setState(update);
   };
 
   #onPriceChange = (evt) => {
     const selectedPrice = evt.target.value;
-    if (selectedPrice) {
+    if (selectedPrice > 0) {
       this.updateElement({
         ...this._state,
         basePrice: Number(evt.target.value),
       });
-    }
-  };
-
-  #onDeleteClick = (evt) => {
-    evt.preventDefault();
-    //проверка: выход без сохранения, если это новая точка, удаление данных, если это существующая
-    if (this._state.id) {
-      this.#deleteClickHandler(EventEditView.parseStateToPoint(this._state)); // метод приходит из event-presenter
     } else {
-      this.#resetClickHandler();
+      this.element.querySelector('.event__save-btn').disabled = true;
+    }
+    //проверка на заполненность полей для новой точки
+    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+      this.element.querySelector('.event__save-btn').disabled = false;
     }
   };
 
   #onDateFromChange = ([userDate]) => {
     const selectedDate = [userDate];
-    this.updateElement({
-      ...this._state,
-      dateFrom: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
-    });
+    if (selectedDate) {
+      this.updateElement({
+        ...this._state,
+        dateFrom: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
+      });
+    } else {
+      this.element.querySelector('.event__save-btn').disabled = true;
+    }
+    //проверка на заполненность полей для новой точки
+    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+      this.element.querySelector('.event__save-btn').disabled = false;
+    }
   };
 
   #onDateToChange = ([userDate]) => {
     const selectedDate = [userDate];
-    this.updateElement({
-      ...this._state,
-      dateTo: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
-    });
+    if (selectedDate) {
+      this.updateElement({
+        ...this._state,
+        dateTo: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
+      });
+    } else {
+      this.element.querySelector('.event__save-btn').disabled = true;
+    }
+    //проверка на заполненность полей для новой точки
+    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+      this.element.querySelector('.event__save-btn').disabled = false;
+    }
   };
 
   #setDatepicker() {
@@ -174,7 +198,7 @@ export default class EventEditView extends AbstractStatefulView {
       destinationPhotos: pointData.destination ? getDestinationByID(pointData.destination, destinations).photos : '',
       offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
       dateFrom: pointData.dateFrom ? dayjs(pointData.dateFrom).format(DATA_FORMAT) : '',
-      dateTo: pointData.dateto ? dayjs(pointData.dateTo).format(DATA_FORMAT) : '',
+      dateTo: pointData.dateTo ? dayjs(pointData.dateTo).format(DATA_FORMAT) : '',
     };
   }
 

@@ -1,5 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render';
 import EventEditView from '../view/edit-form/edit-form-view';
+import { UserAction, UpdateType } from '../consts';
 
 const BLANK_POINT = {
   id: '',
@@ -36,8 +37,14 @@ export default class NewEventPresenter {
     }
   };
 
-  #formSubmitHandler = () => {
+  #formSubmitHandler = (point) => {
     console.log('хотим сохранить точку');
+    console.log(point);
+    // this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
+    // // this.#replaceFormToPoint();
+    // this.#destroy();
+    // this.#onDestroy(); // приходит из header-presenter, разбизабливает кнопку
+    document.removeEventListener('keydown', this.#onEscKeyDown);
     //вызываем здесь
     // this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
     // this.#replaceFormToPoint(); // удаление элемента
