@@ -73,6 +73,12 @@ export default class HeaderPresenter {
     this.#newEventPresenter.init();
   };
 
+  #tripFiltersComponent = new TripFiltersView({
+    // filters: FILTER_TYPES.map((filter) => ({ filterName: filter })), //готовим данные о фильтрах для отрисовки,
+    isDisabled: true,
+    filterTypeClickHandler: this.#filterTypeClickHandler,
+  });
+
   #sortComponent = new SortView({
     currentSortType: this.#currentSortType,
     sortTypeChangeHandler: this.#sortTypeChangeHandler,
@@ -84,12 +90,13 @@ export default class HeaderPresenter {
   });
 
   #renderFilters() {
-    const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
-    const tripFiltersComponent = new TripFiltersView({
-      filters: filters,
-      filterTypeClickHandler: this.#filterTypeClickHandler,
-    });
-    render(tripFiltersComponent, this.#siteTripControlsElement);
+    // const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
+    // const tripFiltersComponent = new TripFiltersView({
+    //   filters: filters,
+    //   isDisabled: isDisabled,
+    //   filterTypeClickHandler: this.#filterTypeClickHandler,
+    // });
+    render(this.#tripFiltersComponent, this.#siteTripControlsElement);
   }
 
   #renderTripInfo() {
@@ -128,10 +135,6 @@ export default class HeaderPresenter {
       points.forEach((point) => this.#renderEvent(point));
     }
   }
-
-  // #renderNoPoints() {
-  //   render(this.#noPointsComponent, this.#siteTripEventsElement);
-  // }
 
   #renderLoading() {
     render(this.#loadingComponent, this.#siteTripEventsElement);
@@ -208,8 +211,14 @@ export default class HeaderPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        // this.#clearAll();
         remove(this.#loadingComponent);
+        remove(this.#tripFiltersComponent);
+        this.#tripFiltersComponent = new TripFiltersView({
+          // filters: FILTER_TYPES.map((filter) => ({ filterName: filter })), //готовим данные о фильтрах для отрисовки,
+          isDisabled: false,
+          filterTypeClickHandler: this.#filterTypeClickHandler,
+        });
+        this.#renderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
         break;
@@ -253,7 +262,7 @@ export default class HeaderPresenter {
   }
 
   init() {
-    this.#renderFilters();
+    this.#renderFilters({ isDisabled: true });
     this.#renderAll();
   }
 }

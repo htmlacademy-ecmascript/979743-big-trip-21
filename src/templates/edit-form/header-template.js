@@ -93,9 +93,12 @@ function createEventEditHeaderTemplate(
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${he.encode(
-    basePrice
-  )}">
+      <input
+        class="event__input  event__input--price"
+        id="event-price-${id}"
+        type="text"
+        ame="event-price"
+        value="${basePrice}">
     </div>
     <button class="event__save-btn  btn  btn--blue" type="submit" ${id ? '' : 'disabled'}>Save</button>
     <button class="event__reset-btn" type="reset">${id ? 'Delete' : 'Cancel'}</button>
