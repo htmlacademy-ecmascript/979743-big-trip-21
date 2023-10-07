@@ -57,7 +57,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onFormSubmit = (evt) => {
-    console.log('сохраните точку, пож');
     evt.preventDefault(); // надо?
     this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем измененные данные для перерисовки и сохранения
   };
