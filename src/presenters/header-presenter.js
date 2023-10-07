@@ -184,7 +184,12 @@ export default class HeaderPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         // обновляем только точку
-        this.#eventPresenters.get(data.id).init(data);
+        if (this.#eventPresenters.get(data.id)) {
+          // проверяем, существует точка или новая
+          this.#eventPresenters.get(data.id).init(data); // для существующей точки
+        } else {
+          this.#renderEvent(data);
+        }
         break;
       case UpdateType.MINOR:
         // обновляем список
@@ -193,7 +198,7 @@ export default class HeaderPresenter {
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
-        this.#clearAll({ resetRenderedTaskCount: true });
+        this.#clearAll({ resetRenderedTaskCount: true }); // что это??
         this.#renderAll();
         break;
       case UpdateType.INIT:

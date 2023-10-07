@@ -55,7 +55,7 @@ export default class EventPresenter {
     // сюда прилетают данные для отправки в модель
     // добавить проверку: перерисовывать только точку или перерисовывать весь список
     console.log(point);
-    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
+    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#onEscKeyDown);
     //вызвать перерисовку списка с учетом сортировки

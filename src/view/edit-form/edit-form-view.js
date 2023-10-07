@@ -207,21 +207,28 @@ export default class EventEditView extends AbstractStatefulView {
     // ретро 7:24
     const transfotmedDateFromStr = formatDateStr(state.dateFrom);
     const transfotmedDateToStr = formatDateStr(state.dateTo);
-
-    const pointData = {
-      basePrice: state.basePrice,
-      // dateFrom: state.dateFrom,
-      // dateTo: state.dateTo,
-      dateFrom: transfotmedDateFromStr,
-      dateTo: transfotmedDateToStr,
-      destination: state.destination,
-      id: state.id,
-      isFavorite: state.isFavorite,
-      offers: state.offers,
-      type: state.type,
-    };
-
-    return pointData;
+    if (state.id) {
+      return {
+        basePrice: state.basePrice,
+        dateFrom: transfotmedDateFromStr,
+        dateTo: transfotmedDateToStr,
+        destination: state.destination,
+        id: state.id,
+        isFavorite: state.isFavorite,
+        offers: state.offers,
+        type: state.type,
+      };
+    } else {
+      return {
+        basePrice: state.basePrice,
+        dateFrom: transfotmedDateFromStr,
+        dateTo: transfotmedDateToStr,
+        destination: state.destination,
+        isFavorite: state.isFavorite,
+        offers: state.offers,
+        type: state.type,
+      };
+    }
   }
 
   removeElement() {
