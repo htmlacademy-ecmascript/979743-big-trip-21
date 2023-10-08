@@ -15,6 +15,12 @@ import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
 import LoadingView from '../view/loading-view';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class HeaderPresenter {
   #container = null;
@@ -25,6 +31,10 @@ export default class HeaderPresenter {
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything';
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT,
+  });
 
   constructor(container, model) {
     this.#container = container;
@@ -197,7 +207,8 @@ export default class HeaderPresenter {
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
-    // вместо pointChangeHandler - передается в event-presenter
+    // передается в event-presenter
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#eventPresenters.get(update.id).setSaving();
@@ -225,6 +236,8 @@ export default class HeaderPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
