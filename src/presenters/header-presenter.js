@@ -149,6 +149,7 @@ export default class HeaderPresenter {
     //список-контейнер не удалаю
     if (this.#newEventPresenter) {
       this.#newEventPresenter.destroy();
+      this.#destroyNewEvent();
     }
   }
 
@@ -239,6 +240,10 @@ export default class HeaderPresenter {
 
   #modeChangeHandler = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#destroyNewEvent();
+    }
   };
 
   get pointData() {
