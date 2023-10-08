@@ -11,7 +11,6 @@ import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
 import NewEventBtnView from '../view/new-event-btn-view';
 import NewEventPresenter from './new-event-presenter';
-// import { updateItem } from '../model/util/updatePoint';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
@@ -51,6 +50,10 @@ export default class HeaderPresenter {
   };
 
   #filterTypeClickHandler = (filterType) => {
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+      this.#noPointsComponent = null;
+    }
     this.#currentFilterType = filterType;
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
@@ -63,6 +66,22 @@ export default class HeaderPresenter {
 
   #newEventClickHandler = () => {
     this.#modeChangeHandler();
+
+    this.#currentSortType = SortType.DAY.name;
+    this.#currentFilterType = 'everything';
+
+    this.#rerenderFilters();
+
+    remove(this.#sortComponent);
+    this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
+      sortTypeChangeHandler: this.#sortTypeChangeHandler,
+    });
+    this.#renderSort();
+
+    this.#clearEventsList();
+    this.#renderEvents(this.pointData);
+
     this.#newEventPresenter = new NewEventPresenter({
       container: this.#eventsListComponent.element,
       offers: this.#model.offers,
@@ -90,6 +109,15 @@ export default class HeaderPresenter {
 
   #renderFilters() {
     render(this.#tripFiltersComponent, this.#siteTripControlsElement);
+  }
+
+  #rerenderFilters() {
+    remove(this.#tripFiltersComponent);
+    this.#tripFiltersComponent = new TripFiltersView({
+      isDisabled: false,
+      filterTypeClickHandler: this.#filterTypeClickHandler,
+    });
+    this.#renderFilters();
   }
 
   #renderTripInfo() {
@@ -140,7 +168,7 @@ export default class HeaderPresenter {
     }
     this.#renderTripInfo();
     this.#renderSort();
-    this.#renderEvents(this.pointData); // какие данные сюда попадают?????
+    this.#renderEvents(this.pointData);
   }
 
   #clearEventsList() {
@@ -225,13 +253,7 @@ export default class HeaderPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        remove(this.#tripFiltersComponent);
-        this.#tripFiltersComponent = new TripFiltersView({
-          // filters: FILTER_TYPES.map((filter) => ({ filterName: filter })), //готовим данные о фильтрах для отрисовки,
-          isDisabled: false,
-          filterTypeClickHandler: this.#filterTypeClickHandler,
-        });
-        this.#renderFilters();
+        this.#rerenderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
         break;
@@ -252,7 +274,7 @@ export default class HeaderPresenter {
     let filteredPoint = [];
 
     switch (this.#currentFilterType) {
-      case 'everything': // переделать структуру
+      case 'everything':
         filteredPoint = allPoints;
         break;
       case 'future':
@@ -275,7 +297,6 @@ export default class HeaderPresenter {
         return filteredPoint.sort(sortByDate);
     }
     return allPoints;
-    // разбор 1 05:13
   }
 
   init() {
