@@ -13,7 +13,6 @@ export default class Model extends Observable {
   }
 
   get offers() {
-    console.log(this.#offersData);
     return this.#offersData;
   }
 

@@ -40,7 +40,7 @@ export default class NewEventPresenter {
   #formSubmitHandler = (point) => {
     this.#onDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
     // this.#replaceFormToPoint();
-    this.#destroy();
+    // this.#destroy();
     this.#onDestroy(); // приходит из header-presenter, разбизабливает кнопку
     document.removeEventListener('keydown', this.#onEscKeyDown);
     //вызываем здесь
@@ -50,13 +50,33 @@ export default class NewEventPresenter {
   };
 
   #resetClickHandler = () => {
-    this.#destroy();
+    this.destroy();
     this.#onDestroy(); // приходит из header-presenter, разбизабливает кнопку
   };
 
   #cancelClickHandler = () => {
     // нужен формально для передачи в EventEditView
   };
+
+  setSaving() {
+    this.#eventEditComponent.updateElement({
+      ...this._state,
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#eventEditComponent.shake(resetFormState);
+  }
 
   init() {
     if (this.#eventEditComponent !== null) {
@@ -77,7 +97,7 @@ export default class NewEventPresenter {
     document.addEventListener('keydown', this.#onEscKeyDown);
   }
 
-  #destroy() {
+  destroy() {
     if (this.#eventEditComponent === null) {
       return;
     }

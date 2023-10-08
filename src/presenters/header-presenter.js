@@ -1,5 +1,5 @@
 // это будет главный презентер
-import { FILTER_TYPES, SortType } from '../consts';
+import { SortType } from '../consts';
 import { render, RenderPosition, remove } from '../framework/render';
 import TripInfoView from '../view/trip-info-view';
 import TripAbouteView from '../view/trip-aboute-view';
@@ -24,7 +24,7 @@ export default class HeaderPresenter {
   #eventPresenters = new Map();
   #noPointsComponent = null;
   #currentSortType = SortType.DAY.name;
-  #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
+  #currentFilterType = 'everything';
   #isLoading = true;
 
   constructor(container, model) {
@@ -74,7 +74,6 @@ export default class HeaderPresenter {
   };
 
   #tripFiltersComponent = new TripFiltersView({
-    // filters: FILTER_TYPES.map((filter) => ({ filterName: filter })), //готовим данные о фильтрах для отрисовки,
     isDisabled: true,
     filterTypeClickHandler: this.#filterTypeClickHandler,
   });
@@ -90,12 +89,6 @@ export default class HeaderPresenter {
   });
 
   #renderFilters() {
-    // const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
-    // const tripFiltersComponent = new TripFiltersView({
-    //   filters: filters,
-    //   isDisabled: isDisabled,
-    //   filterTypeClickHandler: this.#filterTypeClickHandler,
-    // });
     render(this.#tripFiltersComponent, this.#siteTripControlsElement);
   }
 
@@ -154,6 +147,9 @@ export default class HeaderPresenter {
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear(); // очищаем коллекцию презентеров
     //список-контейнер не удалаю
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destoy();
+    }
   }
 
   #clearAll({ resetSortType = false } = {}) {
@@ -171,17 +167,33 @@ export default class HeaderPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     // вместо pointChangeHandler - передается в event-presenter
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#model.updatePoint(updateType, update);
+        this.#eventPresenters.get(update.id).setSaving();
+        // this.#model.updatePoint(updateType, update);
+        try {
+          await this.#model.updatePoint(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#model.addPoint(updateType, update);
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#model.addPoint(updateType, update);
+        } catch (err) {
+          this.#newEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#model.deletePoint(updateType, update);
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#model.deletePoint(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
     }
   };

@@ -18,8 +18,6 @@ export default class EventEditView extends AbstractStatefulView {
   #datepickerTo = null;
 
   constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler, deleteClickHandler }) {
-    // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
-    //constructor({point = BLANK_POINT, onFormSubmit})
     super();
     this._setState(EventEditView.parsePointToState(pointData, offers, destinations)); // значение будет храниться в унаследованном поле _state
     this.#offers = offers;
@@ -34,7 +32,6 @@ export default class EventEditView extends AbstractStatefulView {
     return createEventEditTemplate({
       pointState: this._state,
       destinationNames: this.#destinations.map((destination) => destination.name), //для отрисовки выпадаюющего списка ПН
-      // pointTypes: POINT_TYPES // из consts - для списка типов точек
     });
   }
 
@@ -93,14 +90,14 @@ export default class EventEditView extends AbstractStatefulView {
         destinationPhotos: selectedDestination.photos,
       });
     } else {
-      // this.updateElement({
-      //   ...this._state,
-      //   destination: null,
-      //   destinationDescription: null,
-      //   destinationName: null,
-      //   destinationPhotos: null,
-      // });
-      this.element.querySelector('.event__save-btn').disabled = true;
+      this.updateElement({
+        ...this._state,
+        destination: null,
+        destinationDescription: null,
+        destinationName: null,
+        destinationPhotos: null,
+      });
+      // this.element.querySelector('.event__save-btn').disabled = true;
     }
     //проверка на заполненность полей для новой точки
     if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
@@ -127,12 +124,12 @@ export default class EventEditView extends AbstractStatefulView {
         basePrice: Number(evt.target.value),
       });
     } else {
-      this.element.querySelector('.event__save-btn').disabled = true;
+      // this.element.querySelector('.event__save-btn').disabled = true;
     }
     //проверка на заполненность полей для новой точки
-    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-      this.element.querySelector('.event__save-btn').disabled = false;
-    }
+    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+    // this.element.querySelector('.event__save-btn').disabled = false;
+    // }
   };
 
   #onDateFromChange = ([userDate]) => {
@@ -143,12 +140,12 @@ export default class EventEditView extends AbstractStatefulView {
         dateFrom: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
       });
     } else {
-      this.element.querySelector('.event__save-btn').disabled = true;
+      // this.element.querySelector('.event__save-btn').disabled = true;
     }
     //проверка на заполненность полей для новой точки
-    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-      this.element.querySelector('.event__save-btn').disabled = false;
-    }
+    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+    //   this.element.querySelector('.event__save-btn').disabled = false;
+    // }
   };
 
   #onDateToChange = ([userDate]) => {
@@ -159,12 +156,12 @@ export default class EventEditView extends AbstractStatefulView {
         dateTo: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
       });
     } else {
-      this.element.querySelector('.event__save-btn').disabled = true;
+      // this.element.querySelector('.event__save-btn').disabled = true;
     }
     //проверка на заполненность полей для новой точки
-    if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-      this.element.querySelector('.event__save-btn').disabled = false;
-    }
+    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
+    //   this.element.querySelector('.event__save-btn').disabled = false;
+    // }
   };
 
   #setDatepicker() {
@@ -198,6 +195,9 @@ export default class EventEditView extends AbstractStatefulView {
       offersInfo: getMarkedOffers(pointData.type, pointData.offers, offers),
       dateFrom: pointData.dateFrom ? dayjs(pointData.dateFrom).format(DATA_FORMAT) : '',
       dateTo: pointData.dateTo ? dayjs(pointData.dateTo).format(DATA_FORMAT) : '',
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 

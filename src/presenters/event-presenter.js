@@ -52,8 +52,18 @@ export default class EventPresenter {
 
   #formSubmitHandler = (point) => {
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
-    this.#replaceFormToPoint();
+    // this.#replaceFormToPoint(); // ???????????????????
     document.removeEventListener('keydown', this.#onEscKeyDown);
+    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
+    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
+    // const isMinorUpdate =
+    //   !isDatesEqual(this.#task.dueDate, update.dueDate) ||
+    //   isTaskRepeating(this.#task.repeating) !== isTaskRepeating(update.repeating);
+    // this.#handleDataChange(
+    //   UserAction.UPDATE_TASK,
+    //   isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+    //   update,
+    // );
   };
 
   #deleteClickHandler = (point) => {
@@ -115,11 +125,49 @@ export default class EventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#eventEditComponent, prevEventEditComponent);
+      // replace(this.#eventEditComponent, prevEventEditComponent);
+      replace(this.#eventItemComponent, prevEventEditComponent); // ?????????
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventItemComponent);
     remove(prevEventEditComponent);
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventItemComponent.shake();
+      return;
+    }
+    const resetFormState = () => {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#eventEditComponent.shake(resetFormState);
   }
 
   resetView() {
