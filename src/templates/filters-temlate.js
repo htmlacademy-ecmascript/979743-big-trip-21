@@ -1,4 +1,4 @@
-function createFilterItem({ filterName }, isChecked) {
+function createFilterItem({ filterName }, isDisabled, isChecked) {
   //на входе один элемент из массива фильтров = объект
   return `
   <div class="trip-filters__filter">
@@ -9,14 +9,15 @@ function createFilterItem({ filterName }, isChecked) {
       name="trip-filter"
       value="${filterName}"
       ${isChecked ? 'checked' : ''}
+      ${isDisabled ? 'disabled' : ''}
       >
     <label class="trip-filters__filter-label" for="filter-${filterName}">${filterName}</label>
   </div>
   `;
 }
 
-function createFiltersTemplate(filters) {
-  const filtersTemplate = filters.map((filter, index) => createFilterItem(filter, index === 0)).join('');
+function createFiltersTemplate(filters, isDisabled) {
+  const filtersTemplate = filters.map((filter, index) => createFilterItem(filter, isDisabled, index === 0)).join('');
   return `
   <form class="trip-filters" action="#" method="get">
     ${filtersTemplate}

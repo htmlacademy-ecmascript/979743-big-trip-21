@@ -1,11 +1,7 @@
-// import { filterFuturePoints, filterPresentPoints, filterPastPoints } from './util/filters';
 import Observable from '../framework/observable';
 import dayjs from 'dayjs';
 import { UpdateType } from '../consts';
 export default class Model extends Observable {
-  // #destinations;
-  // #offers = null;
-  // #points = null;
   #pointApiService = null;
   #pointsData = [];
   #destinationsData = [];
@@ -13,10 +9,6 @@ export default class Model extends Observable {
 
   constructor({ pointApiService }) {
     super();
-    // //сырые данные
-    // this.#destinations = destinations;
-    // this.#offers = offers;
-    // this.#points = points;
     this.#pointApiService = pointApiService;
   }
 
@@ -34,22 +26,17 @@ export default class Model extends Observable {
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
-    // ----- добавить еще стоимость офферов (!!!)
-    // const initialCost = 0;
-    // return this.#points
-    //   .map((point) => point.basePrice)
-    //   .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
     return '3456';
   }
 
   async init() {
     try {
       const serverPoints = await this.#pointApiService.points;
-      // console.log(serverPoints);
       this.#pointsData = serverPoints.map(this.#adaptPointToClient);
-      // console.log(this.#pointsData[0].dateFrom instanceof Date); // true
     } catch (err) {
       this.#pointsData = [];
+      this._notify(UpdateType.FAILED);
+      return;
     }
 
     try {
@@ -91,29 +78,38 @@ export default class Model extends Observable {
     }
   }
 
-  addPoint(updateType, update) {
-    this.#pointsData = [
-      // добавляем объект в массив
-      update,
-      ...this.#pointsData,
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointApiService.addPoint(update);
+      const newPoint = this.#adaptPointToClient(response);
+      this.#pointsData = [
+        // добавляем объект в массив
+        newPoint,
+        ...this.#pointsData,
+      ];
+      this._notify(updateType, update);
+    } catch (err) {
+      throw new Error('Cant add task');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const pointIndex = this.#pointsData.findIndex((point) => point.id === update.id);
     if (pointIndex === -1) {
       throw new Error('Cant delete unexisting point');
     }
 
-    this.#pointsData = [
-      // исключаем элемент из массива
-      ...this.#pointsData.slice(0, pointIndex),
-      ...this.#pointsData.slice(pointIndex + 1),
-    ];
-
-    this._notify(updateType);
+    try {
+      await this.#pointApiService.deletePoint(update); // метод удаления задачи на сервере ничего не возвращает
+      this.#pointsData = [
+        // исключаем элемент из массива
+        ...this.#pointsData.slice(0, pointIndex),
+        ...this.#pointsData.slice(pointIndex + 1),
+      ];
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Cant delete task');
+    }
   }
 
   //------------- адаптация данных ---------------------------------------
@@ -154,20 +150,4 @@ export default class Model extends Observable {
 
     return adaptedOffer;
   }
-
-  //------------- отдаем сырые данные, адаптация в шаблоне ---------------------------------------
-  // get offers() {
-  //   // return this.#offers;
-  //   return this.#offersData;
-  // }
-
-  // get destinations() {
-  //   // return this.#destinations;
-  //   return this.#destinationsData;
-  // }
-
-  // get points() {
-  //   // return this.#points;
-  //   return this.#pointsData;
-  // }
 }

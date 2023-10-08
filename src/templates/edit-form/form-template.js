@@ -1,11 +1,10 @@
 import { createEventEditHeaderTemplate } from './header-template';
 import { createEventEditDetailsTemplate } from './details-template';
-function createEventEditTemplate({ pointState }) {
-  // return 'шаблон формы';
+function createEventEditTemplate({ pointState, destinationNames }) {
   return `
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
-      ${createEventEditHeaderTemplate(pointState)}
+      ${createEventEditHeaderTemplate(pointState, destinationNames)}
       ${createEventEditDetailsTemplate(pointState)}
     </form>
   </li>

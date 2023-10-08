@@ -25,13 +25,12 @@ function getOffers(offersInfo) {
 
 function createEventEditOffersTemplate(offersInfo) {
   return `
-                  <section class="event__section  event__section--offers">
-                    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-                    <div class="event__available-offers">
-                    ${getOffers(offersInfo)}
-                    </div>
-                  </section>
+      <section class="${offersInfo.length > 0 ? 'event__section  event__section--offers' : 'visually-hidden'}">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${getOffers(offersInfo)}
+        </div>
+      </section>
   `;
 }
 

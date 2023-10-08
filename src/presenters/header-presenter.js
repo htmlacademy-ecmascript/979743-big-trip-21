@@ -1,5 +1,5 @@
 // это будет главный презентер
-import { FILTER_TYPES, SortType } from '../consts';
+import { SortType } from '../consts';
 import { render, RenderPosition, remove } from '../framework/render';
 import TripInfoView from '../view/trip-info-view';
 import TripAbouteView from '../view/trip-aboute-view';
@@ -9,20 +9,32 @@ import SortView from '../view/sort-view';
 import EventsListView from '../view/events-list-view';
 import EventPresenter from './event-presenter';
 import NoPointsView from '../view/no-points-view';
-import NewEventBtn from '../view/new-event-btn-view';
-// import { updateItem } from '../model/util/updatePoint';
+import NewEventBtnView from '../view/new-event-btn-view';
+import NewEventPresenter from './new-event-presenter';
 import { UserAction, UpdateType } from '../consts';
 import { sortByPrice, sortByTime, sortByDate } from '../util/common';
 import { filterFuturePoints, filterPresentPoints, filterPastPoints } from '../model/util/filters';
 import LoadingView from '../view/loading-view';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class HeaderPresenter {
   #container = null;
   #model = null;
+  #newEventPresenter = null;
   #eventPresenters = new Map();
+  #noPointsComponent = null;
   #currentSortType = SortType.DAY.name;
-  #currentFilterType = 'everything'; // изменить струтуру FILTER_TYPES !!!
+  #currentFilterType = 'everything';
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT,
+  });
 
   constructor(container, model) {
     this.#container = container;
@@ -34,7 +46,7 @@ export default class HeaderPresenter {
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = new TripAbouteView();
-  #newEventBtnComponent = new NewEventBtn();
+
   #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
 
@@ -48,10 +60,52 @@ export default class HeaderPresenter {
   };
 
   #filterTypeClickHandler = (filterType) => {
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+      this.#noPointsComponent = null;
+    }
     this.#currentFilterType = filterType;
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
   };
+
+  #destroyNewEvent = () => {
+    this.#newEventBtnComponent.element.disabled = false;
+    this.#newEventClickHandler = null;
+  };
+
+  #newEventClickHandler = () => {
+    this.#modeChangeHandler();
+
+    this.#currentSortType = SortType.DAY.name;
+    this.#currentFilterType = 'everything';
+
+    this.#rerenderFilters();
+
+    remove(this.#sortComponent);
+    this.#sortComponent = new SortView({
+      currentSortType: this.#currentSortType,
+      sortTypeChangeHandler: this.#sortTypeChangeHandler,
+    });
+    this.#renderSort();
+
+    this.#clearEventsList();
+    this.#renderEvents(this.pointData);
+
+    this.#newEventPresenter = new NewEventPresenter({
+      container: this.#eventsListComponent.element,
+      offers: this.#model.offers,
+      destinations: this.#model.destinations,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#destroyNewEvent,
+    });
+    this.#newEventPresenter.init();
+  };
+
+  #tripFiltersComponent = new TripFiltersView({
+    isDisabled: true,
+    filterTypeClickHandler: this.#filterTypeClickHandler,
+  });
 
   #sortComponent = new SortView({
     currentSortType: this.#currentSortType,
@@ -59,15 +113,21 @@ export default class HeaderPresenter {
   });
 
   #eventsListComponent = new EventsListView();
-  #noPointsComponent = new NoPointsView();
+  #newEventBtnComponent = new NewEventBtnView({
+    newEventClickHandler: this.#newEventClickHandler,
+  });
 
   #renderFilters() {
-    const filters = FILTER_TYPES.map((filter) => ({ filterName: filter })); //готовим данные о фильтрах для отрисовки
-    const tripFiltersComponent = new TripFiltersView({
-      filters: filters,
+    render(this.#tripFiltersComponent, this.#siteTripControlsElement);
+  }
+
+  #rerenderFilters() {
+    remove(this.#tripFiltersComponent);
+    this.#tripFiltersComponent = new TripFiltersView({
+      isDisabled: false,
       filterTypeClickHandler: this.#filterTypeClickHandler,
     });
-    render(tripFiltersComponent, this.#siteTripControlsElement);
+    this.#renderFilters();
   }
 
   #renderTripInfo() {
@@ -82,12 +142,10 @@ export default class HeaderPresenter {
   }
 
   #renderEvent(point) {
-    //куда лучше передавать данные точки: в конструктор или в метод??
     const eventPresenter = new EventPresenter({
       container: this.#eventsListComponent.element,
       offers: this.#model.offers,
       destinations: this.#model.destinations,
-      // onDataChange: this.#pointChangeHandler,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#modeChangeHandler,
     });
@@ -96,32 +154,57 @@ export default class HeaderPresenter {
   }
 
   #renderEvents(points) {
-    render(this.#eventsListComponent, this.#siteTripEventsElement);
-    points.forEach((point) => this.#renderEvent(point));
-  }
-
-  #renderNoPoints() {
-    render(this.#noPointsComponent, this.#siteTripEventsElement);
+    if (points.length === 0) {
+      this.#noPointsComponent = new NoPointsView({
+        currentFilter: this.#currentFilterType,
+      });
+      render(this.#noPointsComponent, this.#siteTripEventsElement);
+    } else {
+      // удалять заглушку, если она есть.
+      remove(this.#noPointsComponent);
+      render(this.#eventsListComponent, this.#siteTripEventsElement);
+      points.forEach((point) => this.#renderEvent(point));
+    }
   }
 
   #renderLoading() {
     render(this.#loadingComponent, this.#siteTripEventsElement);
   }
 
-  #renderAll() {
+  #renderAll(isServerFailed = false) {
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
+
+    if (isServerFailed) {
+      this.renderNoPoints(true);
+      return;
+    }
+
     this.#renderTripInfo();
     this.#renderSort();
-    this.#renderEvents(this.pointData); // какие данные сюда попадают?????
+    // проверяем условие isServerFailed
+    this.#renderEvents(this.pointData);
+  }
+
+  renderNoPoints(isServerFailed = false) {
+    this.#noPointsComponent = new NoPointsView({
+      currentFilter: this.#currentFilterType,
+      isServerFailed: isServerFailed,
+    });
+    render(this.#noPointsComponent, this.#siteTripEventsElement);
+    // render(this.#noPointsComponent, document.querySelector('.trip-events'));
   }
 
   #clearEventsList() {
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear(); // очищаем коллекцию презентеров
     //список-контейнер не удалаю
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#destroyNewEvent();
+    }
   }
 
   #clearAll({ resetSortType = false } = {}) {
@@ -139,19 +222,37 @@ export default class HeaderPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
-    // вместо pointChangeHandler - передается в event-presenter
+  #handleViewAction = async (actionType, updateType, update) => {
+    // передается в event-presenter
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#model.updatePoint(updateType, update);
+        this.#eventPresenters.get(update.id).setSaving();
+        try {
+          await this.#model.updatePoint(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#model.addPoint(updateType, update);
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#model.addPoint(updateType, update);
+        } catch (err) {
+          this.#newEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#model.deletePoint(updateType, update);
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#model.deletePoint(updateType, update);
+        } catch (err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -160,7 +261,12 @@ export default class HeaderPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         // обновляем только точку
-        this.#eventPresenters.get(data.id).init(data);
+        if (this.#eventPresenters.get(data.id)) {
+          // проверяем, существует точка или новая
+          this.#eventPresenters.get(data.id).init(data); // для существующей точки
+        } else {
+          this.#renderEvent(data);
+        }
         break;
       case UpdateType.MINOR:
         // обновляем список
@@ -169,57 +275,66 @@ export default class HeaderPresenter {
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
-        this.#clearAll({ resetRenderedTaskCount: true });
+        this.#clearAll({ resetRenderedTaskCount: true }); // что это??
         this.#renderAll();
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        // this.#clearAll();
         remove(this.#loadingComponent);
+        this.#rerenderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
+        break;
+      case UpdateType.FAILED:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#rerenderFilters();
+        this.#renderAll(true);
         break;
     }
   };
 
   #modeChangeHandler = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#destroyNewEvent();
+    }
   };
 
   get pointData() {
     // возвращает данные о точках с учетом текущей сортировки
     const allPoints = this.#model.points;
-    let filteredPoint = [];
+    let filteredPoints = [];
 
     switch (this.#currentFilterType) {
-      case 'everything': // переделать структуру
-        filteredPoint = allPoints;
+      case 'everything':
+        filteredPoints = allPoints;
         break;
       case 'future':
-        filteredPoint = filterFuturePoints(allPoints); // от большего к меньшему
+        filteredPoints = filterFuturePoints(allPoints); // от большего к меньшему
         break;
       case 'present':
-        filteredPoint = filterPresentPoints(allPoints);
+        filteredPoints = filterPresentPoints(allPoints);
         break;
       case 'past':
-        filteredPoint = filterPastPoints(allPoints);
+        filteredPoints = filterPastPoints(allPoints);
         break;
     }
 
     switch (this.#currentSortType) {
       case SortType.PRICE.name:
-        return filteredPoint.sort(sortByPrice); // от большего к меньшему
+        return filteredPoints.sort(sortByPrice); // от большего к меньшему
       case SortType.TIME.name:
-        return filteredPoint.sort(sortByTime);
+        return filteredPoints.sort(sortByTime);
       case SortType.DAY.name:
-        return filteredPoint.sort(sortByDate);
+        return filteredPoints.sort(sortByDate);
     }
     return allPoints;
-    // разбор 1 05:13
   }
 
   init() {
-    this.#renderFilters();
+    this.#renderFilters({ isDisabled: true });
     this.#renderAll();
   }
 }

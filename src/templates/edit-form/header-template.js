@@ -1,6 +1,25 @@
-function createEventEditHeaderTemplate({ id, type, destination, destinationName, dateFrom, dateTo, basePrice }) {
-  // выпадающий список типов точек не передаем данными? список в константах.
-  //id открытой точки куда добавить?
+import he from 'he';
+
+function getDestinationsListTemplate(destinationNames) {
+  return destinationNames.map((destinationName) => `<option value="${destinationName}"></option>`).join('');
+}
+
+function getCanceleleteBtn(id, isDisabled, isDeleting) {
+  if (id) {
+    return `
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
+        ${isDeleting ? 'Deleting...' : 'Delete'}
+      </button>
+    `;
+  } else {
+    return '<button class="event__reset-btn" type="reset">Cancel</button>';
+  }
+}
+
+function createEventEditHeaderTemplate(
+  { id, type, destination, destinationName, dateFrom, dateTo, basePrice, isDisabled, isSaving, isDeleting },
+  destinationNames
+) {
   return `
   <header class="event__header">
     <div class="event__type-wrapper">
@@ -8,7 +27,11 @@ function createEventEditHeaderTemplate({ id, type, destination, destinationName,
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
       </label>
-      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+      <input
+        class="event__type-toggle  visually-hidden"
+        id="event-type-toggle-${id}"
+        type="checkbox"
+        ${isDisabled ? 'disabled' : ''}>
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
@@ -68,31 +91,50 @@ function createEventEditHeaderTemplate({ id, type, destination, destinationName,
         class="event__input  event__input--destination" id="event-destination-${id}"
         type="text"
         name="event-destination"
-        value="${destination ? destinationName : ''}"
-        list="destination-list-${id}">
+        value="${destination ? he.encode(destinationName) : ''}"
+        list="destination-list-${id}"
+        ${isDisabled ? 'disabled' : ''}>
       <datalist id="destination-list-${id}">
-        <option value="Amsterdam"></option>
-        <option value="Geneva"></option>
-        <option value="Chamonix"></option>
+        ${getDestinationsListTemplate(destinationNames)}
       </datalist>
     </div>
     <div class="event__field-group  event__field-group--time">
-      <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateFrom} 00:00">
+      <label class="visually-hidden" for="event-start-time">From</label>
+      <input
+        class="event__input  event__input--time"
+        id="event-start-time"
+        type="text"
+        name="event-start-time"
+        value="${he.encode(dateFrom)}"
+        ${isDisabled ? 'disabled' : ''}>
         &mdash;
-      <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateTo} 00:00">
+      <label class="visually-hidden" for="event-end-time">To</label>
+      <input
+        class="event__input  event__input--time"
+        id="event-end-time"
+        type="text"
+        name="event-end-time"
+        value="${he.encode(dateTo)}"
+        ${isDisabled ? 'disabled' : ''}>
     </div>
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-${id}">
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+      <input
+        class="event__input  event__input--price"
+        id="event-price-${id}"
+        type="number"
+        ame="event-price"
+        value="${basePrice}"
+        ${isDisabled ? 'disabled' : ''}>
     </div>
-    <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>
+      ${isSaving ? 'saving...' : 'save'}
+    </button>
+    ${getCanceleleteBtn(id, isDisabled, isDeleting)}
+    <button class="edit-form-view ${id ? 'event__rollup-btn' : 'visually-hidden'}" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
   </header>

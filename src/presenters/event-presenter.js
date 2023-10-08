@@ -51,11 +51,7 @@ export default class EventPresenter {
   }
 
   #formSubmitHandler = (point) => {
-    // сюда прилетает _state из view
-    // сюда прилетают данные для отправки в модель
-    // добавить проверку: перерисовывать только точку или перерисовывать весь список
-    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
-    this.#replaceFormToPoint();
+    this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
@@ -69,7 +65,6 @@ export default class EventPresenter {
   };
 
   #favoriteClickHandler = () => {
-    // this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {
       ...this.#point,
       isFavorite: !this.#point.isFavorite,
@@ -118,11 +113,48 @@ export default class EventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#eventEditComponent, prevEventEditComponent);
+      replace(this.#eventItemComponent, prevEventEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventItemComponent);
     remove(prevEventEditComponent);
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventItemComponent.shake();
+      return;
+    }
+    const resetFormState = () => {
+      this.#eventEditComponent.updateElement({
+        ...this._state,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#eventEditComponent.shake(resetFormState);
   }
 
   resetView() {

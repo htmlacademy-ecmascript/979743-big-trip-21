@@ -13,7 +13,6 @@ export default class EventItemView extends AbstractView {
   #favoriteClickHandler = null;
 
   constructor({ pointData, offers, destinations, onEditClick, favoriteClickHandler }) {
-    // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
     this.#pointData = pointData;
     this.#offers = offers;
@@ -40,7 +39,6 @@ export default class EventItemView extends AbstractView {
 
   #onFavoriteClick = () => {
     this.#favoriteClickHandler(); // вносим изменения в данные, прилетела из презентара
-    //при клике фокус на кнопке сохраняется, поэтому она не серенькая становится, а светло-желтая
   };
 
   get template() {
