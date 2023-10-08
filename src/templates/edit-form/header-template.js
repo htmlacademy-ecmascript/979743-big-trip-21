@@ -91,7 +91,7 @@ function createEventEditHeaderTemplate(
         class="event__input  event__input--destination" id="event-destination-${id}"
         type="text"
         name="event-destination"
-        value="${destination ? destinationName : ''}"
+        value="${destination ? he.encode(destinationName) : ''}"
         list="destination-list-${id}"
         ${isDisabled ? 'disabled' : ''}>
       <datalist id="destination-list-${id}">
@@ -105,7 +105,7 @@ function createEventEditHeaderTemplate(
         id="event-start-time"
         type="text"
         name="event-start-time"
-        value="${dateFrom}"
+        value="${he.encode(dateFrom)}"
         ${isDisabled ? 'disabled' : ''}>
         &mdash;
       <label class="visually-hidden" for="event-end-time">To</label>
@@ -114,7 +114,7 @@ function createEventEditHeaderTemplate(
         id="event-end-time"
         type="text"
         name="event-end-time"
-        value="${dateTo}"
+        value="${he.encode(dateTo)}"
         ${isDisabled ? 'disabled' : ''}>
     </div>
     <div class="event__field-group  event__field-group--price">
