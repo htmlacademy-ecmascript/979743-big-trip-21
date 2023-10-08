@@ -4,7 +4,6 @@ import PointApiService from './point-api-service';
 
 const AUTHORIZATION = 'Basic hvkdngbn645cl1sa2j';
 const END_POINT = 'https://21.objects.pages.academy/big-trip';
-// const END_POINT = 'https://21.objects.pages.academy/big-trips';
 
 const model = new Model({
   pointApiService: new PointApiService(END_POINT, AUTHORIZATION),

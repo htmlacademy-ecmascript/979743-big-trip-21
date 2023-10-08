@@ -228,7 +228,6 @@ export default class HeaderPresenter {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#eventPresenters.get(update.id).setSaving();
-        // this.#model.updatePoint(updateType, update);
         try {
           await this.#model.updatePoint(updateType, update);
         } catch (err) {
@@ -291,8 +290,6 @@ export default class HeaderPresenter {
         remove(this.#loadingComponent);
         this.#rerenderFilters();
         this.#renderAll(true);
-        // render(this.#newEventBtnComponent, this.#siteTripMainElement);
-        // this.renderNoPoints(true);
         break;
     }
   };
