@@ -35,6 +35,8 @@ export default class Model extends Observable {
       this.#pointsData = serverPoints.map(this.#adaptPointToClient);
     } catch (err) {
       this.#pointsData = [];
+      this._notify(UpdateType.FAILED);
+      return;
     }
 
     try {

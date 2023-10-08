@@ -171,14 +171,30 @@ export default class HeaderPresenter {
     render(this.#loadingComponent, this.#siteTripEventsElement);
   }
 
-  #renderAll() {
+  #renderAll(isServerFailed = false) {
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
+
+    if (isServerFailed) {
+      this.renderNoPoints(true);
+      return;
+    }
+
     this.#renderTripInfo();
     this.#renderSort();
+    // проверяем условие isServerFailed
     this.#renderEvents(this.pointData);
+  }
+
+  renderNoPoints(isServerFailed = false) {
+    this.#noPointsComponent = new NoPointsView({
+      currentFilter: this.#currentFilterType,
+      isServerFailed: isServerFailed,
+    });
+    render(this.#noPointsComponent, this.#siteTripEventsElement);
+    // render(this.#noPointsComponent, document.querySelector('.trip-events'));
   }
 
   #clearEventsList() {
@@ -269,6 +285,14 @@ export default class HeaderPresenter {
         this.#rerenderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
+        break;
+      case UpdateType.FAILED:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#rerenderFilters();
+        this.#renderAll(true);
+        // render(this.#newEventBtnComponent, this.#siteTripMainElement);
+        // this.renderNoPoints(true);
         break;
     }
   };

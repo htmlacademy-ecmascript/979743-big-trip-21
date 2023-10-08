@@ -1,5 +1,14 @@
-function createNoPointTemplate(currentFilter) {
+function createNoPointTemplate(currentFilter, isServerFailed) {
   let noPointsText;
+  if (isServerFailed) {
+    noPointsText = 'Failed to load latest route information';
+
+    console.log('Failed Server');
+
+    return `
+      <p class="trip-events__msg">${noPointsText}</p>
+    `;
+  }
 
   switch (currentFilter) {
     case 'everything':
