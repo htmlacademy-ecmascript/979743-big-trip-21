@@ -17,7 +17,6 @@ export default class TripFiltersView extends AbstractView {
   }
 
   #onFilterClick = (evt) => {
-    // отследить выделение выбранного пункта
     this.#filterTypeClickHandler(evt.target.value);
   };
 

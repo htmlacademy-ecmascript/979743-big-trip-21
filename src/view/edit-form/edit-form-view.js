@@ -23,9 +23,9 @@ export default class EventEditView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destinations = destinations;
     this.#formSubmitHandler = formSubmitHandler;
-    this.#resetClickHandler = resetClickHandler; // ретро 10:03
+    this.#resetClickHandler = resetClickHandler;
     this.#deleteClickHandler = deleteClickHandler; // для новой точки - это пустая ф-я
-    this._restoreHandlers(); // ретро 9:58
+    this._restoreHandlers();
   }
 
   get template() {
@@ -36,12 +36,10 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   reset = (pointData, offers, destinations) => {
-    //ретро 22:05 и в презентере ретро 22:52
     this.updateElement(EventEditView.parsePointToState(pointData, offers, destinations));
   };
 
   _restoreHandlers = () => {
-    // ретро 10:25 и 15:59
     this.element.querySelector('form.event').addEventListener('submit', this.#onFormSubmit);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeChange); // это fieldset
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
@@ -54,7 +52,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onFormSubmit = (evt) => {
-    evt.preventDefault(); // надо?
+    evt.preventDefault();
     this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем измененные данные для перерисовки и сохранения
   };
 
@@ -78,7 +76,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
-    // ретро 17:31
     const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
 
     if (selectedDestination) {
@@ -97,7 +94,6 @@ export default class EventEditView extends AbstractStatefulView {
         destinationName: null,
         destinationPhotos: null,
       });
-      // this.element.querySelector('.event__save-btn').disabled = true;
     }
     //проверка на заполненность полей для новой точки
     if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
@@ -106,7 +102,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onOffersChange = () => {
-    //ретро 18:20
     const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
     const checkedOfferIds = checkedOffers.map((el) => el.id);
     this._setState({
@@ -117,19 +112,10 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onPriceChange = (evt) => {
-    const selectedPrice = evt.target.value;
-    if (selectedPrice > 0) {
-      this.updateElement({
-        ...this._state,
-        basePrice: Number(evt.target.value),
-      });
-    } else {
-      // this.element.querySelector('.event__save-btn').disabled = true;
-    }
-    //проверка на заполненность полей для новой точки
-    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-    // this.element.querySelector('.event__save-btn').disabled = false;
-    // }
+    this.updateElement({
+      ...this._state,
+      basePrice: Number(evt.target.value),
+    });
   };
 
   #onDateFromChange = ([userDate]) => {
@@ -139,13 +125,7 @@ export default class EventEditView extends AbstractStatefulView {
         ...this._state,
         dateFrom: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
       });
-    } else {
-      // this.element.querySelector('.event__save-btn').disabled = true;
     }
-    //проверка на заполненность полей для новой точки
-    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-    //   this.element.querySelector('.event__save-btn').disabled = false;
-    // }
   };
 
   #onDateToChange = ([userDate]) => {
@@ -155,13 +135,7 @@ export default class EventEditView extends AbstractStatefulView {
         ...this._state,
         dateTo: dayjs(selectedDate).format(DATA_FORMAT), // соответствие типов!!
       });
-    } else {
-      // this.element.querySelector('.event__save-btn').disabled = true;
     }
-    //проверка на заполненность полей для новой точки
-    // if (this._state.destination && this._state.dateFrom && this._state.dateTo && this._state.basePrice) {
-    //   this.element.querySelector('.event__save-btn').disabled = false;
-    // }
   };
 
   #setDatepicker() {
@@ -203,7 +177,6 @@ export default class EventEditView extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     // приводим к структуре сырых данных
-    // ретро 7:24
     const transfotmedDateFromStr = formatDateStr(state.dateFrom);
     const transfotmedDateToStr = formatDateStr(state.dateTo);
     if (state.id) {

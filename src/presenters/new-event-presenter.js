@@ -39,14 +39,8 @@ export default class NewEventPresenter {
 
   #formSubmitHandler = (point) => {
     this.#onDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
-    // this.#replaceFormToPoint();
-    // this.#destroy();
     this.#onDestroy(); // приходит из header-presenter, разбизабливает кнопку
     document.removeEventListener('keydown', this.#onEscKeyDown);
-    //вызываем здесь
-    // this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, point);
-    // this.#replaceFormToPoint(); // удаление элемента
-    // document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
   #resetClickHandler = () => {

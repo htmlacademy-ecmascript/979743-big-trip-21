@@ -52,18 +52,7 @@ export default class EventPresenter {
 
   #formSubmitHandler = (point) => {
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, point);
-    // this.#replaceFormToPoint(); // ???????????????????
     document.removeEventListener('keydown', this.#onEscKeyDown);
-    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
-    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
-    // const isMinorUpdate =
-    //   !isDatesEqual(this.#task.dueDate, update.dueDate) ||
-    //   isTaskRepeating(this.#task.repeating) !== isTaskRepeating(update.repeating);
-    // this.#handleDataChange(
-    //   UserAction.UPDATE_TASK,
-    //   isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
-    //   update,
-    // );
   };
 
   #deleteClickHandler = (point) => {
@@ -76,7 +65,6 @@ export default class EventPresenter {
   };
 
   #favoriteClickHandler = () => {
-    // this.#onDataChange({ ...this.#point, isFavorite: !this.#point.isFavorite }); // вносим изменения в данные
     this.#onDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {
       ...this.#point,
       isFavorite: !this.#point.isFavorite,
@@ -125,8 +113,7 @@ export default class EventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      // replace(this.#eventEditComponent, prevEventEditComponent);
-      replace(this.#eventItemComponent, prevEventEditComponent); // ?????????
+      replace(this.#eventItemComponent, prevEventEditComponent);
       this.#mode = Mode.DEFAULT;
     }
 

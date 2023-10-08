@@ -17,7 +17,6 @@ export default class SortView extends AbstractView {
 
   #onSortTypeChange = (evt) => {
     this.#sortTypeChangeHandler(evt.target.value.slice(5));
-    // this.#currentSortType меняется в header-presenter
   };
 
   #adaptSorting(sortings) {

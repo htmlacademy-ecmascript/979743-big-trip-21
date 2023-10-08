@@ -62,8 +62,6 @@ export default class PointApiService extends ApiService {
       'is_favorite': point.isFavorite,
       'date_from': new Date(point.dateFrom).toISOString(),
       'date_to': new Date(point.dateTo).toISOString(),
-      // 'date_from': point.dateFrom,
-      // 'date_to': point.dateTo,
     };
 
     delete adaptedPoint.basePrice;

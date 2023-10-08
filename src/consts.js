@@ -1,5 +1,4 @@
 // константы
-// const DATA_FORMAT = 'YYYY-MM-DDTHH:mm';
 const DATA_FORMAT = 'DD/MM/YY HH:mm';
 
 const DATA_SHORT_FORMAT = 'MMM DD';
@@ -24,12 +23,6 @@ const DEFAULT_OPEN_POINT_INDEX = 0;
 
 const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
 
-// const FilterType = {
-//   EVERYRHING: 'everything',
-//   FUTURE: 'future',
-//   PRESENT: 'present',
-//   PAST: 'past',
-// };
 const SortType = {
   // передается в шаблон для отрисовки блока с сортировкой
   DAY: {
@@ -80,8 +73,6 @@ export {
   DEFAULT_TYPE,
   DEFAULT_OPEN_POINT_INDEX,
   FILTER_TYPES,
-  // FilterType,
-  // SORT_TYPES,
   SortType,
   UserAction,
   UpdateType,

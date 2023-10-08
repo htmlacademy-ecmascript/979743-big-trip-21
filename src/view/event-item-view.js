@@ -13,7 +13,6 @@ export default class EventItemView extends AbstractView {
   #favoriteClickHandler = null;
 
   constructor({ pointData, offers, destinations, onEditClick, favoriteClickHandler }) {
-    // предусмотреть передачу данных по умолчанию для отрисовки пустой точки
     super();
     this.#pointData = pointData;
     this.#offers = offers;

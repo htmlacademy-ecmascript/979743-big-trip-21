@@ -148,7 +148,7 @@ export default class HeaderPresenter {
     this.#eventPresenters.clear(); // очищаем коллекцию презентеров
     //список-контейнер не удалаю
     if (this.#newEventPresenter) {
-      this.#newEventPresenter.destoy();
+      this.#newEventPresenter.destroy();
     }
   }
 

@@ -26,20 +26,13 @@ export default class Model extends Observable {
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
-    // ----- добавить еще стоимость офферов (!!!)
-    // const initialCost = 0;
-    // return this.#points
-    //   .map((point) => point.basePrice)
-    //   .reduce((accumulator, currentValue) => accumulator + currentValue, initialCost);
     return '3456';
   }
 
   async init() {
     try {
       const serverPoints = await this.#pointApiService.points;
-      // console.log(serverPoints);
       this.#pointsData = serverPoints.map(this.#adaptPointToClient);
-      // console.log(this.#pointsData[0].dateFrom instanceof Date); // true
     } catch (err) {
       this.#pointsData = [];
     }
@@ -79,7 +72,6 @@ export default class Model extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
-      console.log(err);
       throw new Error('Cant update task');
     }
   }
@@ -95,7 +87,6 @@ export default class Model extends Observable {
       ];
       this._notify(updateType, update);
     } catch (err) {
-      console.log(err);
       throw new Error('Cant add task');
     }
   }
@@ -115,7 +106,6 @@ export default class Model extends Observable {
       ];
       this._notify(updateType);
     } catch (err) {
-      console.log(err);
       throw new Error('Cant delete task');
     }
   }
