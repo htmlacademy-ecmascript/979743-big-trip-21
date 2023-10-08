@@ -305,30 +305,30 @@ export default class HeaderPresenter {
   get pointData() {
     // возвращает данные о точках с учетом текущей сортировки
     const allPoints = this.#model.points;
-    let filteredPoint = [];
+    let filteredPoints = [];
 
     switch (this.#currentFilterType) {
       case 'everything':
-        filteredPoint = allPoints;
+        filteredPoints = allPoints;
         break;
       case 'future':
-        filteredPoint = filterFuturePoints(allPoints); // от большего к меньшему
+        filteredPoints = filterFuturePoints(allPoints); // от большего к меньшему
         break;
       case 'present':
-        filteredPoint = filterPresentPoints(allPoints);
+        filteredPoints = filterPresentPoints(allPoints);
         break;
       case 'past':
-        filteredPoint = filterPastPoints(allPoints);
+        filteredPoints = filterPastPoints(allPoints);
         break;
     }
 
     switch (this.#currentSortType) {
       case SortType.PRICE.name:
-        return filteredPoint.sort(sortByPrice); // от большего к меньшему
+        return filteredPoints.sort(sortByPrice); // от большего к меньшему
       case SortType.TIME.name:
-        return filteredPoint.sort(sortByTime);
+        return filteredPoints.sort(sortByTime);
       case SortType.DAY.name:
-        return filteredPoint.sort(sortByDate);
+        return filteredPoints.sort(sortByDate);
     }
     return allPoints;
   }

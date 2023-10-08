@@ -1,3 +1,4 @@
+// версия для второй проверки
 import HeaderPresenter from './presenters/header-presenter';
 import Model from './model/model';
 import PointApiService from './point-api-service';
