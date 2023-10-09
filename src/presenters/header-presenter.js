@@ -47,10 +47,6 @@ export default class HeaderPresenter {
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
   #tripAbouteComponent = null;
-  // #tripAbouteComponent = new TripAbouteView({
-  //   dateFrom: this.#model.totalDateFrom,
-  //   dateTo: this.#model.totalDateTo,
-  // });
 
   #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
@@ -87,7 +83,7 @@ export default class HeaderPresenter {
     this.#currentSortType = SortType.DAY.name;
     this.#currentFilterType = 'everything';
 
-    this.#rerenderFilters();
+    this.#renderFilters();
 
     remove(this.#sortComponent);
     this.#sortComponent = new SortView({
@@ -125,24 +121,17 @@ export default class HeaderPresenter {
   });
 
   #renderFilters() {
+    if (this.#tripFiltersComponent) {
+      remove(this.#tripFiltersComponent);
+      this.#tripFiltersComponent = new TripFiltersView({
+        isDisabled: false,
+        filterTypeClickHandler: this.#filterTypeClickHandler,
+      });
+    }
     render(this.#tripFiltersComponent, this.#siteTripControlsElement);
   }
 
-  #rerenderFilters() {
-    remove(this.#tripFiltersComponent);
-    this.#tripFiltersComponent = new TripFiltersView({
-      isDisabled: false,
-      filterTypeClickHandler: this.#filterTypeClickHandler,
-    });
-    this.#renderFilters();
-  }
-
   #renderTripInfo() {
-    // const totalDestinations = {
-    //   totalStartDestionation: 'Amsterdam',
-    //   totalEndDestination: 'Geneva',
-    //   totalTransitionalDestination: 'Paris',
-    // };
     if (this.#tripTotalComponent) {
       remove(this.#tripTotalComponent);
     }
@@ -309,14 +298,14 @@ export default class HeaderPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#rerenderFilters();
+        this.#renderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
         break;
       case UpdateType.FAILED:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#rerenderFilters();
+        this.#renderFilters();
         this.#renderAll(true);
         break;
     }
