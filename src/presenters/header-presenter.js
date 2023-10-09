@@ -138,6 +138,11 @@ export default class HeaderPresenter {
   }
 
   #renderTripInfo() {
+    // const totalDestinations = {
+    //   totalStartDestionation: 'Amsterdam',
+    //   totalEndDestination: 'Geneva',
+    //   totalTransitionalDestination: 'Paris',
+    // };
     if (this.#tripTotalComponent) {
       remove(this.#tripTotalComponent);
     }
@@ -145,7 +150,7 @@ export default class HeaderPresenter {
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
 
     // инфо об общих сроках поездке и ПН
-    this.#tripAbouteComponent = new TripAbouteView(this.#model.totalDates);
+    this.#tripAbouteComponent = new TripAbouteView(this.#model.totalDates, this.#model.totalDestinations);
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
 
     // инфо об общей цене

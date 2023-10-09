@@ -78,7 +78,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
-    this.#currentUpdateType = UpdateType.MINOR;
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
 
     if (selectedDestination) {

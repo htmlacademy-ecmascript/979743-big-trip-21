@@ -2,6 +2,7 @@ import Observable from '../framework/observable';
 import dayjs from 'dayjs';
 import { UpdateType, DATA_SHORT_FORMAT } from '../consts';
 import { sortByDate } from '../util/common';
+import { getDestinationByID } from './util/data-adapters';
 
 export default class Model extends Observable {
   #pointApiService = null;
@@ -49,14 +50,30 @@ export default class Model extends Observable {
     };
   }
 
-  get totalDateFrom() {
-    const dateFrom = this.#pointsData.sort(sortByDate)[0].dateFrom;
-    return dayjs(dateFrom).format(DATA_SHORT_FORMAT);
-  }
+  get totalDestinations() {
+    const allDestinations = new Set();
+    let transitionalDestination = '...';
 
-  get totalDateTo() {
-    const date = this.#pointsData.sort(sortByDate)[this.#pointsData.length - 1].dateTo;
-    return dayjs(date).format(DATA_SHORT_FORMAT);
+    const sortedDestinations = this.#pointsData
+      .sort(sortByDate)
+      .map((point) => getDestinationByID(point.destination, this.#destinationsData).name)
+      .forEach((destination) => allDestinations.add(destination));
+    console.log(sortedDestinations);
+    const selectedDestinations = Array.from(allDestinations);
+    console.log(selectedDestinations);
+
+    if (selectedDestinations.length <= 2) {
+      transitionalDestination = '';
+    } else if (selectedDestinations.length === 3) {
+      transitionalDestination = selectedDestinations[1];
+    } else if (selectedDestinations.length > 3) {
+      transitionalDestination = '...';
+    }
+    return {
+      totalStartDestionation: selectedDestinations[0],
+      totalEndDestination: selectedDestinations[selectedDestinations.length - 1],
+      totalTransitionalDestination: transitionalDestination,
+    };
   }
 
   async init() {
