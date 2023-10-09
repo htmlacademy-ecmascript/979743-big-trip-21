@@ -66,6 +66,8 @@ export default class HeaderPresenter {
       this.#noPointsComponent = null;
     }
     this.#currentFilterType = filterType;
+    this.#currentSortType = SortType.DAY.name;
+    this.#renderSort();
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
   };
@@ -142,6 +144,13 @@ export default class HeaderPresenter {
   }
 
   #renderSort() {
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+      this.#sortComponent = new SortView({
+        currentSortType: this.#currentSortType,
+        sortTypeChangeHandler: this.#sortTypeChangeHandler,
+      });
+    }
     render(this.#sortComponent, this.#siteTripEventsElement);
   }
 
