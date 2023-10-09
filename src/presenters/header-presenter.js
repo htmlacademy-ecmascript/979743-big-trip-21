@@ -28,6 +28,7 @@ export default class HeaderPresenter {
   #newEventPresenter = null;
   #eventPresenters = new Map();
   #noPointsComponent = null;
+  #tripTotalComponent = null;
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything';
   #isLoading = true;
@@ -131,10 +132,13 @@ export default class HeaderPresenter {
   }
 
   #renderTripInfo() {
+    if (this.#tripTotalComponent) {
+      remove(this.#tripTotalComponent);
+    }
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
-    const tripTotalComponent = new TripTotalView(this.#model.totalPrice);
-    render(tripTotalComponent, this.#tripInfoComponent.element);
+    this.#tripTotalComponent = new TripTotalView(this.#model.totalPrice);
+    render(this.#tripTotalComponent, this.#tripInfoComponent.element);
   }
 
   #renderSort() {
@@ -258,6 +262,7 @@ export default class HeaderPresenter {
   #handleModelEvent = (updateType, data) => {
     // обработчик событий модели
     //вызывается из _notify
+    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         // обновляем только точку
@@ -275,7 +280,7 @@ export default class HeaderPresenter {
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
-        this.#clearAll({ resetRenderedTaskCount: true }); // что это??
+        this.#clearAll(); // что это??
         this.#renderAll();
         break;
       case UpdateType.INIT:

@@ -26,7 +26,9 @@ export default class Model extends Observable {
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
-    return '3456';
+    const initialValue = 0;
+    const total = this.#pointsData.reduce((accumulator, point) => accumulator + point.basePrice, initialValue);
+    return total;
   }
 
   async init() {
