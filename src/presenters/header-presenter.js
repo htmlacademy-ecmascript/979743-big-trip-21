@@ -28,6 +28,7 @@ export default class HeaderPresenter {
   #newEventPresenter = null;
   #eventPresenters = new Map();
   #noPointsComponent = null;
+  #tripTotalComponent = null;
   #currentSortType = SortType.DAY.name;
   #currentFilterType = 'everything';
   #isLoading = true;
@@ -45,7 +46,7 @@ export default class HeaderPresenter {
 
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
-  #tripAbouteComponent = new TripAbouteView();
+  #tripAbouteComponent = null;
 
   #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
@@ -65,6 +66,8 @@ export default class HeaderPresenter {
       this.#noPointsComponent = null;
     }
     this.#currentFilterType = filterType;
+    this.#currentSortType = SortType.DAY.name;
+    this.#renderSort();
     this.#clearEventsList();
     this.#renderEvents(this.pointData);
   };
@@ -80,7 +83,7 @@ export default class HeaderPresenter {
     this.#currentSortType = SortType.DAY.name;
     this.#currentFilterType = 'everything';
 
-    this.#rerenderFilters();
+    this.#renderFilters();
 
     remove(this.#sortComponent);
     this.#sortComponent = new SortView({
@@ -118,26 +121,40 @@ export default class HeaderPresenter {
   });
 
   #renderFilters() {
+    if (this.#tripFiltersComponent) {
+      remove(this.#tripFiltersComponent);
+      this.#tripFiltersComponent = new TripFiltersView({
+        isDisabled: false,
+        filterTypeClickHandler: this.#filterTypeClickHandler,
+      });
+    }
     render(this.#tripFiltersComponent, this.#siteTripControlsElement);
   }
 
-  #rerenderFilters() {
-    remove(this.#tripFiltersComponent);
-    this.#tripFiltersComponent = new TripFiltersView({
-      isDisabled: false,
-      filterTypeClickHandler: this.#filterTypeClickHandler,
-    });
-    this.#renderFilters();
-  }
-
   #renderTripInfo() {
+    if (this.#tripTotalComponent) {
+      remove(this.#tripTotalComponent);
+    }
+
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
+
+    // инфо об общих сроках поездке и ПН
+    this.#tripAbouteComponent = new TripAbouteView(this.#model.totalDates, this.#model.totalDestinations);
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
-    const tripTotalComponent = new TripTotalView(this.#model.totalPrice);
-    render(tripTotalComponent, this.#tripInfoComponent.element);
+
+    // инфо об общей цене
+    this.#tripTotalComponent = new TripTotalView(this.#model.totalPrice);
+    render(this.#tripTotalComponent, this.#tripInfoComponent.element);
   }
 
   #renderSort() {
+    if (this.#sortComponent) {
+      remove(this.#sortComponent);
+      this.#sortComponent = new SortView({
+        currentSortType: this.#currentSortType,
+        sortTypeChangeHandler: this.#sortTypeChangeHandler,
+      });
+    }
     render(this.#sortComponent, this.#siteTripEventsElement);
   }
 
@@ -275,20 +292,20 @@ export default class HeaderPresenter {
         break;
       case UpdateType.MAJOR:
         // обновляем все, в т.ч. хедер
-        this.#clearAll({ resetRenderedTaskCount: true }); // что это??
+        this.#clearAll(); // что это??
         this.#renderAll();
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#rerenderFilters();
+        this.#renderFilters();
         this.#renderAll();
         render(this.#newEventBtnComponent, this.#siteTripMainElement);
         break;
       case UpdateType.FAILED:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#rerenderFilters();
+        this.#renderFilters();
         this.#renderAll(true);
         break;
     }

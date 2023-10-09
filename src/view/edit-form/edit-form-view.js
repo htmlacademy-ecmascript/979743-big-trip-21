@@ -7,6 +7,7 @@ import { DATA_FORMAT } from '../../consts';
 import { formatDateStr } from '../../util/common';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { UpdateType } from '../../consts';
 
 export default class EventEditView extends AbstractStatefulView {
   #formSubmitHandler = null;
@@ -16,6 +17,7 @@ export default class EventEditView extends AbstractStatefulView {
   #deleteClickHandler = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #currentUpdateType = UpdateType.PATCH;
 
   constructor({ pointData, offers, destinations, formSubmitHandler, resetClickHandler, deleteClickHandler }) {
     super();
@@ -53,7 +55,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #onFormSubmit = (evt) => {
     evt.preventDefault();
-    this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state)); // сюда передаем измененные данные для перерисовки и сохранения
+    this.#formSubmitHandler(EventEditView.parseStateToPoint(this._state), this.#currentUpdateType); // сюда передаем измененные данные для перерисовки и сохранения
   };
 
   #onDeleteClick = (evt) => {
@@ -76,6 +78,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
 
     if (selectedDestination) {
@@ -112,6 +115,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onPriceChange = (evt) => {
+    this.#currentUpdateType = UpdateType.MAJOR;
     this.updateElement({
       ...this._state,
       basePrice: Number(evt.target.value),
@@ -119,6 +123,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateFromChange = ([userDate]) => {
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDate = [userDate];
     if (selectedDate) {
       this.updateElement({
@@ -129,6 +134,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateToChange = ([userDate]) => {
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDate = [userDate];
     if (selectedDate) {
       this.updateElement({

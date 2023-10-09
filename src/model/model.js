@@ -1,6 +1,9 @@
 import Observable from '../framework/observable';
 import dayjs from 'dayjs';
-import { UpdateType } from '../consts';
+import { UpdateType, DATA_SHORT_FORMAT } from '../consts';
+import { sortByDate } from '../util/common';
+import { getDestinationByID } from './util/data-adapters';
+
 export default class Model extends Observable {
   #pointApiService = null;
   #pointsData = [];
@@ -26,7 +29,46 @@ export default class Model extends Observable {
 
   //-------------вычисляем общую стоимость---------
   get totalPrice() {
-    return '3456';
+    const initialValue = 0;
+    const total = this.#pointsData.reduce((accumulator, point) => accumulator + point.basePrice, initialValue);
+    return total;
+  }
+
+  // определяем общие даты начала и окончания маршрута
+  get totalDates() {
+    const dateFrom = this.#pointsData.sort(sortByDate)[0].dateFrom;
+    const dateTo = this.#pointsData.sort(sortByDate)[this.#pointsData.length - 1].dateTo;
+    let totalDateTo = dayjs(dateTo).format(DATA_SHORT_FORMAT);
+
+    if (dayjs(dateTo).month() === dayjs(dateFrom).month()) {
+      totalDateTo = dayjs(dateTo).format('DD');
+    }
+
+    return {
+      totalDateFrom: dayjs(dateFrom).format(DATA_SHORT_FORMAT),
+      totalDateTo: totalDateTo,
+    };
+  }
+
+  get totalDestinations() {
+    let transitionalDestination = '...';
+
+    const allDestinations = this.#pointsData
+      .sort(sortByDate)
+      .map((point) => getDestinationByID(point.destination, this.#destinationsData).name);
+
+    if (allDestinations.length <= 2) {
+      transitionalDestination = '';
+    } else if (allDestinations.length === 3) {
+      transitionalDestination = allDestinations[1];
+    } else if (allDestinations.length > 3) {
+      transitionalDestination = '...';
+    }
+    return {
+      totalStartDestionation: allDestinations[0],
+      totalEndDestination: allDestinations[allDestinations.length - 1],
+      totalTransitionalDestination: transitionalDestination,
+    };
   }
 
   async init() {

@@ -1,6 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render';
 import EventEditView from '../view/edit-form/edit-form-view';
-import { UserAction, UpdateType } from '../consts';
+import { UserAction } from '../consts';
 
 const BLANK_POINT = {
   id: '',
@@ -37,8 +37,8 @@ export default class NewEventPresenter {
     }
   };
 
-  #formSubmitHandler = (point) => {
-    this.#onDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
+  #formSubmitHandler = (point, currentUpdateType) => {
+    this.#onDataChange(UserAction.ADD_POINT, currentUpdateType, point);
     this.#onDestroy(); // приходит из header-presenter, разбизабливает кнопку
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
