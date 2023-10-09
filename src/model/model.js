@@ -51,27 +51,22 @@ export default class Model extends Observable {
   }
 
   get totalDestinations() {
-    const allDestinations = new Set();
     let transitionalDestination = '...';
 
-    const sortedDestinations = this.#pointsData
+    const allDestinations = this.#pointsData
       .sort(sortByDate)
-      .map((point) => getDestinationByID(point.destination, this.#destinationsData).name)
-      .forEach((destination) => allDestinations.add(destination));
-    console.log(sortedDestinations);
-    const selectedDestinations = Array.from(allDestinations);
-    console.log(selectedDestinations);
+      .map((point) => getDestinationByID(point.destination, this.#destinationsData).name);
 
-    if (selectedDestinations.length <= 2) {
+    if (allDestinations.length <= 2) {
       transitionalDestination = '';
-    } else if (selectedDestinations.length === 3) {
-      transitionalDestination = selectedDestinations[1];
-    } else if (selectedDestinations.length > 3) {
+    } else if (allDestinations.length === 3) {
+      transitionalDestination = allDestinations[1];
+    } else if (allDestinations.length > 3) {
       transitionalDestination = '...';
     }
     return {
-      totalStartDestionation: selectedDestinations[0],
-      totalEndDestination: selectedDestinations[selectedDestinations.length - 1],
+      totalStartDestionation: allDestinations[0],
+      totalEndDestination: allDestinations[allDestinations.length - 1],
       totalTransitionalDestination: transitionalDestination,
     };
   }

@@ -51,7 +51,6 @@ export default class EventPresenter {
   }
 
   #formSubmitHandler = (point, currentUpdateType) => {
-    console.log(currentUpdateType);
     this.#onDataChange(UserAction.UPDATE_POINT, currentUpdateType, point);
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };

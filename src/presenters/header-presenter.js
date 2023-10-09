@@ -286,7 +286,6 @@ export default class HeaderPresenter {
   #handleModelEvent = (updateType, data) => {
     // обработчик событий модели
     //вызывается из _notify
-    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         // обновляем только точку

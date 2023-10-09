@@ -1,6 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render';
 import EventEditView from '../view/edit-form/edit-form-view';
-import { UserAction, UpdateType } from '../consts';
+import { UserAction } from '../consts';
 
 const BLANK_POINT = {
   id: '',
