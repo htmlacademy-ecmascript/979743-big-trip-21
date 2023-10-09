@@ -46,7 +46,11 @@ export default class HeaderPresenter {
 
   #loadingComponent = new LoadingView();
   #tripInfoComponent = new TripInfoView();
-  #tripAbouteComponent = new TripAbouteView();
+  #tripAbouteComponent = null;
+  // #tripAbouteComponent = new TripAbouteView({
+  //   dateFrom: this.#model.totalDateFrom,
+  //   dateTo: this.#model.totalDateTo,
+  // });
 
   #siteTripMainElement = document.querySelector('.trip-main'); // он определяется в main
   #siteTripControlsElement = document.querySelector('.trip-controls__filters'); //контейнер для filters
@@ -137,8 +141,14 @@ export default class HeaderPresenter {
     if (this.#tripTotalComponent) {
       remove(this.#tripTotalComponent);
     }
+
     render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN); // отрисовываем компонент-контейнер
+
+    // инфо об общих сроках поездке и ПН
+    this.#tripAbouteComponent = new TripAbouteView(this.#model.totalDates);
     render(this.#tripAbouteComponent, this.#tripInfoComponent.element);
+
+    // инфо об общей цене
     this.#tripTotalComponent = new TripTotalView(this.#model.totalPrice);
     render(this.#tripTotalComponent, this.#tripInfoComponent.element);
   }

@@ -1,6 +1,8 @@
 import Observable from '../framework/observable';
 import dayjs from 'dayjs';
-import { UpdateType } from '../consts';
+import { UpdateType, DATA_SHORT_FORMAT } from '../consts';
+import { sortByDate } from '../util/common';
+
 export default class Model extends Observable {
   #pointApiService = null;
   #pointsData = [];
@@ -29,6 +31,32 @@ export default class Model extends Observable {
     const initialValue = 0;
     const total = this.#pointsData.reduce((accumulator, point) => accumulator + point.basePrice, initialValue);
     return total;
+  }
+
+  // определяем общие даты начала и окончания маршрута
+  get totalDates() {
+    const dateFrom = this.#pointsData.sort(sortByDate)[0].dateFrom;
+    const dateTo = this.#pointsData.sort(sortByDate)[this.#pointsData.length - 1].dateTo;
+    let totalDateTo = dayjs(dateTo).format(DATA_SHORT_FORMAT);
+
+    if (dayjs(dateTo).month() === dayjs(dateFrom).month()) {
+      totalDateTo = dayjs(dateTo).format('DD');
+    }
+
+    return {
+      totalDateFrom: dayjs(dateFrom).format(DATA_SHORT_FORMAT),
+      totalDateTo: totalDateTo,
+    };
+  }
+
+  get totalDateFrom() {
+    const dateFrom = this.#pointsData.sort(sortByDate)[0].dateFrom;
+    return dayjs(dateFrom).format(DATA_SHORT_FORMAT);
+  }
+
+  get totalDateTo() {
+    const date = this.#pointsData.sort(sortByDate)[this.#pointsData.length - 1].dateTo;
+    return dayjs(date).format(DATA_SHORT_FORMAT);
   }
 
   async init() {

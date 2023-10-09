@@ -115,7 +115,6 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onPriceChange = (evt) => {
-    console.log('меняем цену');
     this.#currentUpdateType = UpdateType.MAJOR;
     this.updateElement({
       ...this._state,
@@ -124,7 +123,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateFromChange = ([userDate]) => {
-    this.#currentUpdateType = UpdateType.MINOR;
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDate = [userDate];
     if (selectedDate) {
       this.updateElement({
@@ -135,7 +134,7 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #onDateToChange = ([userDate]) => {
-    this.#currentUpdateType = UpdateType.MINOR;
+    this.#currentUpdateType = UpdateType.MAJOR;
     const selectedDate = [userDate];
     if (selectedDate) {
       this.updateElement({
